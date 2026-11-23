@@ -63,7 +63,8 @@ class CoreTests(unittest.TestCase):
         b=self.store.capture(capsule())["id"]
         self.assertNotEqual(a,b)
         inp={"request_id":str(uuid.uuid4()),"left_id":a,"right_id":b,
-             "rationale":"Ambos discutem proveniência", "counterpoint":"Mesmo conceito não comprova influência"}
+             "rationale":"Ambos discutem proveniência", "counterpoint":"Mesmo conceito não comprova influência",
+             "responsible":{"id":"test:operator","name":"Operador declarado"},"origin":"Comparação humana explícita"}
         out=self.store.relate(inp)
         self.assertEqual(out,self.store.relate(inp))
         self.assertEqual(out["status"],"INFERRED_CANDIDATE")
@@ -203,6 +204,40 @@ class HTTPTests(unittest.TestCase):
         with self.assertRaises(HTTPError) as error:
             self.direct_http.open(request,timeout=4)
         self.assertEqual(error.exception.code,404)
+        error.exception.close()
+
+    def test_event_http_access_replay_and_integrity_failure(self):
+        from bbcore.events import Events
+        from test_events import event
+        _,record=self.post('/api/insights',capsule())
+        iid=record['id']
+        self.assertEqual(self.get('/api/insights/'+iid+'/trajectory')['event_count'],1)
+        with self.assertRaises(HTTPError) as error:
+            self.post('/api/events',event(iid),READ)
+        self.assertEqual(error.exception.code,403)
+        error.exception.close()
+        session=Request(self.base+'/api/local-session',data=b'',headers={'Origin':self.base},method='POST')
+        with self.direct_http.open(session,timeout=4) as response:
+            cookie=response.headers['Set-Cookie'].split(';')[0]
+        headers={'Cookie':cookie,'Origin':self.base,'Content-Type':'application/json'}
+        data=event(iid)
+        request=Request(self.base+'/api/events',data=json.dumps(data).encode(),headers=headers)
+        with self.direct_http.open(request,timeout=4) as response:
+            self.assertEqual(json.load(response)['insight_id'],iid)
+        self.assertEqual(self.get('/api/insights/'+iid+'/context')['trajectory']['event_count'],2)
+        exported=self.get('/api/events/export')
+        checkpoint=self.get('/api/events/checkpoint')
+        self.assertEqual(Events.verify_bundle(exported,checkpoint)['integrity'],'VERIFIED')
+        for override in ({'Origin':'https://evil.example'}, {'Origin':''}):
+            request=Request(self.base+'/api/events',data=json.dumps(data).encode(),headers={**headers,**override})
+            with self.assertRaises(HTTPError) as error:
+                self.direct_http.open(request,timeout=4)
+            self.assertIn(error.exception.code,(401,403))
+            error.exception.close()
+        self.server.archive.db.execute('UPDATE event_log_head SET last_hash=?',('a'*64,))
+        with self.assertRaises(HTTPError) as error:
+            self.get('/api/insights/'+iid+'/trajectory')
+        self.assertEqual(error.exception.code,409)
         error.exception.close()
 
     def test_cross_origin_rejected(self):

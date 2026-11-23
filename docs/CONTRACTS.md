@@ -1,5 +1,11 @@
 # Contratos e invariantes — BB-INSIGHT-1
 
+## Fundamento da continuidade intelectual
+
+Todo insight nasce como um registro intelectualmente autônomo, identificado e sustentado por fontes recuperáveis. Sua evolução é contingente e somente pode ser reconstruída a partir de acontecimentos efetivamente registrados. Suas relações com outros insights não são presumidas: podem ser propostas, examinadas, contestadas ou reconhecidas posteriormente, com proveniência e histórico preservados.
+
+Proveniência, trajetória e relações são dimensões independentes. O contrato [BB-EVENT-1](EVENTS.md) define eventos append-only e sua reprodução, sem criar trajetórias retrospectivas fictícias.
+
 ## Identidade
 
 - Cada insight tem ID aleatório, título, formulação candidata, gênese estruturada, contexto delimitado, limites, status e versão.

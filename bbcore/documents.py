@@ -252,6 +252,9 @@ class Documents:
                             (uid(), iid, 1, 'HUMAN_CONFIRMED', canonical({'request_id': request_id, 'kind': kind,
                              'work_state': work_state, 'confirmed_by_declared': actor, 'formulation_origin': origin,
                              'supersedes_id': supersedes}), now))
+            self.archive.events.registered(iid, request_id)
+            if supersedes:
+                self.archive.events.revision_reference(supersedes, iid, actor, request_id)
             return self._remember(request_id, signature, {'id': iid, 'kind': kind, 'work_state': work_state, 'status': status, 'confirmed_at': now})
 
     def sources_for(self, insight_id):

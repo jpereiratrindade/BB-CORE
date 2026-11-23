@@ -64,8 +64,12 @@ TOOLS = [
   "annotations":{"readOnlyHint":False,"destructiveHint":False,"idempotentHint":True},
   "inputSchema":obj({"request_id":s("UUID de idempotência"),"left_id":s("Insight A"),
    "right_id":s("Insight B"),"rationale":s("Justificativa baseada em elementos recuperáveis"),
-   "counterpoint":s("Alternativa, diferença ou motivo para duvidar da relação")},
-   ["request_id","left_id","right_id","rationale","counterpoint"])}
+   "counterpoint":s("Alternativa, diferença ou motivo para duvidar da relação"),
+   "responsible":obj({"id":s("Identificador declarado do proponente"),"name":s("Nome declarado")},["id","name"]),
+   "origin":s("Origem declarada da proposta"),
+   "evidence":{"type":"array","items":obj({"kind":s("Tipo de referência"),"id":s("ID existente"),"role":s("Papel da referência")},["kind","id","role"])},
+   "missing":{"type":"array","items":{"type":"string"}}},
+   ["request_id","left_id","right_id","rationale","counterpoint","responsible","origin"])}
 ]
 
 
@@ -177,11 +181,11 @@ class Handler(BaseHTTPRequestHandler):
 
     def get_route(self):
         path=urlsplit(self.path).path
-        if path in ('/style.css', '/app.js', '/documents.js', '/navigation.js', '/favicon.svg'):
+        if path in ('/style.css', '/app.js', '/documents.js', '/navigation.js', '/trajectory.js', '/favicon.svg'):
             asset = Path(__file__).resolve().parent.parent / 'web' / path[1:]
             blob = asset.read_bytes()
             self.send_response(200)
-            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/documents.js': 'text/javascript; charset=utf-8', '/navigation.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
+            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/documents.js': 'text/javascript; charset=utf-8', '/navigation.js': 'text/javascript; charset=utf-8', '/trajectory.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
             self.send_header('Content-Length', str(len(blob)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
@@ -204,6 +208,10 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers();self.wfile.write(html);return
         if not self.safe_origin(): return
         if not self.authorized(): return
+        if path == '/api/events/checkpoint':
+            self.send_json(200, self.server.archive.events.checkpoint());return
+        if path == '/api/events/export':
+            self.send_json(200, self.server.archive.events.export());return
         if path == '/api/documents':
             offset = int(parse_qs(urlsplit(self.path).query).get('offset', ['0'])[0])
             items = self.server.archive.documents.list(offset)
@@ -243,6 +251,8 @@ class Handler(BaseHTTPRequestHandler):
             if len(rest)==1: self.send_json(200,self.server.archive.get(iid));return
             if len(rest)==2 and rest[1]=="context":
                 self.send_json(200,self.server.archive.context(iid));return
+            if len(rest)==2 and rest[1]=="trajectory":
+                self.send_json(200,self.server.archive.events.trajectory(iid));return
         if path=="/mcp":
             self.send_json(405,{"error":"Use POST /mcp"},{"Allow":"POST, OPTIONS"});return
         self.send_json(404,{"error":"NOT_FOUND"})
@@ -261,7 +271,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, {'access': 'local_read_and_confirmed_document_ingestion'}, {
                 'Set-Cookie': 'bb_local=' + self.server.browser_token + '; HttpOnly; SameSite=Strict; Path=/'})
             return
-        document_write = path in ('/api/documents', '/api/document-records')
+        document_write = path in ('/api/documents', '/api/document-records', '/api/events')
         if path not in ("/mcp","/api/insights","/api/relations") and not document_write:
             self.send_json(404,{"error":"NOT_FOUND"});return
         local_document_write = document_write and self.local_origin() and self.local_cookie()
@@ -271,6 +281,8 @@ class Handler(BaseHTTPRequestHandler):
         if not local_document_write and not self.authorized(write=path!="/mcp"):return
         try:
             data=self.body()
+            if path == '/api/events':
+                self.send_json(201, self.server.archive.events.append(data));return
             if document_write:
                 result = (self.server.archive.documents.ingest(data) if path == '/api/documents'
                           else self.server.archive.documents.create_record(data))

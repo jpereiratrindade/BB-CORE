@@ -41,3 +41,7 @@ Estilos e scripts são arquivos externos do mesmo servidor, compatíveis com a p
 ## Documento e registros separados
 
 A camada documental preserva também o original MÉTIS, seus metadados e dois registros distintos: decisão de consolidar R e questão científica da emergência. O recibo adicional é `reference/METIS-ACH-20261123-001.document-receipt.json`. O registro legado permanece íntegro. Ver [contrato de ingestão](DOCUMENT-INGESTION.md).
+
+## Proveniência, trajetória e relações
+
+A evolução do BB-CORE adota o princípio de autonomia intelectual descrito em [BB-EVENT-1](EVENTS.md). Nenhuma trajetória é inventada para os três registros MÉTIS anteriores à implantação do diário. Novos acontecimentos são acrescentados explicitamente; compartilhar o documento MÉTIS não estabelece influência ou relação entre esses registros. A consulta da trajetória está no leitor do card. Revisões de formulação do mesmo insight podem ser registradas por eventos, mantendo o ID e o original; o fluxo documental legado que cria outro registro continua identificado como vínculo explícito entre registros.

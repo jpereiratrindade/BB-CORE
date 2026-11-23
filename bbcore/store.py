@@ -101,6 +101,8 @@ class Archive:
 
         from .documents import Documents
         self.documents = Documents(self)
+        from .events import Events
+        self.events = Events(self)
 
     @contextmanager
     def transaction(self):
@@ -190,6 +192,7 @@ class Archive:
             self.db.execute("INSERT INTO revisions VALUES(?,?,?,?,?,?)",
                             (uuid.uuid4().hex, iid, 1, "CAPTURED", canonical({"request_id": rid}), now))
             self.db.execute("INSERT INTO insights_fts(insight_id,title,claim) VALUES(?,?,?)", (iid,title,claim))
+            self.events.registered(iid, rid)
             result = {"id": iid, "version": 1, "status": status,
                       "sharing": sharing, "sources": links,
                       "limitation": "Autoria e completude externa não autenticadas; sem homologação científica"}
@@ -228,6 +231,7 @@ class Archive:
                     raise Conflict("Falha de integridade de fonte ou âncora")
                 obj["sources"].append(item)
             obj['sources'].extend(self.documents.sources_for(iid))
+            obj['trajectory'] = self.events.trajectory(iid)
             obj["history"] = [dict(r) for r in self.db.execute(
                 "SELECT version,event,payload,at FROM revisions WHERE insight_id=? ORDER BY version", (iid,))]
             obj["integrity"] = "VERIFIED_LOCAL_BYTES"
@@ -276,10 +280,22 @@ class Archive:
             if existing:
                 if existing["signature"] != signature: raise Conflict("request_id já usado")
                 return json.loads(existing["response"])
+            actor = data.get('responsible')
+            if not isinstance(actor, dict) or set(actor) != {'id', 'name'}:
+                raise ValueError('Novas propostas exigem responsible com id e name declarados')
+            actor = {key: required_string(actor[key], 'responsible.'+key, 240) for key in ('id', 'name')}
+            origin = required_string(data.get('origin'), 'origin', 4000)
+            evidence = data.get('evidence', [])
+            self.events.references(evidence)
+            missing = data.get('missing', [])
+            if not isinstance(missing, list) or len(missing) > 32:
+                raise ValueError('missing deve ser lista de até 32 lacunas')
+            missing = [required_string(item, 'missing', 500) for item in missing]
             self._get(left); self._get(right)
             new_id = uuid.uuid4().hex
             self.db.execute("INSERT INTO relations VALUES(?,?,?,?,?,?,?)",
                             (new_id,left,right,rationale,counterpoint,"INFERRED_CANDIDATE",stamp()))
+            self.events.relation_proposed(new_id, actor, origin, evidence, missing, rid)
             result = {"id":new_id,"status":"INFERRED_CANDIDATE", "left_id":left,"right_id":right,
                       "limitation":"Semelhança não comprova causalidade ou influência histórica"}
             self.db.execute("INSERT INTO requests VALUES(?,?,?)",(rid,signature,canonical(result)))
@@ -294,5 +310,6 @@ class Archive:
                 total += 1
                 bad += digest(r["body"]) != r["sha256"]
             documents = self.documents.verify()
-            return {"sqlite":check,"sources_checked":total,"hash_mismatches":bad, **documents,
-                    "integrity": "VERIFIED" if check=="ok" and not bad and not documents['document_hash_mismatches'] and not documents['document_anchor_failures'] else "FAILED"}
+            events = self.events.verify()
+            return {"sqlite":check,"sources_checked":total,"hash_mismatches":bad, **documents, **events,
+                    "integrity": "VERIFIED" if check=="ok" and not bad and not documents['document_hash_mismatches'] and not documents['document_anchor_failures'] and events['event_integrity']=='VERIFIED' else "FAILED"}

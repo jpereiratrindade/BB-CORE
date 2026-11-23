@@ -2,6 +2,8 @@
 
 Preserva documentos originais e registros intelectuais distintos — achados conceituais, decisões metodológicas, questões abertas e relatos empíricos — ligados por trechos verificáveis. Confirmação humana de um registro não constitui validação científica.
 
+O insight possui identidade autônoma; compartilhar uma fonte não cria influência nem relações entre registros. A [continuidade orientada a eventos](docs/EVENTS.md) mantém acontecimentos, revisões e atribuições documentadas em um diário verificável, sem inventar trajetórias para o acervo anterior.
+
 ## Usar o acervo local
 
 Abra http://127.0.0.1:8789/ no computador do serviço. A entrada mostra os cards do acervo. Selecionar um card abre uma janela de leitura exclusiva; Fechar ou Esc devolve à lista. A navegação separa Documentos, Receber documentos e a elaboração contextual de registros. A interface permite consultar registros, receber Markdown/TXT UTF-8 de até 256000 bytes, revisar metadados e confirmar a preservação. Depois, selecione trechos no documento original para elaborar registros com contexto e limitações. Não há extração por IA nesta etapa.

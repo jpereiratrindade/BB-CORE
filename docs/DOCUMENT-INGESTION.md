@@ -71,3 +71,7 @@ A sessão do navegador permite leitura local e apenas as duas operações docume
 Antes da primeira ativação da camada documental, foi criado backup privado do banco por `sqlite3.Connection.backup`. Código de execução é atualizado por `bash scripts/install-local-runtime.sh`.
 
 Continuam fora desta etapa: PDF/OCR, extração assistida por IA, resolução formal de conflitos, autenticação de autoria, homologação científica, HTTPS/OAuth novos, integração NOESE e descoberta automática de relações.
+
+## Continuidade posterior à ingestão
+
+A [camada de eventos BB-EVENT-1](EVENTS.md) reaproveita documentos, recebimentos e âncoras como referências de acontecimentos. Novas capturas registram a observação de sua gravação; capturas anteriores à implantação não recebem acontecimentos retrospectivos. Preservar uma fonte, registrar uma trajetória e propor uma relação continuam operações distintas. Uma revisão por evento conserva o ID do insight e sua formulação original; a revisão documental que cria outro registro conserva seu comportamento e documenta somente o vínculo explicitamente solicitado.

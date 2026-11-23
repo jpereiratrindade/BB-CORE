@@ -8,6 +8,9 @@ Captura explícita; integridade; idempotência; recuperação; busca textual; re
 ## Ingestão documental local
 Camada anterior à captura: bytes originais, versões declaradas, recebimentos, conflitos preservados e registros humanos com âncoras verificáveis. Ver [contrato e limites](DOCUMENT-INGESTION.md). Independente da integração pública.
 
+## Continuidade orientada a eventos
+Diário append-only, encadeamento SHA-256, reprodução e checkpoints, conforme [BB-EVENT-1](EVENTS.md). Preservação independente de proveniência, trajetória e relações. Nenhuma descoberta, avaliação ou integração automática nesta etapa; registros existentes permanecem sem eventos retrospectivos inventados.
+
 ## Gate 1 — integração real ChatGPT (P0)
 Confirmar transporte e catálogo MCP com conta real e mecanismo de autenticação oferecido pelo cliente. Implementar OAuth 2.1 / PKCE conforme requisitos da plataforma ou gateway validado; observar rejeições e gravar logs sanitizados. Executar captura apenas após consentimento explícito, recuperar em segunda conversa. **Não alegar conclusão antes desse teste.**
 
