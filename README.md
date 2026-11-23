@@ -4,7 +4,7 @@ Preserva documentos originais e registros intelectuais distintos — achados con
 
 ## Usar o acervo local
 
-Abra http://127.0.0.1:8789/ no computador do serviço. A interface permite consultar registros, receber Markdown/TXT UTF-8 de até 256000 bytes, revisar metadados e confirmar a preservação. Depois, selecione trechos no documento original para elaborar registros com contexto e limitações. Não há extração por IA nesta etapa.
+Abra http://127.0.0.1:8789/ no computador do serviço. A entrada mostra o acervo. A navegação separa Documentos, Receber documentos e a elaboração contextual de registros. A interface permite consultar registros, receber Markdown/TXT UTF-8 de até 256000 bytes, revisar metadados e confirmar a preservação. Depois, selecione trechos no documento original para elaborar registros com contexto e limitações. Não há extração por IA nesta etapa.
 
 Os bytes ficam preservados por hash; recebimentos e procedências permanecem separados. Conteúdo divergente com o mesmo identificador e versão gera conflito preservado, sem substituição. Registros podem referenciar vários documentos e revisões criam novos registros ligados aos anteriores.
 

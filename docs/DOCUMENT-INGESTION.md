@@ -13,6 +13,14 @@ O documento preservado e o registro intelectual elaborado a partir dele são obj
 
 A inicialização acrescenta tabelas com `CREATE TABLE IF NOT EXISTS`, preservando o banco anterior. Não converte automaticamente fontes legadas em documentos nem modifica registros existentes. A deduplicação por hash se aplica à nova camada documental; fontes legadas permanecem intactas.
 
+## Organização da interface
+
+A entrada mostra somente o acervo de achados. A navegação lateral separa documentos, recebimento, integridade e informações do sistema. O formulário de recebimento aparece apenas em “Receber documentos”; a elaboração é uma tela contextual, acessível após vincular trechos ou preparar uma revisão.
+
+Após um recebimento, o operador pode consultar o documento pelo link de confirmação. A seleção de trechos permanece na tela documental, permitindo reunir fontes de documentos diferentes antes de continuar a elaboração. Depois de confirmar um registro, o formulário é limpo e há um link para consultar o registro criado.
+
+As telas usam fragmentos de URL (`#acervo`, `#documentos`, `#recebimento`, `#elaboracao`, `#integridade`, `#sobre`), com navegação Voltar/Avançar, título, indicação de seção ativa e foco no cabeçalho. Somente uma funcionalidade fica visível por vez. Rascunhos permanecem na memória ao trocar de tela; não são persistidos após recarregar ou fechar a página.
+
 ## Receber, revisar e confirmar
 
 A seção “Receber documentos” aceita arquivos Markdown e TXT em UTF-8, até 256000 bytes, ou texto colado. Arquivos conservam seus bytes, inclusive BOM e quebras de linha. Texto colado tem como original o texto efetivamente recebido do navegador; não se afirma identidade com um arquivo anterior. Não há interpretação de Markdown como HTML nem extração por IA.
