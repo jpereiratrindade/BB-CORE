@@ -8,6 +8,7 @@ import hmac
 import json
 import os
 import secrets
+from http.cookies import SimpleCookie, CookieError
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit, parse_qs
@@ -103,6 +104,17 @@ class Handler(BaseHTTPRequestHandler):
 
     def authorized(self, write=False):
         token = self.headers.get("Authorization","")
+        if not token and not write and self.command == 'GET' and self.client_address[0] in ('127.0.0.1', '::1'):
+            host = self.headers.get('Host', '')
+            if host in {f'127.0.0.1:{self.server.server_port}', f'localhost:{self.server.server_port}'}:
+                try:
+                    cookies = SimpleCookie(self.headers.get('Cookie', ''))
+                    cookie = cookies.get('bb_local')
+                    if cookie and hmac.compare_digest(cookie.value, self.server.browser_token):
+                        return True
+                except (ValueError, CookieError):
+                    # Malformed cookies never grant access.
+                    pass
         challenge = 'Bearer'
         if self.server.oauth_verifier:
             challenge = ('Bearer resource_metadata="' + self.server.oauth_resource +
@@ -147,6 +159,17 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path=urlsplit(self.path).path
+        if path in ('/style.css', '/app.js', '/favicon.svg'):
+            asset = Path(__file__).resolve().parent.parent / 'web' / path[1:]
+            blob = asset.read_bytes()
+            self.send_response(200)
+            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
+            self.send_header('Content-Length', str(len(blob)))
+            self.send_header('Cache-Control', 'no-store')
+            self.send_header('X-Content-Type-Options', 'nosniff')
+            self.end_headers()
+            self.wfile.write(blob)
+            return
         if path=="/.well-known/oauth-protected-resource" and self.server.oauth_verifier:
             self.oauth_metadata();return
         if path=="/health":
@@ -187,6 +210,16 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         path=urlsplit(self.path).path
+        if path == '/api/local-session':
+            host = self.headers.get('Host', '')
+            allowed = {f'127.0.0.1:{self.server.server_port}', f'localhost:{self.server.server_port}'}
+            if (self.client_address[0] not in ('127.0.0.1', '::1') or host not in allowed
+                    or self.headers.get('Origin') != 'http://' + host):
+                self.send_json(403, {'error': 'LOCAL_ACCESS_REQUIRED'})
+                return
+            self.send_json(200, {'access': 'local_read_only'}, {
+                'Set-Cookie': 'bb_local=' + self.server.browser_token + '; HttpOnly; SameSite=Strict; Path=/'})
+            return
         if path not in ("/mcp","/api/insights","/api/relations"):
             self.send_json(404,{"error":"NOT_FOUND"});return
         if not self.safe_origin(): return
@@ -263,6 +296,7 @@ def serve(host,port,database,read_token,write_token,origins=(),oauth=None):
     server.read_token=read_token
     server.write_token=write_token
     server.allowed_origins=set(origins)
+    server.browser_token=secrets.token_urlsafe(48)
     server.oauth_verifier=oauth
     server.oauth_resource=os.environ.get("BB_OAUTH_RESOURCE","").rstrip("/")
     server.oauth_issuer=os.environ.get("BB_OAUTH_ISSUER","").rstrip("/")

@@ -31,3 +31,9 @@ Importador geral de documentos; unicidade de identificadores externos; revisões
 O documento foi registrado no acervo operacional local como `c957bd2e55254bd8ac2eb8f35ea3e2ff`, preservando o identificador externo `METIS-ACH-20261123-001` e a versão documental `0.1.0`. O recibo está em `reference/METIS-ACH-20261123-001.receipt.json`. A fonte integral foi recuperada e conferida após a gravação. Não houve homologação nem envio ao NOESE.
 
 O serviço de usuário `bb-core.service` está habilitado, com linger ativo para iniciar antes do login. A execução usa `~/.local/lib/bb-core`, sem depender da montagem do disco externo; banco e tokens permanecem nos locais existentes. `scripts/install-local-runtime.sh` atualiza essa cópia de execução e reinicia o serviço. Alterações no código do repositório exigem executar novamente esse script. A inicialização foi configurada e o serviço verificado nesta sessão; um reboot completo ainda não foi testado.
+
+## Consulta no navegador local
+
+A interface em `http://127.0.0.1:8789/` segue a identidade visual do MORFO e abre o acervo em modo de leitura. Uma sessão local usa cookie HttpOnly e SameSite=Strict, sem mostrar tokens. A criação da sessão exige conexão de loopback e Host/Origin locais correspondentes. O cookie não autoriza gravação nem chamadas de ferramentas. Reiniciar o serviço invalida a sessão; recarregar a página cria uma nova sessão local. Acesso ao navegador neste computador permite leitura do acervo: mantenha a sessão do sistema operacional protegida. O acesso remoto continua exigindo autenticação própria.
+
+Estilos e scripts são arquivos externos do mesmo servidor, compatíveis com a política de segurança de conteúdo. A interface mostra a formulação, gênese, contexto, limitações, fonte integral e integridade do registro.

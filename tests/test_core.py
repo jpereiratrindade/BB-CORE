@@ -128,6 +128,41 @@ class HTTPTests(unittest.TestCase):
                                    "params":{"name":"capture_insight","arguments":capsule()}},READ)
         self.assertTrue(denied["result"]["isError"])
 
+    def test_local_browser_session_reads_but_cannot_write(self):
+        request=Request(self.base+'/api/local-session', data=b'', headers={'Origin':self.base}, method='POST')
+        with self.direct_http.open(request,timeout=4) as response:
+            cookie=response.headers['Set-Cookie']
+        self.assertIn('HttpOnly',cookie)
+        self.assertIn('SameSite=Strict',cookie)
+        request=Request(self.base+'/api/insights',headers={'Cookie':cookie.split(';')[0]})
+        with self.direct_http.open(request,timeout=4) as response:
+            self.assertEqual(json.load(response)['items'],[])
+        request=Request(self.base+'/api/insights',data=json.dumps(capsule()).encode(),headers={
+            'Cookie':cookie.split(';')[0], 'Content-Type':'application/json'},method='POST')
+        with self.assertRaises(HTTPError) as error:
+            self.direct_http.open(request,timeout=4)
+        self.assertEqual(error.exception.code,401)
+        error.exception.close()
+
+    def test_local_session_rejects_external_origin_and_host(self):
+        for headers in ({'Origin':'https://evil.example'}, {'Origin':'http://evil.example','Host':'evil.example'}):
+            request=Request(self.base+'/api/local-session',data=b'',headers=headers,method='POST')
+            with self.assertRaises(HTTPError) as error:
+                self.direct_http.open(request,timeout=4)
+            self.assertEqual(error.exception.code,403)
+            error.exception.close()
+
+    def test_external_assets_work_with_content_security_policy(self):
+        with self.direct_http.open(self.base+'/',timeout=4) as response:
+            html=response.read().decode()
+            self.assertNotIn('<style>',html)
+            self.assertNotIn('<script>',html)
+            self.assertIn("script-src 'self'",response.headers['Content-Security-Policy'])
+        for asset,mime in (('/style.css','text/css'),('/app.js','text/javascript')):
+            with self.direct_http.open(self.base+asset,timeout=4) as response:
+                self.assertTrue(response.headers['Content-Type'].startswith(mime))
+                self.assertGreater(len(response.read()),100)
+
     def test_cross_origin_rejected(self):
         r=Request(self.base+"/api/insights",headers={"Authorization":"Bearer "+READ,
                                                      "Origin":"https://evil.example"})

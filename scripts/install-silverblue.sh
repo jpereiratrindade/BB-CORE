@@ -47,17 +47,22 @@ else
 fi
 chmod 600 "$SECRET_FILE"
 
+RUNTIME_DIR="$HOME/.local/lib/bb-core"
+mkdir -p "$RUNTIME_DIR/bbcore" "$RUNTIME_DIR/web"
+cp "$APP_DIR"/bbcore/*.py "$RUNTIME_DIR/bbcore/"
+cp "$APP_DIR"/web/index.html "$APP_DIR"/web/style.css "$APP_DIR"/web/app.js "$APP_DIR"/web/favicon.svg "$RUNTIME_DIR/web/"
+
 # Serviço de usuário só depende do Python do HOST, não do toolbox.
 # Proteções compatíveis com gravação SQLite em ~/.local/share.
 cat > "$UNIT_FILE" <<UNIT
 [Unit]
 Description=BB-CORE — memória contextual de insights (MCP local)
 After=default.target
-ConditionPathIsDirectory=$APP_DIR
+ConditionPathIsDirectory=$RUNTIME_DIR
 
 [Service]
 Type=simple
-WorkingDirectory=$APP_DIR
+WorkingDirectory=$RUNTIME_DIR
 Environment=PYTHONDONTWRITEBYTECODE=1
 EnvironmentFile=$SECRET_FILE
 ExecStart=$PYTHON -m bbcore.server --host 127.0.0.1 --port 8789 --db $DATA_DIR/bb.sqlite
