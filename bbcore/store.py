@@ -99,6 +99,9 @@ class Archive:
             );
             ''')
 
+        from .documents import Documents
+        self.documents = Documents(self)
+
     @contextmanager
     def transaction(self):
         with self.lock:
@@ -203,6 +206,11 @@ class Archive:
         with self.lock:
             obj = self._get(iid)
             obj["source_count"] = self.db.execute("SELECT count(*) FROM insight_sources WHERE insight_id=?",(iid,)).fetchone()[0]
+            obj["source_count"] += self.db.execute('SELECT count(*) FROM document_anchors WHERE insight_id=?', (iid,)).fetchone()[0]
+            elaboration = self.db.execute('SELECT * FROM record_elaborations WHERE insight_id=?', (iid,)).fetchone()
+            if elaboration:
+                obj['elaboration'] = dict(elaboration)
+                obj['revised_by'] = [r['insight_id'] for r in self.db.execute('SELECT insight_id FROM record_elaborations WHERE supersedes_id=?', (iid,))]
             obj["relations"] = [dict(r) for r in self.db.execute(
                 "SELECT * FROM relations WHERE left_id=? OR right_id=? ORDER BY created_at DESC", (iid,iid))]
             return obj
@@ -219,6 +227,7 @@ class Archive:
                 if digest(item["body"]) != item["sha256"] or b[item["start_byte"]:item["end_byte"]] != item["quote"].encode("utf-8"):
                     raise Conflict("Falha de integridade de fonte ou âncora")
                 obj["sources"].append(item)
+            obj['sources'].extend(self.documents.sources_for(iid))
             obj["history"] = [dict(r) for r in self.db.execute(
                 "SELECT version,event,payload,at FROM revisions WHERE insight_id=? ORDER BY version", (iid,))]
             obj["integrity"] = "VERIFIED_LOCAL_BYTES"
@@ -235,9 +244,10 @@ class Archive:
             return []
         expression = " OR ".join('"' + t + '"' for t in terms[:12])
         with self.lock:
-            rows = self.db.execute('''SELECT i.id,i.title,i.claim,i.status,i.sharing,i.created_at,
+            rows = self.db.execute('''SELECT i.id,i.title,i.claim,i.status,i.sharing,i.created_at,e.kind,e.work_state,
                   bm25(insights_fts) AS relevance FROM insights_fts
                   JOIN insights i ON i.id=insights_fts.insight_id
+                  LEFT JOIN record_elaborations e ON e.insight_id=i.id
                   WHERE insights_fts MATCH ? ORDER BY relevance LIMIT ?''', (expression, limit))
             return [dict(r) for r in rows]
 
@@ -246,7 +256,7 @@ class Archive:
             raise ValueError("limit inválido")
         with self.lock:
             return [dict(r) for r in self.db.execute(
-                "SELECT id,title,claim,status,sharing,created_at FROM insights ORDER BY created_at DESC,id DESC LIMIT ?",(limit,))]
+                "SELECT i.id,i.title,i.claim,i.status,i.sharing,i.created_at,e.kind,e.work_state FROM insights i LEFT JOIN record_elaborations e ON e.insight_id=i.id ORDER BY i.created_at DESC,i.rowid DESC LIMIT ?",(limit,))]
 
     def relate(self, data):
         if not isinstance(data,dict):
@@ -283,5 +293,6 @@ class Archive:
             for r in self.db.execute("SELECT body,sha256 FROM sources"):
                 total += 1
                 bad += digest(r["body"]) != r["sha256"]
-            return {"sqlite":check,"sources_checked":total,"hash_mismatches":bad,
-                    "integrity": "VERIFIED" if check=="ok" and not bad else "FAILED"}
+            documents = self.documents.verify()
+            return {"sqlite":check,"sources_checked":total,"hash_mismatches":bad, **documents,
+                    "integrity": "VERIFIED" if check=="ok" and not bad and not documents['document_hash_mismatches'] and not documents['document_anchor_failures'] else "FAILED"}

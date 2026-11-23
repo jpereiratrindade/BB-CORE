@@ -5,6 +5,9 @@ Enquanto a integração pública estiver pendente, exercitar os processos locais
 ## Gate 0 — validado pelos testes unitários locais
 Captura explícita; integridade; idempotência; recuperação; busca textual; relação candidata; separação entre token de leitura/escrita.
 
+## Ingestão documental local
+Camada anterior à captura: bytes originais, versões declaradas, recebimentos, conflitos preservados e registros humanos com âncoras verificáveis. Ver [contrato e limites](DOCUMENT-INGESTION.md). Independente da integração pública.
+
 ## Gate 1 — integração real ChatGPT (P0)
 Confirmar transporte e catálogo MCP com conta real e mecanismo de autenticação oferecido pelo cliente. Implementar OAuth 2.1 / PKCE conforme requisitos da plataforma ou gateway validado; observar rejeições e gravar logs sanitizados. Executar captura apenas após consentimento explícito, recuperar em segunda conversa. **Não alegar conclusão antes desse teste.**
 

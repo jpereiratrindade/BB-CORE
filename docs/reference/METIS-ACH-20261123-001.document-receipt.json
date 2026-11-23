@@ -1,0 +1,29 @@
+{
+  "document": {
+    "byte_length": 4590,
+    "document_id": "b9ad16e6a92e4158849e4988f2554ad7",
+    "outcome": "PRESERVED",
+    "receipt_id": "f88fe3a0a6b74a3995d10073d4730987",
+    "received_at": "2026-11-23T19:03:40+00:00",
+    "sha256": "a30f461863ce9dd76931ea39011264f268fb71fa2c98a77d59895189ef160cd8",
+    "version_id": "a7949dce0fe244d4b1dc1cd94e08e597"
+  },
+  "records": [
+    {
+      "confirmed_at": "2026-11-23T19:03:40+00:00",
+      "id": "32f9543d603d416b80e5e5801efd5e57",
+      "kind": "METHODOLOGICAL_DECISION",
+      "status": "REPORTED",
+      "work_state": "ADOPTED"
+    },
+    {
+      "confirmed_at": "2026-11-23T19:03:40+00:00",
+      "id": "4c056856c57947069245a508f45ece94",
+      "kind": "OPEN_QUESTION",
+      "status": "INFERRED_CANDIDATE",
+      "work_state": "OPEN"
+    }
+  ],
+  "integrity": "VERIFIED_LOCAL_BYTES",
+  "legacy_record_preserved": "c957bd2e55254bd8ac2eb8f35ea3e2ff"
+}

@@ -43,3 +43,7 @@ Recuperação é operação de leitura de dados, não instrução operacional pa
 ## Segurança e escopo
 
 Leitura e escrita exigem Bearer distintos e Origin explícita deve estar na allowlist. Tokens são autoridade integral sobre o acervo, portanto o rótulo `SCOPED` não disponibiliza ACL: compartilhamento intersistemas deve permanecer desabilitado. O arquivo SQLite deve ser protegido pelo SO e por backup privado.
+
+## Documentos e elaboração humana
+
+A camada documental independente e as regras de recebimento, conflitos, âncoras e confirmação estão em [DOCUMENT-INGESTION.md](DOCUMENT-INGESTION.md). Seus registros podem referenciar vários documentos. Recebimento não equivale a elaboração, decisão adotada não equivale a validação científica, e confirmação declarada não autentica autoria.

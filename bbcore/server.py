@@ -11,7 +11,7 @@ import secrets
 from http.cookies import SimpleCookie, CookieError
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import urlsplit, parse_qs
+from urllib.parse import urlsplit, parse_qs, quote
 from .store import Archive, Conflict, NotFound
 from .oauth import OAuthVerifier
 
@@ -102,19 +102,27 @@ class Handler(BaseHTTPRequestHandler):
             "bearer_methods_supported": ["header"],
         })
 
+    def local_origin(self):
+        host = self.headers.get('Host', '')
+        return (self.client_address[0] in ('127.0.0.1', '::1')
+                and host in {f'127.0.0.1:{self.server.server_port}', f'localhost:{self.server.server_port}'}
+                and self.headers.get('Origin') == 'http://' + host)
+
+    def local_cookie(self):
+        host = self.headers.get('Host', '')
+        if (self.client_address[0] not in ('127.0.0.1', '::1') or host not in
+                {f'127.0.0.1:{self.server.server_port}', f'localhost:{self.server.server_port}'}):
+            return False
+        try:
+            cookie = SimpleCookie(self.headers.get('Cookie', '')).get('bb_local')
+            return bool(cookie and hmac.compare_digest(cookie.value, self.server.browser_token))
+        except (ValueError, CookieError):
+            return False
+
     def authorized(self, write=False):
         token = self.headers.get("Authorization","")
-        if not token and not write and self.command == 'GET' and self.client_address[0] in ('127.0.0.1', '::1'):
-            host = self.headers.get('Host', '')
-            if host in {f'127.0.0.1:{self.server.server_port}', f'localhost:{self.server.server_port}'}:
-                try:
-                    cookies = SimpleCookie(self.headers.get('Cookie', ''))
-                    cookie = cookies.get('bb_local')
-                    if cookie and hmac.compare_digest(cookie.value, self.server.browser_token):
-                        return True
-                except (ValueError, CookieError):
-                    # Malformed cookies never grant access.
-                    pass
+        if not token and not write and self.command == 'GET' and self.local_cookie():
+            return True
         challenge = 'Bearer'
         if self.server.oauth_verifier:
             challenge = ('Bearer resource_metadata="' + self.server.oauth_resource +
@@ -158,12 +166,22 @@ class Handler(BaseHTTPRequestHandler):
         return json.loads(raw)
 
     def do_GET(self):
+        try:
+            self.get_route()
+        except NotFound as e:
+            self.send_json(404, {'error': 'NOT_FOUND', 'message': str(e)})
+        except Conflict as e:
+            self.send_json(409, {'error': 'CONFLICT', 'message': str(e)})
+        except ValueError as e:
+            self.send_json(400, {'error': 'INVALID_INPUT', 'message': str(e)})
+
+    def get_route(self):
         path=urlsplit(self.path).path
-        if path in ('/style.css', '/app.js', '/favicon.svg'):
+        if path in ('/style.css', '/app.js', '/documents.js', '/favicon.svg'):
             asset = Path(__file__).resolve().parent.parent / 'web' / path[1:]
             blob = asset.read_bytes()
             self.send_response(200)
-            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
+            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/documents.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
             self.send_header('Content-Length', str(len(blob)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
@@ -186,6 +204,32 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers();self.wfile.write(html);return
         if not self.safe_origin(): return
         if not self.authorized(): return
+        if path == '/api/documents':
+            offset = int(parse_qs(urlsplit(self.path).query).get('offset', ['0'])[0])
+            items = self.server.archive.documents.list(offset)
+            self.send_json(200, {'items': items, 'next_offset': offset + 100 if len(items) == 100 else None})
+            return
+        if path.startswith('/api/documents/') or path.startswith('/api/receipts/'):
+            parts = path.strip('/').split('/')
+            if len(parts) == 3 and parts[1] == 'documents':
+                self.send_json(200, self.server.archive.documents.get(parts[2]))
+                return
+            if len(parts) == 4 and parts[3] == 'original':
+                body = self.server.archive.documents.original(**({'version_id': parts[2]} if parts[1] == 'documents' else {'receipt_id': parts[2]}))
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/octet-stream')
+                with self.server.archive.lock:
+                    filename = self.server.archive._one(
+                        'SELECT filename FROM document_receipts WHERE id=?' if parts[1] == 'receipts' else
+                        "SELECT filename FROM document_receipts WHERE version_id=? AND outcome!='VERSION_CONFLICT' ORDER BY received_at,rowid LIMIT 1",
+                        (parts[2],))['filename']
+                self.send_header('Content-Disposition', "attachment; filename=\"document-original.txt\"; filename*=UTF-8''" + quote(filename, safe=''))
+                self.send_header('Content-Length', str(len(body)))
+                self.send_header('Cache-Control', 'no-store')
+                self.send_header('X-Content-Type-Options', 'nosniff')
+                self.end_headers()
+                self.wfile.write(body)
+                return
         if path=="/api/insights":
             q=parse_qs(urlsplit(self.path).query)
             if q.get("q"):
@@ -211,23 +255,27 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         path=urlsplit(self.path).path
         if path == '/api/local-session':
-            host = self.headers.get('Host', '')
-            allowed = {f'127.0.0.1:{self.server.server_port}', f'localhost:{self.server.server_port}'}
-            if (self.client_address[0] not in ('127.0.0.1', '::1') or host not in allowed
-                    or self.headers.get('Origin') != 'http://' + host):
+            if not self.local_origin():
                 self.send_json(403, {'error': 'LOCAL_ACCESS_REQUIRED'})
                 return
-            self.send_json(200, {'access': 'local_read_only'}, {
+            self.send_json(200, {'access': 'local_read_and_confirmed_document_ingestion'}, {
                 'Set-Cookie': 'bb_local=' + self.server.browser_token + '; HttpOnly; SameSite=Strict; Path=/'})
             return
-        if path not in ("/mcp","/api/insights","/api/relations"):
+        document_write = path in ('/api/documents', '/api/document-records')
+        if path not in ("/mcp","/api/insights","/api/relations") and not document_write:
             self.send_json(404,{"error":"NOT_FOUND"});return
-        if not self.safe_origin(): return
+        local_document_write = document_write and self.local_origin() and self.local_cookie()
+        if not local_document_write and not self.safe_origin(): return
         if self.headers.get("Content-Type","").split(";")[0].strip().lower()!="application/json":
             self.send_json(415,{"error":"application/json obrigatório"});return
-        if not self.authorized(write=path!="/mcp"):return
+        if not local_document_write and not self.authorized(write=path!="/mcp"):return
         try:
             data=self.body()
+            if document_write:
+                result = (self.server.archive.documents.ingest(data) if path == '/api/documents'
+                          else self.server.archive.documents.create_record(data))
+                self.send_json(409 if result.get('outcome') == 'VERSION_CONFLICT' else 201, result)
+                return
             if path=="/mcp":
                 if isinstance(data,list):
                     raise ValueError("MCP batch não suportado")

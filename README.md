@@ -1,4 +1,28 @@
-# BB-CORE DEV-REMOTE — Fedora Silverblue 44
+# BB-CORE — memória investigativa local
+
+Preserva documentos originais e registros intelectuais distintos — achados conceituais, decisões metodológicas, questões abertas e relatos empíricos — ligados por trechos verificáveis. Confirmação humana de um registro não constitui validação científica.
+
+## Usar o acervo local
+
+Abra http://127.0.0.1:8789/ no computador do serviço. A interface permite consultar registros, receber Markdown/TXT UTF-8 de até 256000 bytes, revisar metadados e confirmar a preservação. Depois, selecione trechos no documento original para elaborar registros com contexto e limitações. Não há extração por IA nesta etapa.
+
+Os bytes ficam preservados por hash; recebimentos e procedências permanecem separados. Conteúdo divergente com o mesmo identificador e versão gera conflito preservado, sem substituição. Registros podem referenciar vários documentos e revisões criam novos registros ligados aos anteriores.
+
+- [Contrato de ingestão, estados e limites](docs/DOCUMENT-INGESTION.md)
+- [Processo local e registro MÉTIS](docs/LOCAL-PROCESS.md)
+- [Plano de evolução](docs/PLAN.md)
+
+O serviço instalado usa código em `~/.local/lib/bb-core` e banco privado em `~/.local/share/bb-core/bb.sqlite`. Para atualizar a execução a partir deste repositório: `bash scripts/install-local-runtime.sh`. O acesso à sessão local do computador permite recebimento e elaboração confirmados na interface. Tokens e banco ficam fora do Git.
+
+## Verificar
+
+```bash
+python3 -m unittest discover -s tests -v
+```
+
+A conexão pública não é necessária para ingestão local. HTTPS e integração remota continuam pendentes.
+
+## DEV-REMOTE — Fedora Silverblue 44
 
 ## Instalação
 

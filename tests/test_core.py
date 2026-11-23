@@ -163,6 +163,48 @@ class HTTPTests(unittest.TestCase):
                 self.assertTrue(response.headers['Content-Type'].startswith(mime))
                 self.assertGreater(len(response.read()),100)
 
+    def test_document_http_ingestion_confirmation_conflict_and_download(self):
+        from test_documents import ingestion, anchored, METIS
+        session=Request(self.base+'/api/local-session',data=b'',headers={'Origin':self.base},method='POST')
+        with self.direct_http.open(session,timeout=4) as response:
+            cookie=response.headers['Set-Cookie'].split(';')[0]
+        headers={'Cookie':cookie,'Origin':self.base,'Content-Type':'application/json'}
+        payload=ingestion()
+        request=Request(self.base+'/api/documents',data=json.dumps(payload).encode(),headers=headers)
+        with self.direct_http.open(request,timeout=4) as response:
+            receipt=json.load(response)
+        self.assertEqual(receipt['outcome'],'PRESERVED')
+        request=Request(self.base+'/api/documents/'+receipt['version_id']+'/original',headers={'Cookie':cookie})
+        with self.direct_http.open(request,timeout=4) as response:
+            self.assertEqual(response.read(),METIS.read_bytes())
+        record=anchored(receipt,'A prioridade não implica considerar os dados de origem já auditados nem o indicador cientificamente validado.')
+        request=Request(self.base+'/api/document-records',data=json.dumps(record).encode(),headers=headers)
+        with self.direct_http.open(request,timeout=4) as response:
+            self.assertIn('id',json.load(response))
+        conflict=ingestion(METIS.read_bytes()+b' changed')
+        request=Request(self.base+'/api/documents',data=json.dumps(conflict).encode(),headers=headers)
+        with self.assertRaises(HTTPError) as error:
+            self.direct_http.open(request,timeout=4)
+        self.assertEqual(error.exception.code,409)
+        self.assertEqual(json.load(error.exception)['outcome'],'VERSION_CONFLICT')
+        error.exception.close()
+        for bad_headers in ({'Cookie':cookie,'Content-Type':'application/json'}, {**headers,'Origin':'https://evil.example'}):
+            request=Request(self.base+'/api/documents',data=json.dumps(ingestion()).encode(),headers=bad_headers)
+            with self.assertRaises(HTTPError) as error:
+                self.direct_http.open(request,timeout=4)
+            self.assertIn(error.exception.code,(401,403))
+            error.exception.close()
+        request=Request(self.base+'/api/documents',data=json.dumps({**ingestion(),'confirmed':False}).encode(),headers=headers)
+        with self.assertRaises(HTTPError) as error:
+            self.direct_http.open(request,timeout=4)
+        self.assertEqual(error.exception.code,400)
+        error.exception.close()
+        request=Request(self.base+'/api/documents/not-found',headers={'Cookie':cookie})
+        with self.assertRaises(HTTPError) as error:
+            self.direct_http.open(request,timeout=4)
+        self.assertEqual(error.exception.code,404)
+        error.exception.close()
+
     def test_cross_origin_rejected(self):
         r=Request(self.base+"/api/insights",headers={"Authorization":"Bearer "+READ,
                                                      "Origin":"https://evil.example"})
