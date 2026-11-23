@@ -43,7 +43,7 @@
         open(view) {
             if (!Object.hasOwn(routes, view)) return;
             if (location.hash === '#' + view) render();
-            else location.hash = view;
+            else { location.hash = view; render(); }
         },
         current: () => current,
     };

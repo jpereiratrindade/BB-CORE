@@ -15,9 +15,11 @@ A inicialização acrescenta tabelas com `CREATE TABLE IF NOT EXISTS`, preservan
 
 ## Organização da interface
 
-A entrada mostra somente o acervo de achados. A navegação lateral separa documentos, recebimento, integridade e informações do sistema. O formulário de recebimento aparece apenas em “Receber documentos”; a elaboração é uma tela contextual, acessível após vincular trechos ou preparar uma revisão.
+A entrada mostra somente os cards do acervo de achados, sem abrir automaticamente o primeiro registro. A navegação lateral separa documentos, recebimento, integridade e informações do sistema. O formulário de recebimento aparece apenas em “Receber documentos”; a elaboração é uma tela contextual, acessível após vincular trechos ou preparar uma revisão.
 
-Após um recebimento, o operador pode consultar o documento pelo link de confirmação. A seleção de trechos permanece na tela documental, permitindo reunir fontes de documentos diferentes antes de continuar a elaboração. Depois de confirmar um registro, o formulário é limpo e há um link para consultar o registro criado.
+Ao selecionar um card de achado ou documento, o conteúdo abre em uma janela modal de leitura, com o restante da página indisponível para interação. O cabeçalho e o botão Fechar permanecem visíveis; Esc fecha a janela e devolve o foco ao card, mantendo a posição da lista. A navegação por teclado permanece dentro da leitura. No celular, o leitor ocupa a tela. Respostas que chegam depois de fechar a janela não a reabrem.
+
+Após um recebimento, o operador pode consultar o documento pelo link de confirmação, que abre explicitamente o leitor. A seleção de trechos permanece na tela documental, permitindo reunir fontes de documentos diferentes antes de continuar a elaboração. Depois de confirmar um registro, o formulário é limpo e há um link para consultar o registro criado.
 
 As telas usam fragmentos de URL (`#acervo`, `#documentos`, `#recebimento`, `#elaboracao`, `#integridade`, `#sobre`), com navegação Voltar/Avançar, título, indicação de seção ativa e foco no cabeçalho. Somente uma funcionalidade fica visível por vez. Rascunhos permanecem na memória ao trocar de tela; não são persistidos após recarregar ou fechar a página.
 
