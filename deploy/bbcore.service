@@ -1,0 +1,14 @@
+[Unit]
+Description=BB-CORE — memória de insights com MCP
+After=network.target
+[Service]
+Type=simple
+WorkingDirectory=%h/dev/bb-core
+EnvironmentFile=%h/.config/bb-core/secret.env
+ExecStart=/usr/bin/python3 -m bbcore.server --host 127.0.0.1 --port 8789 --db %h/.local/share/bb-core/bb.sqlite
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+[Install]
+WantedBy=default.target

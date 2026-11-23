@@ -1,0 +1,10 @@
+{
+  "id": "c957bd2e55254bd8ac2eb8f35ea3e2ff",
+  "external_id": "METIS-ACH-20261123-001",
+  "document_version": "0.1.0",
+  "status": "INFERRED_CANDIDATE",
+  "created_at": "2026-11-23T17:16:59+00:00",
+  "source_sha256": "a30f461863ce9dd76931ea39011264f268fb71fa2c98a77d59895189ef160cd8",
+  "integrity": "VERIFIED_LOCAL_BYTES",
+  "storage": "operational local archive"
+}

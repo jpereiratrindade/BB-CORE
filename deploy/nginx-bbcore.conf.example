@@ -1,0 +1,25 @@
+# Exemplo de vhost Nginx. Substitua domínio e caminhos de certificado.
+# Use DNS público apontando para o proxy, HTTPS TLS 1.2+, e bloqueie demais caminhos.
+server {
+    listen 443 ssl http2;
+    server_name bb.seudominio.com;
+    ssl_certificate /etc/letsencrypt/live/bb.seudominio.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bb.seudominio.com/privkey.pem;
+    client_max_body_size 800k;
+    proxy_read_timeout 120s;
+
+    location = /mcp {
+        proxy_pass http://127.0.0.1:8789;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Authorization $http_authorization;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header Connection "";
+        proxy_buffering off;
+    }
+    location = /.well-known/oauth-protected-resource {
+        proxy_pass http://127.0.0.1:8789;
+        proxy_set_header Host $host;
+    }
+    location / { return 404; }
+}

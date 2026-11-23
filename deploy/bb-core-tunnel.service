@@ -1,0 +1,18 @@
+[Unit]
+Description=BB-CORE temporary HTTPS tunnel (development only)
+Wants=network-online.target bb-core.service
+After=network-online.target bb-core.service
+PartOf=bb-core.service
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/bb-core-tunnel-run
+Restart=always
+RestartSec=10
+StartLimitIntervalSec=0
+NoNewPrivileges=true
+PrivateTmp=true
+UMask=0077
+
+[Install]
+WantedBy=default.target
