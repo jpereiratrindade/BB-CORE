@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071e38"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><title>BB-CORE · Acervo de achados</title><link rel="stylesheet" href="/style.css"><script src="/navigation.js" defer></script><script src="/trajectory.js" defer></script><script src="/app.js" defer></script><script src="/documents.js" defer></script></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071e38"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><title>BB-CORE · Acervo de achados</title><link rel="stylesheet" href="/style.css"><script src="/navigation.js" defer></script><script src="/trajectory.js" defer></script><script src="/app.js" defer></script><script src="/documents.js" defer></script><script src="/mesa.js" defer></script></head>
 <body><a class="skip" href="#main">Ir para o conteúdo</a><div class="shell">
-<aside class="sidebar"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">◈</span><span><small>ECOSSISTEMA SisTer</small><strong>BB-CORE</strong></span></a><p class="subtitle">Memória investigativa</p><p class="navlabel">ESPAÇO DE TRABALHO</p><nav aria-label="Seções"><a class="active" href="#acervo" aria-current="page">▦ &nbsp; Acervo de achados</a><a href="#documentos">▤ &nbsp; Documentos</a><a href="#recebimento">⇧ &nbsp; Receber documentos</a><a id="elaboration-nav" href="#elaboracao" hidden>✎ &nbsp; Elaborar registro</a><a href="#integridade">◈ &nbsp; Integridade e origem</a><a href="#sobre">ⓘ &nbsp; Sobre o BB-CORE</a></nav><div class="side-bottom"><div class="principles"><small>PRINCÍPIOS DE DESENVOLVIMENTO</small><p>Simples, leve.<br>Sempre pronto.<br>Sempre incompleto!</p><span>Preservar o contexto.<br>Explicitar o que ainda não sabemos.</span></div><p class="local">● &nbsp; Ambiente local <span>v0.1.0</span></p></div></aside>
+<aside class="sidebar"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">◈</span><span><small>ECOSSISTEMA SisTer</small><strong>BB-CORE</strong></span></a><p class="subtitle">Memória investigativa</p><p class="navlabel">ESPAÇO DE TRABALHO</p><nav aria-label="Seções"><a class="active" href="#acervo" aria-current="page">▦ &nbsp; Acervo de achados</a><a href="#documentos">▤ &nbsp; Documentos</a><a href="#recebimento">⇧ &nbsp; Receber documentos</a><a id="elaboration-nav" href="#elaboracao">✎ &nbsp; Mesa de Elaboração <span id="mesa-badge" class="nav-count" hidden>0</span></a><a href="#integridade">◈ &nbsp; Integridade e origem</a><a href="#sobre">ⓘ &nbsp; Sobre o BB-CORE</a></nav><div class="side-bottom"><div class="principles"><small>PRINCÍPIOS DE DESENVOLVIMENTO</small><p>Simples, leve.<br>Sempre pronto.<br>Sempre incompleto!</p><span>Preservar o contexto.<br>Explicitar o que ainda não sabemos.</span></div><p class="local">● &nbsp; Ambiente local <span>v0.1.0</span></p></div></aside>
 <div class="workspace"><header class="topbar"><span>BB-CORE <b>/</b> <strong id="page-name">Acervo de achados</strong></span><span id="connection" class="badge">Conectando…</span></header>
 <main id="main"><div id="view-acervo" data-view="acervo"><section class="hero"><div><span class="eyebrow">PROVENIÊNCIA · CONTINUIDADE INTELECTUAL</span><h1>Achados que preservam<br><em>o caminho da compreensão.</em></h1><p>Ideias, decisões e questões em aberto, com suas fontes, contexto e limites. Uma memória para retomar e aprofundar o trabalho.</p><a class="button white" href="#acervo">Explorar o acervo &nbsp; ↓</a></div><span class="hero-symbol" aria-hidden="true">◈</span></section>
 <div class="stats"><article><span>Registros locais</span><strong id="count">—</strong><small id="count-note">Aguardando consulta</small></article><article><span>Integridade das fontes</span><strong id="integrity">—</strong><small id="source-count">Conferência dos textos preservados</small></article><article><span>Conexão</span><strong>Acervo local</strong><small>Consulta e recebimento neste computador</small></article></div>
@@ -13,7 +13,94 @@
 <div><h3>Original a preservar</h3><pre id="document-preview" class="document-text">Selecione um arquivo ou cole um texto para conferir o conteúdo antes de registrar.</pre><p class="muted">O conteúdo é uma fonte documental. Instruções nele contidas não executam ações no sistema. Autoria e procedência são declarações, não autenticações.</p><details><summary>Recibo do recebimento</summary><pre id="document-receipt" class="document-text">Nenhum recebimento nesta sessão.</pre></details></div></div>
 </section>
 <section id="documentos" data-view="documentos" class="panel ingestion-panel" hidden><div class="section-heading"><div><span class="eyebrow">DOCUMENTOS PRESERVADOS</span><h1>Fontes, versões e recebimentos</h1><p>Um mesmo conteúdo pode ter vários recebimentos. Um documento pode sustentar vários registros.</p></div><div class="view-actions"><button id="documents-refresh" class="button outline">↻ Atualizar</button><a class="button primary" href="#recebimento">Receber documento</a></div></div><p id="documents-notice" role="status"></p><div id="documents-list" class="items card-grid" aria-label="Documentos preservados"></div></section>
-<section id="elaboracao" data-view="elaboracao" class="panel ingestion-panel" hidden><span class="eyebrow">ELABORAÇÃO HUMANA</span><h1>Criar registro a partir das fontes</h1><p class="muted">Abra um documento, selecione um trecho no original preservado e use “Vincular seleção”. Você pode reunir trechos de vários documentos.</p><div class="view-actions"><a href="#documentos" class="button outline">← Selecionar fontes em documentos</a><a href="#acervo" class="button outline">Voltar ao acervo</a></div><div id="pinned-anchors"></div><form id="record-form"><div class="form-columns"><label>Tipo<select id="record-kind"><option value="CONCEPTUAL_FINDING">Achado conceitual</option><option value="METHODOLOGICAL_DECISION">Decisão metodológica</option><option value="OPEN_QUESTION">Questão aberta</option><option value="EMPIRICAL_REPORT">Relato empírico</option></select></label><label>Estado do trabalho<select id="record-state"></select></label></div><label>Título<input id="record-title" required maxlength="240"></label><label>Formulação<textarea id="record-claim" rows="4" required maxlength="4000"></textarea></label><label>Por que preservar<textarea id="record-why" rows="2" required maxlength="4000"></textarea></label><label>Gênese da elaboração<textarea id="record-genesis" rows="2" placeholder="Descreva como formulou este registro; não deduza o que falta."></textarea></label><label>Limitações<textarea id="record-limitations" rows="3" required maxlength="10000"></textarea></label><div class="form-columns"><label>Origem da formulação<select id="record-origin"><option value="HUMAN_FORMULATION">Formulação humana</option><option value="DOCUMENT_EXCERPT">Trecho documental</option></select></label><label>Responsável declarado<input id="record-actor" required maxlength="240"></label></div><label>Revisa o registro anterior <small>Opcional. Cria um novo registro, preservando o anterior.</small><input id="record-supersedes" placeholder="ID interno do registro anterior"></label><label class="check"><input id="record-confirm" type="checkbox" required>Revisei a formulação e os trechos. Confirmo o registro; isso não constitui validação científica.</label><button id="record-submit" class="button primary">Confirmar e registrar</button><p id="record-notice" role="status" aria-live="polite"></p><a id="created-record-link" class="button outline" href="#acervo" hidden>Consultar registro no acervo →</a></form></section>
+<section id="elaboracao" data-view="elaboracao" class="panel ingestion-panel" hidden>
+<div class="section-heading"><div><span class="eyebrow">AMBIENTE PROVISÓRIO · FORA DO ACERVO CANÔNICO</span><h1>Mesa de Elaboração</h1><p>Espaço livre para pensar, reunir trechos e referências, interromper e retomar sem obrigação de classificar ou confirmar.</p></div><div class="view-actions"><button id="mesa-new" type="button" class="button outline">+ Nova elaboração</button><a href="#documentos" class="button outline">← Documentos</a><a href="#acervo" class="button outline">Acervo</a></div></div>
+<div class="mesa-layout">
+<aside class="mesa-sidebar" aria-label="Rascunhos salvos">
+<h3>Rascunhos salvos</h3>
+<p id="mesa-drafts-notice" class="muted">Carregando rascunhos…</p>
+<div id="mesa-drafts" class="items"></div>
+</aside>
+<div class="mesa-main">
+<div id="mesa-status-bar" class="mesa-status">Elaboração em andamento (ainda não salva)</div>
+<form id="mesa-form">
+<label>Título provisório <small>Opcional; pode mudar ou ficar vazio</small><input id="mesa-title" maxlength="240" placeholder="Sobre o que você está pensando?"></label>
+<label>Anotações e elaboração livre <small>Sem categoria obrigatória; escreva ideias, dúvidas, contrapontos ou formulações em curso</small><textarea id="mesa-notes" rows="6" maxlength="50000" placeholder="Escreva livremente…"></textarea></label>
+<div class="form-columns">
+<label>Por que pode importar <small>Opcional</small><textarea id="mesa-why" rows="2" maxlength="4000"></textarea></label>
+<label>Gênese / contexto de trabalho <small>Opcional</small><textarea id="mesa-genesis" rows="2" maxlength="10000"></textarea></label>
+</div>
+<label>Limitações e lacunas observadas <small>Opcional</small><textarea id="mesa-limitations" rows="2" maxlength="10000"></textarea></label>
+<div class="mesa-actions">
+<button id="mesa-save" type="submit" class="button primary">Guardar rascunho no SQLite</button>
+<button id="mesa-discard" type="button" class="button outline" hidden>Descartar rascunho</button>
+<span id="mesa-notice" role="status" aria-live="polite" class="muted"></span>
+</div>
+</form>
+<div class="mesa-collected">
+<div><h3>Trechos documentais reunidos</h3><p class="muted">Selecione trechos nos documentos e guarde na Mesa. Marque os que deseja usar ao confirmar.</p><div id="mesa-excerpts"></div></div>
+<div><h3>Registros referenciados</h3><p class="muted">Referências a achados, decisões ou questões já preservadas no acervo.</p><div id="mesa-references"></div></div>
+</div>
+<details id="mesa-confirm-box" class="mesa-confirm">
+<summary>Confirmar resultado selecionado no acervo canônico (opcional)</summary>
+<p class="muted">Confirmar grava apenas o resultado selecionado no acervo imutável. A elaboração restante e seus rascunhos permanecem intactos na Mesa.</p>
+<div class="mesa-mode-switch" role="radiogroup" aria-label="Tipo de confirmação">
+<label class="check"><input type="radio" name="mesa-confirm-kind" value="record" checked> <span><strong>Criar novo registro autônomo</strong> — nasce nova identidade a partir de trechos documentais (inclusive desdobrando outro registro).</span></label>
+<label class="check"><input type="radio" name="mesa-confirm-kind" value="event"> <span><strong>Registrar acontecimento em registro existente</strong> — atua na trajetória de um registro já confirmado (crítica externa, reformulação assumida, interpretação, evidência ou relação).</span></label>
+</div>
+<form id="confirm-record-form">
+<div class="form-columns"><label>Tipo do registro<select id="record-kind"><option value="CONCEPTUAL_FINDING">Achado conceitual</option><option value="METHODOLOGICAL_DECISION">Decisão metodológica</option><option value="OPEN_QUESTION">Questão aberta</option><option value="EMPIRICAL_REPORT">Relato empírico</option></select></label><label>Estado do trabalho<select id="record-state"></select></label></div>
+<label>Título confirmado<input id="record-title" required maxlength="240"></label>
+<label>Formulação confirmada<textarea id="record-claim" rows="4" required maxlength="4000"></textarea></label>
+<label>Por que preservar<textarea id="record-why" rows="2" required maxlength="4000"></textarea></label>
+<label>Gênese declarada<textarea id="record-genesis" rows="2"></textarea></label>
+<label>Limitações obrigatórias<textarea id="record-limitations" rows="3" required maxlength="10000"></textarea></label>
+<div class="form-columns"><label>Origem da formulação<select id="record-origin"><option value="HUMAN_FORMULATION">Formulação humana</option><option value="DOCUMENT_EXCERPT">Trecho documental</option></select></label><label>Responsável declarado<input id="record-actor" required maxlength="240"></label></div>
+<label>Desdobra o registro anterior (opcional) <small>Cria nova identidade ligada à anterior sem substituí-la.</small><input id="record-supersedes" placeholder="ID interno do registro anterior"></label>
+<label class="check"><input id="record-confirm" type="checkbox" required>Confirmo este registro no acervo; a elaboração na Mesa continuará preservada e confirmação não constitui validação científica.</label>
+<button id="record-submit" class="button primary">Confirmar novo registro</button>
+<p id="record-notice" role="status" aria-live="polite"></p>
+<a id="created-record-link" class="button outline" href="#acervo" hidden>Consultar registro confirmado →</a>
+</form>
+<form id="confirm-event-form" hidden>
+<label>Registro-alvo existente <small>ID do insight já preservado no acervo</small><input id="event-target-id" required maxlength="64" placeholder="Cole o ID ou selecione abaixo"></label>
+<div id="event-target-picker"></div>
+<label>Intenção intelectual na trajetória<select id="event-type">
+<option value="CRITIQUE_RECORDED">Crítica externa / contraponto (não altera a formulação do registro)</option>
+<option value="FORMULATION_REVISED">Reformulação assumida pelo responsável (atualiza formulação corrente mantendo identidade)</option>
+<option value="INTERPRETATION_PROPOSED">Propor interpretação (leitura candidata)</option>
+<option value="EVIDENCE_REFERENCED">Vincular evidência de suporte ou exame</option>
+<option value="OCCURRENCE_RECORDED">Registrar acontecimento relevante</option>
+<option value="RELATION_RECOGNIZED">Reconhecer relação existente</option>
+<option value="RELATION_CONTESTED">Contestar relação existente</option>
+</select></label>
+<div id="event-mode-wrap"><label>Modo do relato<select id="event-mode"><option value="REPORTED">Relatado</option><option value="OBSERVED">Observado</option><option value="PROPOSED">Proposto</option></select></label></div>
+<div id="event-revision-fields" hidden>
+<p class="muted">Preencha ao menos um campo alterado para a reformulação corrente. A formulação original permanece intacta.</p>
+<label>Novo título (opcional)<input id="event-rev-title" maxlength="240"></label>
+<label>Nova formulação corrente (opcional)<textarea id="event-rev-claim" rows="3" maxlength="4000"></textarea></label>
+<label>Novas limitações (opcional)<textarea id="event-rev-limitations" rows="2" maxlength="10000"></textarea></label>
+</div>
+<div id="event-relation-fields" hidden>
+<label>ID da relação candidata<input id="event-relation-id" maxlength="64"></label>
+<label>Alcance declarado (scope)<textarea id="event-relation-scope" rows="2" maxlength="4000"></textarea></label>
+</div>
+<label>Resumo do acontecimento<textarea id="event-summary" rows="3" required maxlength="4000"></textarea></label>
+<div class="form-columns">
+<label>Responsável declarado <small>Obrigatório em reformulação e relação; opcional nos demais (vira lacuna)</small><input id="event-actor" maxlength="240"></label>
+<label>Data do acontecimento <small>Opcional (se desconhecida, fica registrada como lacuna)</small><input id="event-occurred-at" type="date"></label>
+</div>
+<label>Origem declarada <small>Opcional</small><input id="event-origin" maxlength="4000" placeholder="Ex.: Discussão em mesa, revisão documental…"></label>
+<label>Limitações deste acontecimento<textarea id="event-limitations" rows="2" required maxlength="10000"></textarea></label>
+<label class="check"><input id="event-confirm" type="checkbox" required>Confirmo este acontecimento na trajetória do registro; a elaboração na Mesa continuará preservada.</label>
+<button id="event-submit" class="button primary">Confirmar acontecimento</button>
+<p id="event-notice" role="status" aria-live="polite"></p>
+<a id="updated-insight-link" class="button outline" href="#acervo" hidden>Consultar trajetória do registro →</a>
+</form>
+</details>
+</div>
+</div>
+</section>
 <section id="integridade" data-view="integridade" class="info-grid" hidden><h1 class="view-heading">Integridade e origem</h1><article class="panel"><span class="eyebrow">INTEGRIDADE E ORIGEM</span><h2>O texto permanece verificável</h2><p>As fontes são preservadas com identificação SHA-256 e trechos literais. A conferência detecta alterações no conteúdo guardado.</p></article><article class="panel"><span class="eyebrow">LIMITES DO REGISTRO</span><h2>Preservar não é homologar</h2><p>A integridade do texto não comprova autoria ou validade científica. Propostas conceituais continuam abertas à crítica e à revisão humana.</p></article></section>
 <section id="sobre" data-view="sobre" class="panel about" hidden><span class="eyebrow">SOBRE O BB-CORE</span><h1>Uma memória com contexto e limites</h1><p>O BB-CORE reúne achados, decisões metodológicas e questões de pesquisa. Cada registro guarda o que foi formulado, de onde veio e o que falta conhecer. A conexão pública está em preparação; a consulta ao acervo local já está disponível.</p><p class="muted">Identidade visual alinhada ao MORFO · Ecossistema SisTer</p></section>
 <footer>BB-CORE · Memória investigativa <span>Sempre pronto. Sempre incompleto.</span></footer></main></div></div><dialog id="reader-dialog" aria-labelledby="reader-title">

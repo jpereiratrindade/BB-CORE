@@ -6,7 +6,7 @@ DROPIN_DIR="$HOME/.config/systemd/user/bb-core.service.d"
 systemctl --user cat bb-core.service >/dev/null
 mkdir -p "$RUNTIME_DIR/bbcore" "$RUNTIME_DIR/web" "$DROPIN_DIR"
 cp "$SOURCE_DIR"/bbcore/*.py "$RUNTIME_DIR/bbcore/"
-cp "$SOURCE_DIR"/web/index.html "$SOURCE_DIR"/web/style.css "$SOURCE_DIR"/web/app.js "$SOURCE_DIR"/web/documents.js "$SOURCE_DIR"/web/navigation.js "$SOURCE_DIR"/web/trajectory.js "$SOURCE_DIR"/web/favicon.svg "$RUNTIME_DIR/web/"
+cp "$SOURCE_DIR"/web/index.html "$SOURCE_DIR"/web/style.css "$SOURCE_DIR"/web/app.js "$SOURCE_DIR"/web/documents.js "$SOURCE_DIR"/web/mesa.js "$SOURCE_DIR"/web/navigation.js "$SOURCE_DIR"/web/trajectory.js "$SOURCE_DIR"/web/favicon.svg "$RUNTIME_DIR/web/"
 cat > "$DROPIN_DIR/local-runtime.conf" <<EOF
 [Unit]
 ConditionPathIsDirectory=

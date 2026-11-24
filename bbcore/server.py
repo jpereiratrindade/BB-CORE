@@ -181,11 +181,11 @@ class Handler(BaseHTTPRequestHandler):
 
     def get_route(self):
         path=urlsplit(self.path).path
-        if path in ('/style.css', '/app.js', '/documents.js', '/navigation.js', '/trajectory.js', '/favicon.svg'):
+        if path in ('/style.css', '/app.js', '/documents.js', '/mesa.js', '/navigation.js', '/trajectory.js', '/favicon.svg'):
             asset = Path(__file__).resolve().parent.parent / 'web' / path[1:]
             blob = asset.read_bytes()
             self.send_response(200)
-            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/documents.js': 'text/javascript; charset=utf-8', '/navigation.js': 'text/javascript; charset=utf-8', '/trajectory.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
+            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/documents.js': 'text/javascript; charset=utf-8', '/mesa.js': 'text/javascript; charset=utf-8', '/navigation.js': 'text/javascript; charset=utf-8', '/trajectory.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
             self.send_header('Content-Length', str(len(blob)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
@@ -212,6 +212,12 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, self.server.archive.events.checkpoint());return
         if path == '/api/events/export':
             self.send_json(200, self.server.archive.events.export());return
+        if path == '/api/elaborations':
+            self.send_json(200, {'items': self.server.archive.elaborations.list()});return
+        if path.startswith('/api/elaborations/'):
+            parts = path.strip('/').split('/')
+            if len(parts) == 3:
+                self.send_json(200, self.server.archive.elaborations.get(parts[2]));return
         if path == '/api/documents':
             offset = int(parse_qs(urlsplit(self.path).query).get('offset', ['0'])[0])
             items = self.server.archive.documents.list(offset)
@@ -271,7 +277,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, {'access': 'local_read_and_confirmed_document_ingestion'}, {
                 'Set-Cookie': 'bb_local=' + self.server.browser_token + '; HttpOnly; SameSite=Strict; Path=/'})
             return
-        document_write = path in ('/api/documents', '/api/document-records', '/api/events')
+        document_write = path in ('/api/documents', '/api/document-records', '/api/events', '/api/elaborations')
         if path not in ("/mcp","/api/insights","/api/relations") and not document_write:
             self.send_json(404,{"error":"NOT_FOUND"});return
         local_document_write = document_write and self.local_origin() and self.local_cookie()
@@ -283,6 +289,9 @@ class Handler(BaseHTTPRequestHandler):
             data=self.body()
             if path == '/api/events':
                 self.send_json(201, self.server.archive.events.append(data));return
+            if path == '/api/elaborations':
+                item, created = self.server.archive.elaborations.save(data)
+                self.send_json(201 if created else 200, item);return
             if document_write:
                 result = (self.server.archive.documents.ingest(data) if path == '/api/documents'
                           else self.server.archive.documents.create_record(data))
@@ -299,6 +308,21 @@ class Handler(BaseHTTPRequestHandler):
         except Conflict as e: self.send_json(409,{"error":"CONFLICT","message":str(e)})
         except NotFound as e: self.send_json(404,{"error":"NOT_FOUND","message":str(e)})
         except (TypeError,KeyError,json.JSONDecodeError): self.send_json(400,{"error":"INVALID_INPUT"})
+
+    def do_DELETE(self):
+        path = urlsplit(self.path).path
+        parts = path.strip('/').split('/')
+        if len(parts) != 3 or parts[0] != 'api' or parts[1] != 'elaborations':
+            self.send_json(404, {'error': 'NOT_FOUND'});return
+        local_write = self.local_origin() and self.local_cookie()
+        if not local_write and not self.safe_origin(): return
+        if not local_write and not self.authorized(write=True): return
+        try:
+            self.send_json(200, self.server.archive.elaborations.delete(parts[2]))
+        except NotFound as e:
+            self.send_json(404, {'error': 'NOT_FOUND', 'message': str(e)})
+        except ValueError as e:
+            self.send_json(400, {'error': 'INVALID_INPUT', 'message': str(e)})
 
     def mcp(self, request):
         if not isinstance(request,dict) or request.get("jsonrpc")!="2.0":

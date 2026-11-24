@@ -4,7 +4,7 @@
         acervo: 'Acervo de achados',
         documentos: 'Documentos',
         recebimento: 'Receber documentos',
-        elaboracao: 'Elaborar registro',
+        elaboracao: 'Mesa de Elaboração',
         integridade: 'Integridade e origem',
         sobre: 'Sobre o BB-CORE',
     };

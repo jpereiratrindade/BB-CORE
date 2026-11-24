@@ -103,6 +103,8 @@ class Archive:
         self.documents = Documents(self)
         from .events import Events
         self.events = Events(self)
+        from .elaborations import Elaborations
+        self.elaborations = Elaborations(self)
 
     @contextmanager
     def transaction(self):
