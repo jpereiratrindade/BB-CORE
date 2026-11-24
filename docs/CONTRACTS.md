@@ -53,3 +53,12 @@ Leitura e escrita exigem Bearer distintos e Origin explícita deve estar na allo
 ## Documentos e elaboração humana
 
 A camada documental independente e as regras de recebimento, conflitos, âncoras e confirmação estão em [DOCUMENT-INGESTION.md](DOCUMENT-INGESTION.md). Seus registros podem referenciar vários documentos. Recebimento não equivale a elaboração, decisão adotada não equivale a validação científica, e confirmação declarada não autentica autoria.
+
+## Exportação e continuidade explícita (`BB-CORE-EXP-0.1.0` / `BB-CORE-CONT-0.1.0`)
+
+O contrato de exportação `BB-CORE-EXP-0.1.0` (`GET /api/insights/{id}/export.md`) suporta dois modos explícitos, mantendo compatibilidade retroativa com exportações anteriores:
+
+- **Exportação para consulta (`mode=export`, padrão):** emite `document_role: "EXPORTED_RECORD"` com identidade, formulação original vs. corrente, fontes ancoradas, limitações, proveniência e trajetória `BB-EVENT-1`.
+- **Pacote de continuidade (`mode=continuity`, extensão `BB-CORE-CONT-0.1.0`):** mantém `export_schema: "BB-CORE-EXP-0.1.0"`, acrescenta `continuity_extension: "BB-CORE-CONT-0.1.0"`, `document_role: "CONTINUITY_PACKET"` e o bloco estruturado `continuity` no frontmatter (`operation`, `reference_system`, `insight_id`, `title`, `record_version`, `trajectory_point`, `retrieved_at`, `origin_reference`, `origin_status`, `purpose`, `context_gaps`), além da seção inicial **Declaração explícita de continuidade** e do pedido de reconhecimento inicial antes das fontes.
+
+Nenhuma operação de consulta, exportação, cópia para área de transferência ou abertura de conversa no ambiente externo produz acontecimentos no diário `BB-EVENT-1`, cria novos registros ou altera a identidade/formulação preservada.

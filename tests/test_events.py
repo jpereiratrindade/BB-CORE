@@ -367,6 +367,74 @@ class EventTests(unittest.TestCase):
         self.assertIn(url1, md2)
         self.assertIn(url2, md2)
 
+    def test_continuity_packet_and_per_record_divergence_check_on_return(self):
+        iid = self.create()
+        other_iid = self.create()
+        # Evento em registro não relacionado não altera o ponto de trajetória de iid.
+        self.archive.events.append(event(other_iid, content={'summary': 'Evento em outro registro'}))
+
+        ctx_before = self.archive.context(iid)
+        point0 = ctx_before['trajectory']['trajectory_point']
+        self.assertEqual(point0['record_event_count'], 1)
+
+        # Exportação de consulta vs. pacote de continuidade.
+        md_export = self.archive.export_markdown(iid)
+        self.assertIn('document_role: "EXPORTED_RECORD"', md_export)
+        self.assertNotIn('continuity_extension:', md_export)
+
+        md_cont = self.archive.export_markdown(iid, mode='continuity', purpose='Exame crítico no ChatGPT')
+        self.assertIn('export_schema: "BB-CORE-EXP-0.1.0"', md_cont)
+        self.assertIn('continuity_extension: "BB-CORE-CONT-0.1.0"', md_cont)
+        self.assertIn('document_role: "CONTINUITY_PACKET"', md_cont)
+        self.assertIn('Declaração explícita de continuidade', md_cont)
+        self.assertIn('Reconhecimento inicial solicitado ao ambiente de elaboração', md_cont)
+        self.assertLess(
+            md_cont.index('## Declaração explícita de continuidade'),
+            md_cont.index('## Evidências, identificadores e âncoras preservadas'),
+        )
+        # Exportar continuidade não grava acontecimento no diário.
+        self.assertEqual(self.archive.events.trajectory(iid)['event_count'], 1)
+
+        # Retorno com ponto correspondente (mesmo após evento no registro não relacionado) -> MATCHED.
+        ev_match = self.archive.events.append(event(
+            iid,
+            content={'summary': 'Contribuição inicial de retorno'},
+            expected_trajectory_point=point0,
+        ))
+        self.assertEqual(ev_match['state_check'], 'MATCHED')
+
+        # Novo retorno usando o ponto antigo (point0) após alteração posterior no mesmo registro -> POSTERIOR_CHANGES.
+        with self.assertRaises(Conflict) as cm:
+            self.archive.events.append(event(
+                iid,
+                content={'summary': 'Retorno com ponto desatualizado'},
+                expected_trajectory_point=point0,
+            ))
+        self.assertEqual(cm.exception.details['status'], 'POSTERIOR_CHANGES')
+        self.assertEqual(len(cm.exception.details['subsequent_events']), 1)
+
+        # Após exame humano com acknowledge_divergence=True -> DIVERGENT_ACKNOWLEDGED.
+        ev_ack = self.archive.events.append(event(
+            iid,
+            content={'summary': 'Retorno após exame da alteração posterior'},
+            expected_trajectory_point=point0,
+            acknowledge_divergence=True,
+        ))
+        self.assertEqual(ev_ack['state_check'], 'DIVERGENT_ACKNOWLEDGED')
+
+        # Ponto incompatível (contagem maior que o histórico local) -> TRAJECTORY_CONFLICT.
+        with self.assertRaises(Conflict) as cm2:
+            self.archive.events.append(event(
+                iid,
+                content={'summary': 'Ponto inválido'},
+                expected_trajectory_point={
+                    'record_event_count': 99,
+                    'last_record_event_id': 'x' * 32,
+                    'last_record_event_hash': 'y' * 64,
+                },
+            ))
+        self.assertEqual(cm2.exception.details['status'], 'TRAJECTORY_CONFLICT')
+
 
 if __name__ == '__main__':
     unittest.main()

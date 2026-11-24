@@ -670,5 +670,6 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
         with self.opener.open(f"http://127.0.0.1:{self.port}/app.js", timeout=5) as js_resp:
             js = js_resp.read().decode('utf-8')
             self.assertIn('Retomar conversa original', js)
-            self.assertIn('Exportar Markdown para nova conversa', js)
+            self.assertIn('Dar continuidade ao registro no ChatGPT', js)
+            self.assertIn('Exportar contexto em Markdown', js)
             self.assertIn('noopener noreferrer', js)

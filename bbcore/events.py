@@ -380,12 +380,77 @@ class Events:
                     raise ValueError('content.provenance_gaps deve ser lista de até 32 lacunas')
                 normalized_content['provenance_gaps'] = [required_string(g, 'content.provenance_gaps', 500) for g in gaps]
             content = normalized_content
+        expected_point = data.get('expected_trajectory_point')
+        ack_divergence = data.get('acknowledge_divergence') is True
+        if expected_point is not None:
+            if not isinstance(expected_point, dict):
+                raise ValueError('expected_trajectory_point deve ser objeto JSON')
+            exp_count = expected_point.get('record_event_count')
+            if isinstance(exp_count, bool) or not isinstance(exp_count, int) or exp_count < 0:
+                raise ValueError('expected_trajectory_point.record_event_count deve ser inteiro >= 0')
+            exp_last_id = expected_point.get('last_record_event_id')
+            exp_last_hash = expected_point.get('last_record_event_hash')
+            if exp_count == 0 and (exp_last_id is not None or exp_last_hash is not None):
+                raise ValueError('expected_trajectory_point com 0 eventos não deve informar last_record_event_id/hash')
+            if exp_count > 0:
+                required_string(exp_last_id, 'expected_trajectory_point.last_record_event_id', 64)
+                required_string(exp_last_hash, 'expected_trajectory_point.last_record_event_hash', 64)
         with self.archive.transaction():
             rid, signature, retry = self.archive.documents._retry(data, 'intellectual_event')
             if retry is not None:
                 self._verified()
                 return retry
             self.archive._get(iid)
+            state_check = 'NOT_PROVIDED'
+            if expected_point is not None:
+                bundle_now = self._verified()
+                rec_events = [e for e in bundle_now['events'] if iid in (e['insight_id'], e['related_insight_id'])]
+                cur_count = len(rec_events)
+                cur_point = {
+                    'record_event_count': cur_count,
+                    'last_record_event_id': rec_events[-1]['id'] if rec_events else None,
+                    'last_record_event_hash': rec_events[-1]['event_hash'] if rec_events else None,
+                }
+                exp_count = expected_point['record_event_count']
+                exp_id = expected_point.get('last_record_event_id')
+                exp_hash = expected_point.get('last_record_event_hash')
+                if exp_count == cur_count and exp_id == cur_point['last_record_event_id'] and exp_hash == cur_point['last_record_event_hash']:
+                    state_check = 'MATCHED'
+                elif exp_count < cur_count and (exp_count == 0 or (
+                    rec_events[exp_count - 1]['id'] == exp_id and rec_events[exp_count - 1]['event_hash'] == exp_hash
+                )):
+                    if not ack_divergence:
+                        subsequent = [
+                            {
+                                'id': e['id'],
+                                'seq': e['seq'],
+                                'event_type': e['event_type'],
+                                'occurred_at': e.get('occurred_at'),
+                                'recorded_at': e['recorded_at'],
+                                'responsible': e.get('responsible'),
+                                'summary': (e.get('content') or {}).get('summary'),
+                            }
+                            for e in rec_events[exp_count:]
+                        ]
+                        raise Conflict(
+                            'Alterações posteriores no registro desde o ponto de partida recuperado; examine antes de registrar.',
+                            details={
+                                'status': 'POSTERIOR_CHANGES',
+                                'expected_trajectory_point': expected_point,
+                                'current_trajectory_point': cur_point,
+                                'subsequent_events': subsequent,
+                            },
+                        )
+                    state_check = 'DIVERGENT_ACKNOWLEDGED'
+                else:
+                    raise Conflict(
+                        'Conflito no ponto de trajetória informado (histórico local incompatível); requer exame humano.',
+                        details={
+                            'status': 'TRAJECTORY_CONFLICT',
+                            'expected_trajectory_point': expected_point,
+                            'current_trajectory_point': cur_point,
+                        },
+                    )
             related = None
             refs = data.get('evidence', [])
             resolved = self.references(refs)
@@ -418,7 +483,7 @@ class Events:
                                  content=content, origin=origin, responsible=actor, occurred_at=moment,
                                  evidence=refs, prior_events=normalized_prior, missing=missing,
                                  limitations=limitations, request_id=rid)
-            return self.archive.documents._remember(rid, signature, event)
+            return self.archive.documents._remember(rid, signature, {**event, 'state_check': state_check})
 
     def relation_proposed(self, relation_id, actor, origin, evidence, missing, request_id):
         relation = self.archive._one('SELECT * FROM relations WHERE id=?', (relation_id,))
@@ -514,9 +579,16 @@ class Events:
             if event['event_type'].startswith('RELATION_'):
                 relations.append(event)
         provenance = Events._provenance_projection(baseline['record'] if baseline else None, supplements)
+        trajectory_point = {
+            'record_event_count': len(events),
+            'last_record_event_id': events[-1]['id'] if events else None,
+            'last_record_event_hash': events[-1]['event_hash'] if events else None,
+            'formulation_revision_count': len(formulations),
+        }
         return {'insight_id': insight_id, 'events': events, 'event_count': len(events), 'baseline': baseline,
                 'current_state': state, 'formulations': formulations, 'relation_attributions': relations,
                 'formulation_revision_count': len(formulations),
+                'trajectory_point': trajectory_point,
                 'provenance': provenance,
                 'chain_integrity': verification['integrity'], 'evidence_integrity': 'NOT_RECHECKED_OFFLINE',
                 'order': 'RECORDING_ORDER_NOT_CAUSAL',

@@ -266,10 +266,14 @@ class Handler(BaseHTTPRequestHandler):
             if len(rest)==2 and rest[1]=="trajectory":
                 self.send_json(200,self.server.archive.events.trajectory(iid));return
             if len(rest)==2 and rest[1]=="export.md":
-                md = self.server.archive.export_markdown(iid).encode('utf-8')
+                q = parse_qs(urlsplit(self.path).query)
+                mode = q.get("mode", ["export"])[0]
+                purpose = q.get("purpose", [None])[0]
+                md = self.server.archive.export_markdown(iid, mode=mode, purpose=purpose).encode('utf-8')
+                prefix = "continuity" if mode == "continuity" else "insight"
                 self.send_response(200)
                 self.send_header('Content-Type', 'text/markdown; charset=utf-8')
-                self.send_header('Content-Disposition', f'attachment; filename="insight-{iid[:12]}.md"')
+                self.send_header('Content-Disposition', f'attachment; filename="{prefix}-{iid[:12]}.md"')
                 self.send_header('Content-Length', str(len(md)))
                 self.send_header('Cache-Control', 'no-store')
                 self.send_header('X-Content-Type-Options', 'nosniff')
@@ -331,7 +335,11 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(201,self.server.archive.capture(data));return
             self.send_json(201,self.server.archive.relate(data))
         except ValueError as e: self.send_json(400,{"error":"INVALID_INPUT","message":str(e)})
-        except Conflict as e: self.send_json(409,{"error":"CONFLICT","message":str(e)})
+        except Conflict as e:
+            payload = {"error": "CONFLICT", "message": str(e)}
+            if getattr(e, "details", None):
+                payload["details"] = e.details
+            self.send_json(409, payload)
         except NotFound as e: self.send_json(404,{"error":"NOT_FOUND","message":str(e)})
         except (TypeError,KeyError,json.JSONDecodeError): self.send_json(400,{"error":"INVALID_INPUT"})
 

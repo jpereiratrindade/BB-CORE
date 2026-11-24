@@ -29,3 +29,16 @@
 .param-card.confirmed{border-left-color:var(--teal);background:#f5fbfa}
 .param-confirm-form{display:grid;gap:10px;padding-top:10px;border-top:1px solid var(--line)}
 .param-confirm-form input:not([type=checkbox]){width:100%;border:1px solid #cedce6;padding:8px 10px;border-radius:6px;background:#fff}
+.continuity-card{border:1px solid #d5e0e8;border-radius:10px;background:#f8fbfd;margin:14px 0 18px;overflow:hidden}
+.continuity-action{display:flex;align-items:center;justify-content:space-between;gap:14px;width:100%;padding:13px 16px;border:0;border-bottom:1px solid #e3ecf2;background:transparent;text-align:left;text-decoration:none;color:inherit;cursor:pointer;font:inherit}
+.continuity-action:last-child{border-bottom:0}
+.continuity-action:hover{background:#eef5fa}
+.continuity-action:focus-visible{outline:2px solid #0b5cab;outline-offset:-2px}
+.continuity-action-main{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.continuity-action-icon{flex:none;width:20px;text-align:center;font-size:1.05rem;line-height:1.4;color:#275375}
+.continuity-action-title{display:block;font-weight:600;color:#12283a;font-size:.96rem;line-height:1.35}
+.continuity-action-desc{display:block;color:#52697a;font-size:.86rem;line-height:1.4;margin-top:2px}
+.continuity-action-arrow{flex:none;color:#4e697d;font-size:1rem}
+.continuity-status{margin:8px 0 14px;padding:11px 14px;border-radius:8px;border:1px solid #cfe0ec;background:#f2f8fc;color:#18344a;font-size:.9rem;line-height:1.45}
+.continuity-status.error{border-color:#e4b9b9;background:#fdf3f3;color:#7a1f1f}
+.continuity-status .document-actions{margin-top:8px}
