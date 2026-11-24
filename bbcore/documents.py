@@ -78,11 +78,41 @@ class Documents:
                 rationale TEXT,
                 confirmed_at TEXT NOT NULL
             );
-            CREATE UNIQUE INDEX IF NOT EXISTS imported_record_occurrence
-                ON imported_record_identities(receipt_id, id_local)
-                WHERE receipt_id IS NOT NULL AND id_local IS NOT NULL;
             CREATE INDEX IF NOT EXISTS document_anchor_record ON document_anchors(insight_id);
             CREATE INDEX IF NOT EXISTS document_receipt_version ON document_receipts(version_id);
+            ''')
+            cols = {r['name'] for r in self.db.execute('PRAGMA table_info(imported_record_identities)')}
+            if 'identity_key' not in cols:
+                self.db.executescript('''
+                ALTER TABLE imported_record_identities RENAME TO imported_record_identities_v1;
+                CREATE TABLE imported_record_identities (
+                    identity_key TEXT PRIMARY KEY,
+                    declared_record_key TEXT UNIQUE,
+                    receipt_id TEXT,
+                    id_local TEXT,
+                    insight_id TEXT NOT NULL REFERENCES insights(id),
+                    document_external_id TEXT,
+                    declared_version TEXT,
+                    claim_sha256 TEXT NOT NULL,
+                    content_sha256 TEXT NOT NULL,
+                    recognition_kind TEXT NOT NULL DEFAULT 'CONFIRMED_FROM_PARAMETRIZED',
+                    confirmed_by_declared TEXT,
+                    rationale TEXT,
+                    confirmed_at TEXT NOT NULL
+                );
+                INSERT INTO imported_record_identities (
+                    identity_key, declared_record_key, insight_id, document_external_id,
+                    declared_version, claim_sha256, content_sha256, confirmed_at
+                )
+                SELECT declared_record_key, declared_record_key, insight_id, document_external_id,
+                       declared_version, claim_sha256, content_sha256, confirmed_at
+                FROM imported_record_identities_v1;
+                DROP TABLE imported_record_identities_v1;
+                ''')
+            self.db.execute('''
+            CREATE UNIQUE INDEX IF NOT EXISTS imported_record_occurrence
+                ON imported_record_identities(receipt_id, id_local)
+                WHERE receipt_id IS NOT NULL AND id_local IS NOT NULL
             ''')
 
     def _retry(self, data, operation):

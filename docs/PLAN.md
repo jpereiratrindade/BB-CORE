@@ -64,7 +64,15 @@ A análise anterior de que *nenhuma adaptação de banco seria necessária* foi 
 
 ---
 
-## 5. Compromissos e Gates anteriores preservados (suspensos nesta etapa)
+## 5. Marco de suficiência funcional do núcleo (consolidação)
+
+- **Objetivo desta etapa:** alcançar **suficiência funcional** nas operações de recebimento, exame, confirmação, preservação, recuperação e exportação (`BB-CORE-ING-0.2.0` e `BB-CORE-EXP-0.1.0`), mantendo o MCP fora do escopo.
+- **Critério de priorização:** priorizar exclusivamente correções que comprometam integridade, identidade, proveniência, responsabilidade intelectual ou fidelidade da recuperação. Oportunidades de melhoria que não afetem esses pilares ficam documentadas para etapas orientadas pelo uso real.
+- **Critério de encerramento:** após a consolidação e a validação da experiência de continuidade intelectual em nova conversa do ChatGPT, estabelecer um marco versionado de suficiência funcional do núcleo.
+
+---
+
+## 6. Compromissos e Gates anteriores preservados (suspensos nesta etapa)
 
 - **Gate 0 — validado pelos testes unitários locais (42 testes).**
 - **Ingestão documental local e `BB-EVENT-1` — implementados.**
