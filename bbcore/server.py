@@ -228,6 +228,9 @@ class Handler(BaseHTTPRequestHandler):
             if len(parts) == 3 and parts[1] == 'documents':
                 self.send_json(200, self.server.archive.documents.get(parts[2]))
                 return
+            if len(parts) == 4 and parts[1] == 'documents' and parts[3] == 'parametrized':
+                self.send_json(200, self.server.archive.documents.inspect_parametrized(version_id=parts[2]))
+                return
             if len(parts) == 4 and parts[3] == 'original':
                 body = self.server.archive.documents.original(**({'version_id': parts[2]} if parts[1] == 'documents' else {'receipt_id': parts[2]}))
                 self.send_response(200)
@@ -277,16 +280,19 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, {'access': 'local_read_and_confirmed_document_ingestion'}, {
                 'Set-Cookie': 'bb_local=' + self.server.browser_token + '; HttpOnly; SameSite=Strict; Path=/'})
             return
-        document_write = path in ('/api/documents', '/api/document-records', '/api/events', '/api/elaborations')
+        document_write = path in ('/api/documents', '/api/documents/inspect', '/api/document-records', '/api/events', '/api/elaborations')
         if path not in ("/mcp","/api/insights","/api/relations") and not document_write:
             self.send_json(404,{"error":"NOT_FOUND"});return
         local_document_write = document_write and self.local_origin() and self.local_cookie()
         if not local_document_write and not self.safe_origin(): return
         if self.headers.get("Content-Type","").split(";")[0].strip().lower()!="application/json":
             self.send_json(415,{"error":"application/json obrigatório"});return
-        if not local_document_write and not self.authorized(write=path!="/mcp"):return
+        if not local_document_write and not self.authorized(write=path not in ("/mcp", "/api/documents/inspect")):return
         try:
             data=self.body()
+            if path == '/api/documents/inspect':
+                self.send_json(200, self.server.archive.documents.inspect_parametrized(content_base64=data.get('content_base64')))
+                return
             if path == '/api/events':
                 self.send_json(201, self.server.archive.events.append(data));return
             if path == '/api/elaborations':

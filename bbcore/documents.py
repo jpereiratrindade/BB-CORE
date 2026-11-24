@@ -63,6 +63,15 @@ class Documents:
                 quote TEXT NOT NULL, start_byte INTEGER NOT NULL, end_byte INTEGER NOT NULL,
                 role TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS imported_record_identities (
+                declared_record_key TEXT PRIMARY KEY,
+                insight_id TEXT NOT NULL REFERENCES insights(id),
+                document_external_id TEXT,
+                declared_version TEXT,
+                claim_sha256 TEXT NOT NULL,
+                content_sha256 TEXT NOT NULL,
+                confirmed_at TEXT NOT NULL
+            );
             CREATE INDEX IF NOT EXISTS document_anchor_record ON document_anchors(insight_id);
             CREATE INDEX IF NOT EXISTS document_receipt_version ON document_receipts(version_id);
             ''')
@@ -208,10 +217,21 @@ class Documents:
         if not isinstance(links, list) or not 1 <= len(links) <= 16:
             raise ValueError('De 1 a 16 âncoras obrigatórias')
         supersedes = optional_text(data.get('supersedes_id'), 'supersedes_id', 64)
+        declared_record_key = optional_text(data.get('declared_record_key'), 'declared_record_key', 240)
+        content_sha256 = optional_text(data.get('content_sha256'), 'content_sha256', 64)
         with self.archive.transaction():
             request_id, signature, retry = self._retry(data, 'document_record')
             if retry is not None:
                 return retry
+            if declared_record_key:
+                existing_identity = self.db.execute(
+                    'SELECT * FROM imported_record_identities WHERE declared_record_key=?',
+                    (declared_record_key,),
+                ).fetchone()
+                if existing_identity:
+                    raise Conflict(
+                        f'Registro declarado "{declared_record_key}" já confirmado como {existing_identity["insight_id"]}'
+                    )
             if supersedes:
                 previous = self.archive._one('SELECT * FROM record_elaborations WHERE insight_id=?', (supersedes,))
                 if previous['kind'] != kind:
@@ -255,6 +275,20 @@ class Documents:
             self.archive.events.registered(iid, request_id)
             if supersedes:
                 self.archive.events.revision_reference(supersedes, iid, actor, request_id)
+            if declared_record_key:
+                claim_sha = hashlib.sha256(claim.encode('utf-8')).hexdigest()
+                self.db.execute(
+                    'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?)',
+                    (
+                        declared_record_key,
+                        iid,
+                        optional_text(context.get('external_document_id') if isinstance(context, dict) else None, 'external_document_id', 240),
+                        optional_text(context.get('document_version') if isinstance(context, dict) else None, 'document_version', 120),
+                        claim_sha,
+                        content_sha256 or claim_sha,
+                        now,
+                    ),
+                )
             return self._remember(request_id, signature, {'id': iid, 'kind': kind, 'work_state': work_state, 'status': status, 'confirmed_at': now})
 
     def sources_for(self, insight_id):
@@ -286,3 +320,61 @@ class Documents:
             except Conflict:
                 anchor_bad += 1
         return {'document_contents_checked': total, 'document_hash_mismatches': bad, 'document_anchor_failures': anchor_bad}
+
+    def inspect_parametrized(self, *, version_id=None, content_base64=None):
+        from .parametrized import ParametrizedError, parse_parametrized_markdown
+
+        if version_id is not None:
+            raw_bytes = self.original(version_id=version_id)
+        else:
+            encoded = required_string(content_base64, 'content_base64', 350_000)
+            try:
+                raw_bytes = base64.b64decode(encoded, validate=True)
+            except (ValueError, binascii.Error):
+                raise ValueError('Conteúdo deve ser base64 válido') from None
+
+        try:
+            parsed = parse_parametrized_markdown(raw_bytes)
+        except ParametrizedError as err:
+            return {'is_parametrized': False, 'error': str(err)}
+
+        ext_doc_id = parsed['document'].get('external_id')
+        with self.archive.lock:
+            legacy_rows = []
+            if ext_doc_id:
+                legacy_rows = self.db.execute(
+                    """SELECT id, title, claim FROM insights
+                       WHERE json_extract(context, '$.external_document_id')=?
+                         AND id NOT IN (SELECT insight_id FROM imported_record_identities)""",
+                    (ext_doc_id,),
+                ).fetchall()
+            for rec in parsed['records']:
+                key = rec.get('external_record_id')
+                existing = (
+                    self.db.execute(
+                        'SELECT * FROM imported_record_identities WHERE declared_record_key=?',
+                        (key,),
+                    ).fetchone()
+                    if key
+                    else None
+                )
+                if existing:
+                    if existing['claim_sha256'] == rec['claim_sha256'] and existing['content_sha256'] == rec['content_sha256']:
+                        rec['archive_status'] = 'ALREADY_CONFIRMED'
+                    else:
+                        rec['archive_status'] = 'FORMULATION_DIVERGENCE'
+                    rec['existing_insight_id'] = existing['insight_id']
+                    rec['existing_claim_sha256'] = existing['claim_sha256']
+                elif legacy_rows:
+                    rec['archive_status'] = 'LEGACY_MATCH_CANDIDATE'
+                    rec['legacy_matches'] = [
+                        {
+                            'insight_id': row['id'],
+                            'title': row['title'],
+                            'claim_matches': row['claim'] == rec['claim'],
+                        }
+                        for row in legacy_rows
+                    ]
+                else:
+                    rec['archive_status'] = 'NEW_CANDIDATE'
+        return {'is_parametrized': True, **parsed}

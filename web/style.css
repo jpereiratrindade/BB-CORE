@@ -22,3 +22,10 @@
 #event-target-picker{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 #event-target-picker p{width:100%;margin:0}
 @media(max-width:950px){.mesa-layout,.mesa-collected{grid-template-columns:1fr}.mesa-sidebar{border-right:0;border-bottom:1px solid var(--line);padding:0 0 18px}}
+.param-preview{padding:12px 14px;border-radius:8px;border:1px solid var(--line);background:#f1f8fe;margin-bottom:12px;font-size:12.5px}
+.param-preview.error{background:#fff3f1;border-color:#efb7ae;color:#8c2819}
+.param-card{border:1px solid var(--line);border-left:4px solid var(--blue);border-radius:9px;padding:16px;margin:14px 0;background:#fbfdff;display:grid;gap:10px}
+.param-card.conflict{border-left-color:#b85d00;background:#fffaf2}
+.param-card.confirmed{border-left-color:var(--teal);background:#f5fbfa}
+.param-confirm-form{display:grid;gap:10px;padding-top:10px;border-top:1px solid var(--line)}
+.param-confirm-form input:not([type=checkbox]){width:100%;border:1px solid #cedce6;padding:8px 10px;border-radius:6px;background:#fff}
