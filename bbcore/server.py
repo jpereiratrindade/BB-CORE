@@ -181,11 +181,11 @@ class Handler(BaseHTTPRequestHandler):
 
     def get_route(self):
         path=urlsplit(self.path).path
-        if path in ('/style.css', '/app.js', '/documents.js', '/mesa.js', '/navigation.js', '/trajectory.js', '/favicon.svg'):
+        if path in ('/style.css', '/app.js', '/analytics.js', '/documents.js', '/mesa.js', '/navigation.js', '/trajectory.js', '/favicon.svg'):
             asset = Path(__file__).resolve().parent.parent / 'web' / path[1:]
             blob = asset.read_bytes()
             self.send_response(200)
-            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/documents.js': 'text/javascript; charset=utf-8', '/mesa.js': 'text/javascript; charset=utf-8', '/navigation.js': 'text/javascript; charset=utf-8', '/trajectory.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
+            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/analytics.js': 'text/javascript; charset=utf-8', '/documents.js': 'text/javascript; charset=utf-8', '/mesa.js': 'text/javascript; charset=utf-8', '/navigation.js': 'text/javascript; charset=utf-8', '/trajectory.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
             self.send_header('Content-Length', str(len(blob)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
@@ -250,6 +250,9 @@ class Handler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(body)
                 return
+        if path == "/api/analytics/overview":
+            from .analytics import build_overview
+            self.send_json(200, build_overview(self.server.archive)); return
         if path=="/api/insights":
             q=parse_qs(urlsplit(self.path).query)
             if q.get("q"):
