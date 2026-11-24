@@ -1,0 +1,1338 @@
+{
+  "instruction": "BB-CORE-EXP-002 v0.1.0",
+  "executed_at": "2026-11-24T20:43:34+00:00",
+  "model": "qwen2.5:14b",
+  "parameters": {
+    "temperature": 0.1,
+    "num_ctx": 16384
+  },
+  "ollama_ps": "NAME           ID              SIZE     PROCESSOR    CONTEXT    UNTIL              \nqwen2.5:14b    7cdf5a0187d5    12 GB    100% GPU     16384      4 minutes from now",
+  "records": [
+    {
+      "id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+      "version": 1,
+      "title": "A organização da memória não determina a organização da atividade intelectual"
+    },
+    {
+      "id": "36cae570a28f47b9b36ead9f2c1a4d87",
+      "version": 1,
+      "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual"
+    },
+    {
+      "id": "87f47b767c6e4994a3746c0375ff5348",
+      "version": 1,
+      "title": "Preservação de uma representação não comprova fidelidade à fonte de origem"
+    },
+    {
+      "id": "784c05eb89d5436b942e340d109dcebb",
+      "version": 1,
+      "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo"
+    },
+    {
+      "id": "752eab672c1246acb4318bd83d98c5e9",
+      "version": 1,
+      "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento"
+    },
+    {
+      "id": "d1090ec7e66a43b09dd798f9195a0c44",
+      "version": 1,
+      "title": "Continuidade intelectual pela retomada do contexto de origem"
+    }
+  ],
+  "pairs": [
+    {
+      "pair_index": 1,
+      "record_a": {
+        "id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "version": 1,
+        "title": "A organização da memória não determina a organização da atividade intelectual"
+      },
+      "record_b": {
+        "id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "version": 1,
+        "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais sobre a preservação e organização de atividades intelectuais, mas enfatizam diferentes dimensões desses processos. O Registro A discute que a estrutura da memória não precisa refletir diretamente a dinâmica da atividade intelectual, enquanto o Registro B argumenta que a mera documentação do acontecimento intelectual não é suficiente para permitir sua recuperação e reutilização em novas investigações. Esses registros se conectam na medida em que ambos enfatizam a necessidade de uma abordagem cuidadosa e reflexiva sobre como os sistemas preservam e organizam o conhecimento, destacando que a mera existência de um registro não garante sua utilidade ou relevância intelectual.",
+          "excerpts_a": [
+            "A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados."
+          ],
+          "excerpts_b": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+            "Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+          ],
+          "justification": "Ambos os registros enfatizam que a mera documentação ou registro de atividades intelectuais não é suficiente para garantir sua utilidade ou relevância. O Registro A argumenta que a estrutura da memória não precisa refletir diretamente a dinâmica da atividade intelectual, enquanto o Registro B enfatiza que a recuperação eficaz de um acontecimento exige mais do que apenas documentar sua existência.",
+          "limitations": [
+            "Ambos os registros são proposições conceituais derivadas do caso BB-CORE e não foram confrontados sistematicamente com literatura ou usuários independentes."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais sobre a preservação e organização de atividades intelectuais, mas enfatizam diferentes dimensões desses processos. O Registro A discute que a estrutura da memória não precisa refletir diretamente a dinâmica da atividade intelectual, enquanto o Registro B argumenta que a mera documentação do acontecimento intelectual não é suficiente para permitir sua recuperação e reutilização em novas investigações. Esses registros se conectam na medida em que ambos enfatizam a necessidade de uma abordagem cuidadosa e reflexiva sobre como os sistemas preservam e organizam o conhecimento, destacando que a mera existência de um registro não garante sua utilidade ou relevância intelectual.\",\n  \"excerpts_a\": [\n    \"A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.\"\n  ],\n  \"excerpts_b\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.\",\n    \"Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam que a mera documentação ou registro de atividades intelectuais não é suficiente para garantir sua utilidade ou relevância. O Registro A argumenta que a estrutura da memória não precisa refletir diretamente a dinâmica da atividade intelectual, enquanto o Registro B enfatiza que a recuperação eficaz de um acontecimento exige mais do que apenas documentar sua existência.\",\n  \"limitations\": [\n    \"Ambos os registros são proposições conceituais derivadas do caso BB-CORE e não foram confrontados sistematicamente com literatura ou usuários independentes.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+            "exact_match": true
+          },
+          {
+            "excerpt": "Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 7.27,
+          "prompt_eval_count": 795,
+          "eval_count": 482,
+          "total_duration_ns": 7270281197
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais da recuperação e preservação de conhecimento, mas sob perspectivas distintas: o Registro A foca na distinção entre a existência de um acontecimento intelectual e seu conteúdo efetivamente recuperável; já o Registro B discute como a organização dos objetos intelectuais não precisa refletir diretamente a dinâmica da atividade que os originou. Essas duas ideias convergem na importância de manter uma distinção clara entre estruturas e processos, permitindo maior flexibilidade e eficácia no uso do conhecimento preservado.",
+          "excerpts_a": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação."
+          ],
+          "excerpts_b": [
+            "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz."
+          ],
+          "justification": "Ambos os registros enfatizam a necessidade de uma distinção clara entre estruturas e processos, seja na recuperação do conteúdo intelectual (Registro A) ou na preservação dos objetos intelectuais sem reproduzir diretamente a dinâmica da atividade que os originou (Registro B). Essa distinção permite maior flexibilidade e eficácia no uso do conhecimento preservado, evitando uma relação rígida entre estruturas de armazenamento e processos intelectuais.",
+          "limitations": [
+            "O Registro A não pressupõe a exportação integral de todas as fontes em toda consulta, indicando que a suficiência do contexto depende da finalidade da recuperação.",
+            "O Registro B é uma proposição conceitual derivada do caso BB-CORE e sua relação com o achado BB-CORE-INSIGHT-001 não foi confirmada."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais da recuperação e preservação de conhecimento, mas sob perspectivas distintas: o Registro A foca na distinção entre a existência de um acontecimento intelectual e seu conteúdo efetivamente recuperável; já o Registro B discute como a organização dos objetos intelectuais não precisa refletir diretamente a dinâmica da atividade que os originou. Essas duas ideias convergem na importância de manter uma distinção clara entre estruturas e processos, permitindo maior flexibilidade e eficácia no uso do conhecimento preservado.\",\n  \"excerpts_a\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.\"\n  ],\n  \"excerpts_b\": [\n    \"A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a necessidade de uma distinção clara entre estruturas e processos, seja na recuperação do conteúdo intelectual (Registro A) ou na preservação dos objetos intelectuais sem reproduzir diretamente a dinâmica da atividade que os originou (Registro B). Essa distinção permite maior flexibilidade e eficácia no uso do conhecimento preservado, evitando uma relação rígida entre estruturas de armazenamento e processos intelectuais.\",\n  \"limitations\": [\n    \"O Registro A não pressupõe a exportação integral de todas as fontes em toda consulta, indicando que a suficiência do contexto depende da finalidade da recuperação.\",\n    \"O Registro B é uma proposição conceitual derivada do caso BB-CORE e sua relação com o achado BB-CORE-INSIGHT-001 não foi confirmada.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.98,
+          "prompt_eval_count": 795,
+          "eval_count": 471,
+          "total_duration_ns": 6980867912
+        }
+      }
+    },
+    {
+      "pair_index": 2,
+      "record_a": {
+        "id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "version": 1,
+        "title": "A organização da memória não determina a organização da atividade intelectual"
+      },
+      "record_b": {
+        "id": "87f47b767c6e4994a3746c0375ff5348",
+        "version": 1,
+        "title": "Preservação de uma representação não comprova fidelidade à fonte de origem"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam a distinção entre a preservação de objetos intelectuais e a fidelidade à atividade ou fonte que originou esses objetos.",
+          "excerpts_a": [
+            "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz."
+          ],
+          "excerpts_b": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "justification": "Ambos os registros enfatizam a separação entre a preservação física dos objetos intelectuais e as questões relacionadas à fidelidade, autenticidade e validade desses objetos em relação às suas origens ou contextos de geração. O Registro A discute como a organização da memória não precisa refletir diretamente a atividade intelectual que gerou esses objetos, enquanto o Registro B argumenta que a integridade preservada de um documento não garante sua fidelidade à fonte ou ao processo de geração.",
+          "limitations": [
+            "Ambos os registros são proposições conceituais derivadas do contexto específico do BB-CORE e podem ser desdobramentos de achados anteriores, mas a relação com outros estudos não foi confirmada.",
+            "Não há confronto sistemático com literatura ou usuários para validar essas proposições."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam a distinção entre a preservação de objetos intelectuais e a fidelidade à atividade ou fonte que originou esses objetos.\",\n  \"excerpts_a\": [\n    \"A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.\"\n  ],\n  \"excerpts_b\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a separação entre a preservação física dos objetos intelectuais e as questões relacionadas à fidelidade, autenticidade e validade desses objetos em relação às suas origens ou contextos de geração. O Registro A discute como a organização da memória não precisa refletir diretamente a atividade intelectual que gerou esses objetos, enquanto o Registro B argumenta que a integridade preservada de um documento não garante sua fidelidade à fonte ou ao processo de geração.\",\n  \"limitations\": [\n    \"Ambos os registros são proposições conceituais derivadas do contexto específico do BB-CORE e podem ser desdobramentos de achados anteriores, mas a relação com outros estudos não foi confirmada.\",\n    \"Não há confronto sistemático com literatura ou usuários para validar essas proposições.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.7,
+          "prompt_eval_count": 798,
+          "eval_count": 379,
+          "total_duration_ns": 5695776560
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos da preservação e representação de atividades intelectuais, enfatizando a distinção entre a estrutura física dos objetos preservados e as características intrínsecas dessas atividades. Enquanto o Registro A foca na separação entre a integridade técnica de um documento e sua fidelidade à fonte original, o Registro B discute como a organização dos objetos intelectuais preservados não precisa refletir diretamente a estrutura da atividade que os gerou.",
+          "excerpts_a": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "excerpts_b": [
+            "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz."
+          ],
+          "justification": "Ambos os registros enfatizam a necessidade de distinguir entre as propriedades físicas ou técnicas dos documentos e suas relações com o contexto intelectual original. O Registro A se concentra na distinção entre integridade técnica e fidelidade à fonte, enquanto o Registro B discute como a estrutura preservada pode divergir da organização da atividade que gerou esses objetos.",
+          "limitations": [
+            "O Registro A não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia.",
+            "O Registro B é uma proposição conceitual derivada do caso BB-CORE e a relação com outros achados não foi confirmada."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos da preservação e representação de atividades intelectuais, enfatizando a distinção entre a estrutura física dos objetos preservados e as características intrínsecas dessas atividades. Enquanto o Registro A foca na separação entre a integridade técnica de um documento e sua fidelidade à fonte original, o Registro B discute como a organização dos objetos intelectuais preservados não precisa refletir diretamente a estrutura da atividade que os gerou.\",\n  \"excerpts_a\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"excerpts_b\": [\n    \"A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a necessidade de distinguir entre as propriedades físicas ou técnicas dos documentos e suas relações com o contexto intelectual original. O Registro A se concentra na distinção entre integridade técnica e fidelidade à fonte, enquanto o Registro B discute como a estrutura preservada pode divergir da organização da atividade que gerou esses objetos.\",\n  \"limitations\": [\n    \"O Registro A não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia.\",\n    \"O Registro B é uma proposição conceitual derivada do caso BB-CORE e a relação com outros achados não foi confirmada.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.28,
+          "prompt_eval_count": 798,
+          "eval_count": 420,
+          "total_duration_ns": 6274723697
+        }
+      }
+    },
+    {
+      "pair_index": 3,
+      "record_a": {
+        "id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "version": 1,
+        "title": "A organização da memória não determina a organização da atividade intelectual"
+      },
+      "record_b": {
+        "id": "784c05eb89d5436b942e340d109dcebb",
+        "version": 1,
+        "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo"
+      },
+      "stability": "DIVERGENT_ORDER_DEPENDENT",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": false,
+          "connection_nature": "",
+          "excerpts_a": [],
+          "excerpts_b": [],
+          "justification": "Não há uma conexão intelectualmente relevante entre os dois registros fornecidos. Ambos tratam de conceitos fundamentais no desenvolvimento do BB-CORE, mas abordam aspectos distintos da organização e preservação dos objetos intelectuais. O Registro A discute a separação entre a estrutura de armazenamento e a dinâmica da atividade intelectual que gera esses objetos. Já o Registro B foca na distinção entre reconhecer a identidade de um objeto intelectual e confirmar integralmente seu conteúdo, enfatizando a preservação da diferença e evitando atribuições incorretas ao registro anterior. Não há compartilhamento substantivo de ideias ou temas que justifiquem uma conexão relevante entre eles.",
+          "limitations": [
+            "Ambos os registros são proposições conceituais derivadas do desenvolvimento do BB-CORE e não foram validados sistematicamente com usuários ou literatura externa."
+          ],
+          "abstention_reason": "Os registros tratam de aspectos distintos da organização e preservação dos objetos intelectuais, sem compartilhamento substantivo de ideias ou temas que justifiquem uma conexão relevante entre eles."
+        },
+        "raw_response": "{\n  \"connection_proposed\": false,\n  \"connection_nature\": \"\",\n  \"excerpts_a\": [],\n  \"excerpts_b\": [],\n  \"justification\": \"Não há uma conexão intelectualmente relevante entre os dois registros fornecidos. Ambos tratam de conceitos fundamentais no desenvolvimento do BB-CORE, mas abordam aspectos distintos da organização e preservação dos objetos intelectuais. O Registro A discute a separação entre a estrutura de armazenamento e a dinâmica da atividade intelectual que gera esses objetos. Já o Registro B foca na distinção entre reconhecer a identidade de um objeto intelectual e confirmar integralmente seu conteúdo, enfatizando a preservação da diferença e evitando atribuições incorretas ao registro anterior. Não há compartilhamento substantivo de ideias ou temas que justifiquem uma conexão relevante entre eles.\",\n  \"limitations\": [\n    \"Ambos os registros são proposições conceituais derivadas do desenvolvimento do BB-CORE e não foram validados sistematicamente com usuários ou literatura externa.\"\n  ],\n  \"abstention_reason\": \"Os registros tratam de aspectos distintos da organização e preservação dos objetos intelectuais, sem compartilhamento substantivo de ideias ou temas que justifiquem uma conexão relevante entre eles.\"\n}",
+        "excerpts_a_check": [],
+        "excerpts_b_check": [],
+        "metrics": {
+          "elapsed_s": 4.64,
+          "prompt_eval_count": 796,
+          "eval_count": 312,
+          "total_duration_ns": 4640510986
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais da preservação e reconhecimento de objetos intelectuais no contexto do BB-CORE, mas enfocam diferentes dimensões desses conceitos. O Registro A discute a distinção entre identidade e equivalência de conteúdo em representações intelectuais, enquanto o Registro B trata da independência entre a organização dos objetos preservados e a atividade intelectual que os produz.",
+          "excerpts_a": [
+            "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+          ],
+          "excerpts_b": [
+            "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz. A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados."
+          ],
+          "justification": "Ambos os registros enfatizam a importância de distinguir aspectos fundamentais na interação e preservação de objetos intelectuais. O Registro A destaca a necessidade de separar o reconhecimento da identidade do conteúdo, enquanto o Registro B argumenta que a organização dos objetos preservados não precisa refletir diretamente a atividade intelectual que os criou.",
+          "limitations": [
+            "O Registro A é uma análise conceitual e estática, sem validação empírica. O Registro B também é uma proposição conceitual derivada do caso BB-CORE, sem confronto sistemático com literatura ou usuários."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais da preservação e reconhecimento de objetos intelectuais no contexto do BB-CORE, mas enfocam diferentes dimensões desses conceitos. O Registro A discute a distinção entre identidade e equivalência de conteúdo em representações intelectuais, enquanto o Registro B trata da independência entre a organização dos objetos preservados e a atividade intelectual que os produz.\",\n  \"excerpts_a\": [\n    \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.\"\n  ],\n  \"excerpts_b\": [\n    \"A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz. A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a importância de distinguir aspectos fundamentais na interação e preservação de objetos intelectuais. O Registro A destaca a necessidade de separar o reconhecimento da identidade do conteúdo, enquanto o Registro B argumenta que a organização dos objetos preservados não precisa refletir diretamente a atividade intelectual que os criou.\",\n  \"limitations\": [\n    \"O Registro A é uma análise conceitual e estática, sem validação empírica. O Registro B também é uma proposição conceitual derivada do caso BB-CORE, sem confronto sistemático com literatura ou usuários.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz. A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.21,
+          "prompt_eval_count": 796,
+          "eval_count": 417,
+          "total_duration_ns": 6205698752
+        }
+      }
+    },
+    {
+      "pair_index": 4,
+      "record_a": {
+        "id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "version": 1,
+        "title": "A organização da memória não determina a organização da atividade intelectual"
+      },
+      "record_b": {
+        "id": "752eab672c1246acb4318bd83d98c5e9",
+        "version": 1,
+        "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais do desenvolvimento e uso do BB-CORE, focando em princípios que orientam a evolução da arquitetura de preservação e operações intelectuais. O Registro A discute como a organização dos objetos intelectuais não precisa refletir diretamente a atividade intelectual que os produz, enquanto o Registro B estabelece critérios para determinar quando uma etapa do desenvolvimento é suficiente.",
+          "excerpts_a": [
+            "A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados."
+          ],
+          "excerpts_b": [
+            "Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade; melhorias não essenciais devem ser orientadas pelo uso real."
+          ],
+          "justification": "Ambos os registros enfatizam a importância de princípios claros e pragmáticos para o desenvolvimento do BB-CORE. O Registro A sugere que a preservação dos objetos intelectuais pode ocorrer independentemente da atividade intelectual, enquanto o Registro B estabelece critérios funcionais para determinar quando uma etapa de desenvolvimento é suficiente.",
+          "limitations": [
+            "O Registro A é uma proposição conceitual derivada do caso BB-CORE e não foi confrontado sistematicamente com literatura ou usuários, enquanto o Registro B estabelece um critério de decisão que ainda não foi validado em nova conversa."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais do desenvolvimento e uso do BB-CORE, focando em princípios que orientam a evolução da arquitetura de preservação e operações intelectuais. O Registro A discute como a organização dos objetos intelectuais não precisa refletir diretamente a atividade intelectual que os produz, enquanto o Registro B estabelece critérios para determinar quando uma etapa do desenvolvimento é suficiente.\",\n  \"excerpts_a\": [\n    \"A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.\"\n  ],\n  \"excerpts_b\": [\n    \"Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade; melhorias não essenciais devem ser orientadas pelo uso real.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a importância de princípios claros e pragmáticos para o desenvolvimento do BB-CORE. O Registro A sugere que a preservação dos objetos intelectuais pode ocorrer independentemente da atividade intelectual, enquanto o Registro B estabelece critérios funcionais para determinar quando uma etapa de desenvolvimento é suficiente.\",\n  \"limitations\": [\n    \"O Registro A é uma proposição conceitual derivada do caso BB-CORE e não foi confrontado sistematicamente com literatura ou usuários, enquanto o Registro B estabelece um critério de decisão que ainda não foi validado em nova conversa.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade; melhorias não essenciais devem ser orientadas pelo uso real.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.74,
+          "prompt_eval_count": 825,
+          "eval_count": 389,
+          "total_duration_ns": 5740768115
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais do desenvolvimento e utilização do BB-CORE, focando em critérios de decisão e organização intelectual.",
+          "excerpts_a": [
+            "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações... melhorias não essenciais devem ser orientadas pelo uso real."
+          ],
+          "excerpts_b": [
+            "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz..."
+          ],
+          "justification": "O Registro A estabelece critérios para o encerramento de uma etapa do desenvolvimento do BB-CORE, focando na suficiência funcional e na priorização de correções essenciais. O Registro B propõe que a organização da memória não precisa refletir diretamente a atividade intelectual, permitindo flexibilidade na avaliação das funcionalidades do sistema. Ambos os registros enfatizam a importância de critérios claros e flexíveis para o desenvolvimento e utilização efetiva do BB-CORE.",
+          "limitations": [
+            "O Registro A é um critério de decisão que não indica se o marco foi atingido, enquanto o Registro B é uma proposição conceitual sem confronto sistemático com literatura ou usuários."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais do desenvolvimento e utilização do BB-CORE, focando em critérios de decisão e organização intelectual.\",\n  \"excerpts_a\": [\n    \"A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações... melhorias não essenciais devem ser orientadas pelo uso real.\"\n  ],\n  \"excerpts_b\": [\n    \"A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz...\"\n  ],\n  \"justification\": \"O Registro A estabelece critérios para o encerramento de uma etapa do desenvolvimento do BB-CORE, focando na suficiência funcional e na priorização de correções essenciais. O Registro B propõe que a organização da memória não precisa refletir diretamente a atividade intelectual, permitindo flexibilidade na avaliação das funcionalidades do sistema. Ambos os registros enfatizam a importância de critérios claros e flexíveis para o desenvolvimento e utilização efetiva do BB-CORE.\",\n  \"limitations\": [\n    \"O Registro A é um critério de decisão que não indica se o marco foi atingido, enquanto o Registro B é uma proposição conceitual sem confronto sistemático com literatura ou usuários.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações... melhorias não essenciais devem ser orientadas pelo uso real.",
+            "exact_match": false
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz...",
+            "exact_match": false
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.18,
+          "prompt_eval_count": 825,
+          "eval_count": 337,
+          "total_duration_ns": 5175414549
+        }
+      }
+    },
+    {
+      "pair_index": 5,
+      "record_a": {
+        "id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "version": 1,
+        "title": "A organização da memória não determina a organização da atividade intelectual"
+      },
+      "record_b": {
+        "id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "version": 1,
+        "title": "Continuidade intelectual pela retomada do contexto de origem"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros discutem a continuidade intelectual e a preservação de contextos de atividade intelectual em diferentes ambientes. O Registro A enfatiza que a organização da memória não precisa reproduzir a estrutura da atividade intelectual, enquanto o Registro B argumenta que a continuidade pode ser alcançada tanto pela recuperação do conhecimento quanto pela retomada dos contextos de origem.",
+          "excerpts_a": [
+            "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz."
+          ],
+          "excerpts_b": [
+            "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+          ],
+          "justification": "Ambos os registros abordam a ideia de continuidade intelectual e a preservação de contextos, mas enfatizam aspectos diferentes. O Registro A foca na independência da organização da memória em relação à atividade intelectual, enquanto o Registro B discute como a continuidade pode ser alcançada através da retomada dos contextos originais.",
+          "limitations": [
+            "Ambos os registros são proposições conceituais derivadas do caso BB-CORE e não foram confrontados sistematicamente com literatura ou experiência independente."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros discutem a continuidade intelectual e a preservação de contextos de atividade intelectual em diferentes ambientes. O Registro A enfatiza que a organização da memória não precisa reproduzir a estrutura da atividade intelectual, enquanto o Registro B argumenta que a continuidade pode ser alcançada tanto pela recuperação do conhecimento quanto pela retomada dos contextos de origem.\",\n  \"excerpts_a\": [\n    \"A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.\"\n  ],\n  \"excerpts_b\": [\n    \"A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.\"\n  ],\n  \"justification\": \"Ambos os registros abordam a ideia de continuidade intelectual e a preservação de contextos, mas enfatizam aspectos diferentes. O Registro A foca na independência da organização da memória em relação à atividade intelectual, enquanto o Registro B discute como a continuidade pode ser alcançada através da retomada dos contextos originais.\",\n  \"limitations\": [\n    \"Ambos os registros são proposições conceituais derivadas do caso BB-CORE e não foram confrontados sistematicamente com literatura ou experiência independente.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.44,
+          "prompt_eval_count": 880,
+          "eval_count": 367,
+          "total_duration_ns": 5435323274
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam a ideia de continuidade intelectual entre ambientes distintos, seja na preservação e recuperação do conhecimento (Registro A) ou na organização dos objetos intelectuais sem reproduzir a estrutura da atividade que os produziu (Registro B).",
+          "excerpts_a": [
+            "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+          ],
+          "excerpts_b": [
+            "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz. A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados."
+          ],
+          "justification": "Ambos os registros enfatizam a importância de manter a continuidade intelectual através da separação clara entre o ambiente onde o conhecimento é gerado e o ambiente onde ele é preservado. O Registro A foca na retomada dos contextos originais para garantir essa continuidade, enquanto o Registro B argumenta que a organização de um sistema de preservação não precisa refletir diretamente a estrutura da atividade intelectual que gerou os objetos preservados. Ambas as proposições visam evitar a centralização excessiva e promover uma flexibilidade maior na continuidade do conhecimento.",
+          "limitations": [
+            "Ambos os registros são propostas conceituais ainda não confrontadas sistematicamente com literatura ou experiência independente, o que limita sua validação ampla.",
+            "O Registro A menciona a dificuldade de preservar conversas e contextos originais de forma confiável.",
+            "O Registro B é derivado do caso específico BB-CORE e pode ser um desdobramento de outro achado (BB-CORE-INSIGHT-001), mas essa relação não foi confirmada."
+          ],
+          "abstention_reason": ""
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam a ideia de continuidade intelectual entre ambientes distintos, seja na preservação e recuperação do conhecimento (Registro A) ou na organização dos objetos intelectuais sem reproduzir a estrutura da atividade que os produziu (Registro B).\",\n  \"excerpts_a\": [\n    \"A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.\"\n  ],\n  \"excerpts_b\": [\n    \"A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz. A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a importância de manter a continuidade intelectual através da separação clara entre o ambiente onde o conhecimento é gerado e o ambiente onde ele é preservado. O Registro A foca na retomada dos contextos originais para garantir essa continuidade, enquanto o Registro B argumenta que a organização de um sistema de preservação não precisa refletir diretamente a estrutura da atividade intelectual que gerou os objetos preservados. Ambas as proposições visam evitar a centralização excessiva e promover uma flexibilidade maior na continuidade do conhecimento.\",\n  \"limitations\": [\n    \"Ambos os registros são propostas conceituais ainda não confrontadas sistematicamente com literatura ou experiência independente, o que limita sua validação ampla.\",\n    \"O Registro A menciona a dificuldade de preservar conversas e contextos originais de forma confiável.\",\n    \"O Registro B é derivado do caso específico BB-CORE e pode ser um desdobramento de outro achado (BB-CORE-INSIGHT-001), mas essa relação não foi confirmada.\"\n  ],\n  \"abstention_reason\": \"\"\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz. A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 7.34,
+          "prompt_eval_count": 880,
+          "eval_count": 499,
+          "total_duration_ns": 7335601296
+        }
+      }
+    },
+    {
+      "pair_index": 6,
+      "record_a": {
+        "id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "version": 1,
+        "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual"
+      },
+      "record_b": {
+        "id": "87f47b767c6e4994a3746c0375ff5348",
+        "version": 1,
+        "title": "Preservação de uma representação não comprova fidelidade à fonte de origem"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais sobre a natureza e as limitações da preservação e recuperação de conhecimento intelectual no contexto do BB-CORE. O Registro A enfoca-se na distinção entre o fato de um acontecimento ter ocorrido e a disponibilidade dos detalhes necessários para sua reanálise, enquanto o Registro B trata especificamente da diferença entre a preservação física de uma representação e a garantia de que essa representação é fiel à fonte original.",
+          "excerpts_a": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação."
+          ],
+          "excerpts_b": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "justification": "Ambos os registros compartilham uma preocupação com a distinção entre a existência e o conteúdo efetivo de um registro intelectual. O Registro A discute como a mera documentação da ocorrência de um evento não garante que todas as informações necessárias para sua reanálise estejam disponíveis, enquanto o Registro B enfatiza que a preservação física de uma representação não implica em garantir a fidelidade dessa representação à fonte original. Ambos os registros destacam a importância de distinguir entre diferentes aspectos da integridade e autenticidade dos registros intelectuais.",
+          "limitations": [
+            "O Registro A enfatiza que a suficiência do contexto para recuperação depende da finalidade específica, enquanto o Registro B limita-se a delimitar o alcance da garantia de preservação técnica sem afirmar falsidade."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais sobre a natureza e as limitações da preservação e recuperação de conhecimento intelectual no contexto do BB-CORE. O Registro A enfoca-se na distinção entre o fato de um acontecimento ter ocorrido e a disponibilidade dos detalhes necessários para sua reanálise, enquanto o Registro B trata especificamente da diferença entre a preservação física de uma representação e a garantia de que essa representação é fiel à fonte original.\",\n  \"excerpts_a\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.\"\n  ],\n  \"excerpts_b\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"justification\": \"Ambos os registros compartilham uma preocupação com a distinção entre a existência e o conteúdo efetivo de um registro intelectual. O Registro A discute como a mera documentação da ocorrência de um evento não garante que todas as informações necessárias para sua reanálise estejam disponíveis, enquanto o Registro B enfatiza que a preservação física de uma representação não implica em garantir a fidelidade dessa representação à fonte original. Ambos os registros destacam a importância de distinguir entre diferentes aspectos da integridade e autenticidade dos registros intelectuais.\",\n  \"limitations\": [\n    \"O Registro A enfatiza que a suficiência do contexto para recuperação depende da finalidade específica, enquanto o Registro B limita-se a delimitar o alcance da garantia de preservação técnica sem afirmar falsidade.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.55,
+          "prompt_eval_count": 796,
+          "eval_count": 451,
+          "total_duration_ns": 6550660353
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam a distinção entre a existência de um evento ou documento intelectual e sua fidelidade ou integridade no que diz respeito ao conteúdo original. O Registro A enfoca a separação entre a preservação técnica (integridade dos bytes) e a autenticidade do conhecimento, enquanto o Registro B discute a diferença entre documentar a existência de um evento intelectual e fornecer seu conteúdo efetivamente recuperável para novas investigações.",
+          "excerpts_a": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "excerpts_b": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+          ],
+          "justification": "Ambos os registros enfatizam que a mera documentação ou preservação da existência de um evento intelectual não garante sua fidelidade ou integridade no contexto do conhecimento original. O Registro A foca na separação entre a preservação técnica e a autenticidade, enquanto o Registro B se concentra na distinção entre documentar a existência e fornecer conteúdo recuperável para novas investigações.",
+          "limitations": [
+            "O Registro A não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia.",
+            "O Registro B não pressupõe exportação integral de todas as fontes em toda consulta."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam a distinção entre a existência de um evento ou documento intelectual e sua fidelidade ou integridade no que diz respeito ao conteúdo original. O Registro A enfoca a separação entre a preservação técnica (integridade dos bytes) e a autenticidade do conhecimento, enquanto o Registro B discute a diferença entre documentar a existência de um evento intelectual e fornecer seu conteúdo efetivamente recuperável para novas investigações.\",\n  \"excerpts_a\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"excerpts_b\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam que a mera documentação ou preservação da existência de um evento intelectual não garante sua fidelidade ou integridade no contexto do conhecimento original. O Registro A foca na separação entre a preservação técnica e a autenticidade, enquanto o Registro B se concentra na distinção entre documentar a existência e fornecer conteúdo recuperável para novas investigações.\",\n  \"limitations\": [\n    \"O Registro A não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia.\",\n    \"O Registro B não pressupõe exportação integral de todas as fontes em toda consulta.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.47,
+          "prompt_eval_count": 796,
+          "eval_count": 447,
+          "total_duration_ns": 6465925344
+        }
+      }
+    },
+    {
+      "pair_index": 7,
+      "record_a": {
+        "id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "version": 1,
+        "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual"
+      },
+      "record_b": {
+        "id": "784c05eb89d5436b942e340d109dcebb",
+        "version": 1,
+        "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam a distinção entre reconhecer a existência de um objeto intelectual e garantir que seu conteúdo seja integralmente preservado para fins de recuperação ou análise. O Registro A foca na necessidade de distinguir a mera existência de um acontecimento intelectual da disponibilidade do seu conteúdo, enquanto o Registro B enfatiza que reconhecer a identidade de dois objetos intelectuais não implica em garantir a equivalência integral de seus conteúdos.",
+          "excerpts_a": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação."
+          ],
+          "excerpts_b": [
+            "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+          ],
+          "justification": "Ambos os registros enfatizam a importância de distinguir entre o reconhecimento da existência de um objeto intelectual (ou acontecimento) e a garantia de que seu conteúdo é integralmente preservado. Essa distinção é crucial para evitar confusões sobre a equivalência ou integridade do conhecimento associado ao objeto.",
+          "limitations": [
+            "Ambos os registros são conceituais e não baseiam-se em validação empírica, o que limita sua aplicação direta sem considerações adicionais de contexto específico."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam a distinção entre reconhecer a existência de um objeto intelectual e garantir que seu conteúdo seja integralmente preservado para fins de recuperação ou análise. O Registro A foca na necessidade de distinguir a mera existência de um acontecimento intelectual da disponibilidade do seu conteúdo, enquanto o Registro B enfatiza que reconhecer a identidade de dois objetos intelectuais não implica em garantir a equivalência integral de seus conteúdos.\",\n  \"excerpts_a\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.\"\n  ],\n  \"excerpts_b\": [\n    \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a importância de distinguir entre o reconhecimento da existência de um objeto intelectual (ou acontecimento) e a garantia de que seu conteúdo é integralmente preservado. Essa distinção é crucial para evitar confusões sobre a equivalência ou integridade do conhecimento associado ao objeto.\",\n  \"limitations\": [\n    \"Ambos os registros são conceituais e não baseiam-se em validação empírica, o que limita sua aplicação direta sem considerações adicionais de contexto específico.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.59,
+          "prompt_eval_count": 794,
+          "eval_count": 381,
+          "total_duration_ns": 5594337979
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam a distinção entre reconhecer a existência de um objeto intelectual (ou acontecimento) e garantir que o conteúdo completo, fundamentos, evidências e limitações associados a ele são integralmente preservados ou disponíveis para recuperação.",
+          "excerpts_a": [
+            "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+          ],
+          "excerpts_b": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+          ],
+          "justification": "Ambos os registros enfatizam a necessidade de distinção entre o reconhecimento da identidade ou existência de um objeto intelectual (ou acontecimento) e a garantia de que todos os aspectos relevantes associados a ele são integralmente preservados. Essa distinção é crucial para evitar confusões sobre o grau de conhecimento disponível e assegurar uma recuperação contextualizada.",
+          "limitations": [
+            "Ambos os registros reconhecem limitações conceituais, sendo baseados em inspeções estáticas do código ou análise teórica sem validação empírica. A equivalência intelectual não pode ser decidida apenas por hashes e a suficiência do contexto depende da finalidade da recuperação."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam a distinção entre reconhecer a existência de um objeto intelectual (ou acontecimento) e garantir que o conteúdo completo, fundamentos, evidências e limitações associados a ele são integralmente preservados ou disponíveis para recuperação.\",\n  \"excerpts_a\": [\n    \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.\"\n  ],\n  \"excerpts_b\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a necessidade de distinção entre o reconhecimento da identidade ou existência de um objeto intelectual (ou acontecimento) e a garantia de que todos os aspectos relevantes associados a ele são integralmente preservados. Essa distinção é crucial para evitar confusões sobre o grau de conhecimento disponível e assegurar uma recuperação contextualizada.\",\n  \"limitations\": [\n    \"Ambos os registros reconhecem limitações conceituais, sendo baseados em inspeções estáticas do código ou análise teórica sem validação empírica. A equivalência intelectual não pode ser decidida apenas por hashes e a suficiência do contexto depende da finalidade da recuperação.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.1,
+          "prompt_eval_count": 794,
+          "eval_count": 419,
+          "total_duration_ns": 6101396483
+        }
+      }
+    },
+    {
+      "pair_index": 8,
+      "record_a": {
+        "id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "version": 1,
+        "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual"
+      },
+      "record_b": {
+        "id": "752eab672c1246acb4318bd83d98c5e9",
+        "version": 1,
+        "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos cruciais do desenvolvimento e fundamentos do BB-CORE, focando em critérios de recuperação e validação de informações.",
+          "excerpts_a": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação."
+          ],
+          "excerpts_b": [
+            "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+          ],
+          "justification": "O Registro A enfoca a distinção entre a existência de um acontecimento intelectual e o conteúdo necessário para sua recuperação contextualizada. O Registro B estabelece critérios funcionais para encerrar uma etapa do desenvolvimento, incluindo operações de recuperação e exportação. Ambos os registros se relacionam com a necessidade de definir claramente quando e como as informações são recuperadas e validadas no contexto do BB-CORE.",
+          "limitations": [
+            "O Registro A não pressupõe uma exportação integral de todas as fontes em toda consulta, indicando que a recuperação deve ser contextualizada e relevante para o uso específico.",
+            "O Registro B adia a validação da adoção do critério MVP-1, sugerindo que ainda há discussões pendentes sobre quando exatamente essas etapas devem ser concluídas."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos cruciais do desenvolvimento e fundamentos do BB-CORE, focando em critérios de recuperação e validação de informações.\",\n  \"excerpts_a\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.\"\n  ],\n  \"excerpts_b\": [\n    \"A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.\"\n  ],\n  \"justification\": \"O Registro A enfoca a distinção entre a existência de um acontecimento intelectual e o conteúdo necessário para sua recuperação contextualizada. O Registro B estabelece critérios funcionais para encerrar uma etapa do desenvolvimento, incluindo operações de recuperação e exportação. Ambos os registros se relacionam com a necessidade de definir claramente quando e como as informações são recuperadas e validadas no contexto do BB-CORE.\",\n  \"limitations\": [\n    \"O Registro A não pressupõe uma exportação integral de todas as fontes em toda consulta, indicando que a recuperação deve ser contextualizada e relevante para o uso específico.\",\n    \"O Registro B adia a validação da adoção do critério MVP-1, sugerindo que ainda há discussões pendentes sobre quando exatamente essas etapas devem ser concluídas.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.5,
+          "prompt_eval_count": 823,
+          "eval_count": 372,
+          "total_duration_ns": 5501041065
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais do processo de desenvolvimento e utilização do BB-CORE, focando na necessidade de estabelecer critérios claros para a validação e recuperação de informações. O Registro A define um critério funcional para encerrar uma etapa de desenvolvimento, enquanto o Registro B propõe uma distinção entre a existência de um acontecimento intelectual e seu conteúdo recuperável.",
+          "excerpts_a": [
+            "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+          ],
+          "excerpts_b": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+          ],
+          "justification": "Ambos os registros enfatizam a necessidade de critérios claros para determinar quando uma etapa ou processo é suficiente. O Registro A estabelece um critério funcional para encerrar o desenvolvimento do BB-CORE, enquanto o Registro B propõe uma distinção fundamental na recuperação de acontecimentos intelectuais. Essa conexão se baseia no princípio comum de que a validação e a recuperação eficazes requerem critérios bem definidos.",
+          "limitations": [
+            "O Registro A não estabelece que o marco foi atingido, apenas define um critério para interromper a expansão do escopo. O Registro B também não pressupõe uma exportação integral de todas as fontes em toda consulta."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais do processo de desenvolvimento e utilização do BB-CORE, focando na necessidade de estabelecer critérios claros para a validação e recuperação de informações. O Registro A define um critério funcional para encerrar uma etapa de desenvolvimento, enquanto o Registro B propõe uma distinção entre a existência de um acontecimento intelectual e seu conteúdo recuperável.\",\n  \"excerpts_a\": [\n    \"A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.\"\n  ],\n  \"excerpts_b\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a necessidade de critérios claros para determinar quando uma etapa ou processo é suficiente. O Registro A estabelece um critério funcional para encerrar o desenvolvimento do BB-CORE, enquanto o Registro B propõe uma distinção fundamental na recuperação de acontecimentos intelectuais. Essa conexão se baseia no princípio comum de que a validação e a recuperação eficazes requerem critérios bem definidos.\",\n  \"limitations\": [\n    \"O Registro A não estabelece que o marco foi atingido, apenas define um critério para interromper a expansão do escopo. O Registro B também não pressupõe uma exportação integral de todas as fontes em toda consulta.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.41,
+          "prompt_eval_count": 823,
+          "eval_count": 448,
+          "total_duration_ns": 6409104465
+        }
+      }
+    },
+    {
+      "pair_index": 9,
+      "record_a": {
+        "id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "version": 1,
+        "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual"
+      },
+      "record_b": {
+        "id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "version": 1,
+        "title": "Continuidade intelectual pela retomada do contexto de origem"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros discutem aspectos fundamentais da recuperação e continuidade intelectual de acontecimentos ou contextos de atividade intelectual, focando na necessidade de preservar não apenas o resultado final mas também as condições que permitiram sua criação.",
+          "excerpts_a": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+          ],
+          "excerpts_b": [
+            "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+            "Permite conceber o acervo como ponto de acesso tanto aos resultados intelectuais quanto aos ambientes em que foram elaborados."
+          ],
+          "justification": "Ambos os registros enfatizam a importância da preservação do contexto e dos fundamentos para garantir uma recuperação efetiva e contínua. O Registro A destaca a necessidade de distinguir a existência de um acontecimento intelectual de seu conteúdo, enquanto o Registro B aborda a continuidade intelectual através da retomada do contexto original que gerou conhecimentos específicos.",
+          "limitations": [
+            "Ambos os registros reconhecem limitações na avaliação completa e independente das propostas conceituais apresentadas. O Registro A menciona que a suficiência do contexto depende da finalidade da recuperação, enquanto o Registro B indica que a proposição ainda não foi confrontada sistematicamente com literatura ou experiência independente."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros discutem aspectos fundamentais da recuperação e continuidade intelectual de acontecimentos ou contextos de atividade intelectual, focando na necessidade de preservar não apenas o resultado final mas também as condições que permitiram sua criação.\",\n  \"excerpts_a\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\"\n  ],\n  \"excerpts_b\": [\n    \"A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.\",\n    \"Permite conceber o acervo como ponto de acesso tanto aos resultados intelectuais quanto aos ambientes em que foram elaborados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a importância da preservação do contexto e dos fundamentos para garantir uma recuperação efetiva e contínua. O Registro A destaca a necessidade de distinguir a existência de um acontecimento intelectual de seu conteúdo, enquanto o Registro B aborda a continuidade intelectual através da retomada do contexto original que gerou conhecimentos específicos.\",\n  \"limitations\": [\n    \"Ambos os registros reconhecem limitações na avaliação completa e independente das propostas conceituais apresentadas. O Registro A menciona que a suficiência do contexto depende da finalidade da recuperação, enquanto o Registro B indica que a proposição ainda não foi confrontada sistematicamente com literatura ou experiência independente.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+            "exact_match": true
+          },
+          {
+            "excerpt": "Permite conceber o acervo como ponto de acesso tanto aos resultados intelectuais quanto aos ambientes em que foram elaborados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.46,
+          "prompt_eval_count": 878,
+          "eval_count": 443,
+          "total_duration_ns": 6460442348
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais da continuidade intelectual, focando na importância de preservar tanto a existência quanto o contexto dos acontecimentos intelectuais para permitir uma recuperação e análise adequadas. O Registro A enfatiza a retomada do contexto original como um meio de garantir a continuidade intelectual, enquanto o Registro B destaca a necessidade de distinguir a existência de um evento da sua documentação efetiva.",
+          "excerpts_a": [
+            "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade."
+          ],
+          "excerpts_b": [
+            "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+          ],
+          "justification": "Ambos os registros enfatizam a importância da preservação contextual para garantir uma recuperação intelectual adequada. O Registro A sugere que a continuidade intelectual pode ser alcançada através da retomada do contexto original, enquanto o Registro B argumenta que é necessário distinguir a existência de um evento de sua documentação efetiva para permitir uma análise contextualizada.",
+          "limitations": [
+            "Ambos os registros são proposições conceituais ainda não confrontadas sistematicamente com literatura ou experiência independente, limitando a validade generalizável das ideias apresentadas."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais da continuidade intelectual, focando na importância de preservar tanto a existência quanto o contexto dos acontecimentos intelectuais para permitir uma recuperação e análise adequadas. O Registro A enfatiza a retomada do contexto original como um meio de garantir a continuidade intelectual, enquanto o Registro B destaca a necessidade de distinguir a existência de um evento da sua documentação efetiva.\",\n  \"excerpts_a\": [\n    \"A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.\"\n  ],\n  \"excerpts_b\": [\n    \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a importância da preservação contextual para garantir uma recuperação intelectual adequada. O Registro A sugere que a continuidade intelectual pode ser alcançada através da retomada do contexto original, enquanto o Registro B argumenta que é necessário distinguir a existência de um evento de sua documentação efetiva para permitir uma análise contextualizada.\",\n  \"limitations\": [\n    \"Ambos os registros são proposições conceituais ainda não confrontadas sistematicamente com literatura ou experiência independente, limitando a validade generalizável das ideias apresentadas.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.85,
+          "prompt_eval_count": 878,
+          "eval_count": 403,
+          "total_duration_ns": 5845372416
+        }
+      }
+    },
+    {
+      "pair_index": 10,
+      "record_a": {
+        "id": "87f47b767c6e4994a3746c0375ff5348",
+        "version": 1,
+        "title": "Preservação de uma representação não comprova fidelidade à fonte de origem"
+      },
+      "record_b": {
+        "id": "784c05eb89d5436b942e340d109dcebb",
+        "version": 1,
+        "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam a distinção entre a integridade e autenticidade de representações intelectuais, enfatizando que a preservação ou reconhecimento da identidade não implica necessariamente na fidelidade do conteúdo ou validação científica.",
+          "excerpts_a": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "excerpts_b": [
+            "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+          ],
+          "justification": "Ambos os registros enfatizam a distinção entre a integridade de uma representação intelectual (ou seja, sua autenticidade em termos técnicos) e a fidelidade do conteúdo que ela pretende transmitir. O Registro A foca na preservação técnica não garantindo a fidelidade à fonte original, enquanto o Registro B discute como reconhecer a identidade de uma representação sem confirmar integralmente seu conteúdo.",
+          "limitations": [
+            "Ambos os registros são conceitualmente fundamentados e não fornecem validações empíricas ou taxonomias obrigatórias para apoiar suas proposições."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam a distinção entre a integridade e autenticidade de representações intelectuais, enfatizando que a preservação ou reconhecimento da identidade não implica necessariamente na fidelidade do conteúdo ou validação científica.\",\n  \"excerpts_a\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"excerpts_b\": [\n    \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a distinção entre a integridade de uma representação intelectual (ou seja, sua autenticidade em termos técnicos) e a fidelidade do conteúdo que ela pretende transmitir. O Registro A foca na preservação técnica não garantindo a fidelidade à fonte original, enquanto o Registro B discute como reconhecer a identidade de uma representação sem confirmar integralmente seu conteúdo.\",\n  \"limitations\": [\n    \"Ambos os registros são conceitualmente fundamentados e não fornecem validações empíricas ou taxonomias obrigatórias para apoiar suas proposições.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.47,
+          "prompt_eval_count": 797,
+          "eval_count": 370,
+          "total_duration_ns": 5467489113
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam a distinção entre a identidade e a fidelidade do conteúdo em diferentes contextos intelectuais.",
+          "excerpts_a": [
+            "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, evidências e atribuições são idênticos ou foram preservados."
+          ],
+          "excerpts_b": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "justification": "Ambos os registros enfatizam a distinção entre a identificação e a fidelidade do conteúdo. O Registro A discute como reconhecer a mesma representação não implica na preservação integral dos detalhes associados, enquanto o Registro B argumenta que a integridade de um documento não garante sua fidelidade à fonte original ou ao processo intelectual subjacente.",
+          "limitations": [
+            "Ambos os registros são conceituais e baseiam-se em análise estática do código, sem validação empírica. Eles destacam limitações na interpretação da preservação técnica como garantia de autenticidade ou fidelidade."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam a distinção entre a identidade e a fidelidade do conteúdo em diferentes contextos intelectuais.\",\n  \"excerpts_a\": [\n    \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, evidências e atribuições são idênticos ou foram preservados.\"\n  ],\n  \"excerpts_b\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a distinção entre a identificação e a fidelidade do conteúdo. O Registro A discute como reconhecer a mesma representação não implica na preservação integral dos detalhes associados, enquanto o Registro B argumenta que a integridade de um documento não garante sua fidelidade à fonte original ou ao processo intelectual subjacente.\",\n  \"limitations\": [\n    \"Ambos os registros são conceituais e baseiam-se em análise estática do código, sem validação empírica. Eles destacam limitações na interpretação da preservação técnica como garantia de autenticidade ou fidelidade.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, evidências e atribuições são idênticos ou foram preservados.",
+            "exact_match": false
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.16,
+          "prompt_eval_count": 797,
+          "eval_count": 340,
+          "total_duration_ns": 5155954749
+        }
+      }
+    },
+    {
+      "pair_index": 11,
+      "record_a": {
+        "id": "87f47b767c6e4994a3746c0375ff5348",
+        "version": 1,
+        "title": "Preservação de uma representação não comprova fidelidade à fonte de origem"
+      },
+      "record_b": {
+        "id": "752eab672c1246acb4318bd83d98c5e9",
+        "version": 1,
+        "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais do desenvolvimento e aplicação do BB-CORE, focando em questões de integridade e fidelidade da representação dos achados intelectuais. O Registro A enfatiza que a preservação técnica não garante a autenticidade ou fidelidade à fonte original, enquanto o Registro B estabelece critérios para encerrar uma etapa do desenvolvimento com base na suficiência funcional das operações.",
+          "excerpts_a": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "excerpts_b": [
+            "Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade;"
+          ],
+          "justification": "Ambos os registros discutem a importância de distinguir entre a preservação técnica e a autenticidade/fidelidade dos achados intelectuais. O Registro A alerta sobre o risco de confundir integridade com fidelidade, enquanto o Registro B estabelece critérios para garantir que as correções essenciais sejam priorizadas durante o desenvolvimento do BB-CORE.",
+          "limitations": [
+            "O Registro A não fornece uma demonstração direta de falsidade das fontes ou da representação, apenas delimita o alcance da garantia técnica.",
+            "O Registro B define critérios para encerrar a etapa atual do desenvolvimento, mas não indica que esses critérios já foram atingidos."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais do desenvolvimento e aplicação do BB-CORE, focando em questões de integridade e fidelidade da representação dos achados intelectuais. O Registro A enfatiza que a preservação técnica não garante a autenticidade ou fidelidade à fonte original, enquanto o Registro B estabelece critérios para encerrar uma etapa do desenvolvimento com base na suficiência funcional das operações.\",\n  \"excerpts_a\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"excerpts_b\": [\n    \"Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade;\"\n  ],\n  \"justification\": \"Ambos os registros discutem a importância de distinguir entre a preservação técnica e a autenticidade/fidelidade dos achados intelectuais. O Registro A alerta sobre o risco de confundir integridade com fidelidade, enquanto o Registro B estabelece critérios para garantir que as correções essenciais sejam priorizadas durante o desenvolvimento do BB-CORE.\",\n  \"limitations\": [\n    \"O Registro A não fornece uma demonstração direta de falsidade das fontes ou da representação, apenas delimita o alcance da garantia técnica.\",\n    \"O Registro B define critérios para encerrar a etapa atual do desenvolvimento, mas não indica que esses critérios já foram atingidos.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade;",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.11,
+          "prompt_eval_count": 826,
+          "eval_count": 413,
+          "total_duration_ns": 6110137519
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais do desenvolvimento e utilização do BB-CORE, focando em critérios de qualidade e validade dos dados e operações.",
+          "excerpts_a": [
+            "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+          ],
+          "excerpts_b": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "justification": "O Registro A estabelece critérios para o encerramento de uma etapa do desenvolvimento do BB-CORE, enfatizando a suficiência das operações e a integridade dos dados. O Registro B discute que a preservação técnica não garante fidelidade à fonte original, separando a integridade dos bytes da validade do conhecimento. Ambos os registros se preocupam com as garantias de qualidade e autenticidade das operações e representações no BB-CORE.",
+          "limitations": [
+            "O Registro A foca em critérios para encerrar uma etapa, enquanto o Registro B trata especificamente da distinção entre integridade técnica e fidelidade à fonte original."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais do desenvolvimento e utilização do BB-CORE, focando em critérios de qualidade e validade dos dados e operações.\",\n  \"excerpts_a\": [\n    \"A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.\"\n  ],\n  \"excerpts_b\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"justification\": \"O Registro A estabelece critérios para o encerramento de uma etapa do desenvolvimento do BB-CORE, enfatizando a suficiência das operações e a integridade dos dados. O Registro B discute que a preservação técnica não garante fidelidade à fonte original, separando a integridade dos bytes da validade do conhecimento. Ambos os registros se preocupam com as garantias de qualidade e autenticidade das operações e representações no BB-CORE.\",\n  \"limitations\": [\n    \"O Registro A foca em critérios para encerrar uma etapa, enquanto o Registro B trata especificamente da distinção entre integridade técnica e fidelidade à fonte original.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.31,
+          "prompt_eval_count": 826,
+          "eval_count": 354,
+          "total_duration_ns": 5309638491
+        }
+      }
+    },
+    {
+      "pair_index": 12,
+      "record_a": {
+        "id": "87f47b767c6e4994a3746c0375ff5348",
+        "version": 1,
+        "title": "Preservação de uma representação não comprova fidelidade à fonte de origem"
+      },
+      "record_b": {
+        "id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "version": 1,
+        "title": "Continuidade intelectual pela retomada do contexto de origem"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros discutem aspectos da preservação e validação de conhecimento intelectual, mas enfatizam perspectivas distintas: o Registro A foca na distinção entre a integridade técnica de um documento e sua fidelidade à fonte original; já o Registro B aborda a continuidade intelectual através da retomada do contexto de origem. Ambos alertam para limitações na interpretação automática ou simplista desses conceitos.",
+          "excerpts_a": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "excerpts_b": [
+            "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+          ],
+          "justification": "Ambos os registros tratam da complexidade envolvida na preservação e validação de conhecimentos intelectuais, destacando que aspectos técnicos (como integridade do documento) não garantem necessariamente fidelidade ou continuidade contextual. O Registro A enfatiza a distinção entre integridade técnica e fidelidade à fonte original; o Registro B discute como a retomada de contextos originais pode promover uma continuidade intelectual mais rica, além da simples recuperação do conhecimento.",
+          "limitations": [
+            "O Registro A não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia. O Registro B é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros discutem aspectos da preservação e validação de conhecimento intelectual, mas enfatizam perspectivas distintas: o Registro A foca na distinção entre a integridade técnica de um documento e sua fidelidade à fonte original; já o Registro B aborda a continuidade intelectual através da retomada do contexto de origem. Ambos alertam para limitações na interpretação automática ou simplista desses conceitos.\",\n  \"excerpts_a\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"excerpts_b\": [\n    \"A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.\"\n  ],\n  \"justification\": \"Ambos os registros tratam da complexidade envolvida na preservação e validação de conhecimentos intelectuais, destacando que aspectos técnicos (como integridade do documento) não garantem necessariamente fidelidade ou continuidade contextual. O Registro A enfatiza a distinção entre integridade técnica e fidelidade à fonte original; o Registro B discute como a retomada de contextos originais pode promover uma continuidade intelectual mais rica, além da simples recuperação do conhecimento.\",\n  \"limitations\": [\n    \"O Registro A não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia. O Registro B é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.65,
+          "prompt_eval_count": 881,
+          "eval_count": 454,
+          "total_duration_ns": 6650881871
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais sobre a preservação e validade do conhecimento intelectual, mas de maneiras distintas. O Registro A foca na importância da continuidade intelectual através da retomada dos contextos originais onde o conhecimento foi gerado, enquanto o Registro B enfatiza que a integridade técnica de um documento não garante sua fidelidade à fonte original ou autenticidade do processo intelectual.",
+          "excerpts_a": [
+            "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+          ],
+          "excerpts_b": [
+            "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+          ],
+          "justification": "Ambos os registros discutem aspectos cruciais da preservação e validade do conhecimento. O Registro A sugere que a continuidade intelectual pode ser mantida através da retomada dos contextos originais, enquanto o Registro B alerta sobre as limitações de garantir a fidelidade e autenticidade apenas pela integridade técnica de um documento.",
+          "limitations": [
+            "O Registro A enfatiza que a conversa não preserva a atividade intelectual documentada e pode mudar ou ficar indisponível, enquanto o Registro B destaca que a integridade dos bytes não garante a fidelidade da representação ou validade do conhecimento."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais sobre a preservação e validade do conhecimento intelectual, mas de maneiras distintas. O Registro A foca na importância da continuidade intelectual através da retomada dos contextos originais onde o conhecimento foi gerado, enquanto o Registro B enfatiza que a integridade técnica de um documento não garante sua fidelidade à fonte original ou autenticidade do processo intelectual.\",\n  \"excerpts_a\": [\n    \"A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.\"\n  ],\n  \"excerpts_b\": [\n    \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\"\n  ],\n  \"justification\": \"Ambos os registros discutem aspectos cruciais da preservação e validade do conhecimento. O Registro A sugere que a continuidade intelectual pode ser mantida através da retomada dos contextos originais, enquanto o Registro B alerta sobre as limitações de garantir a fidelidade e autenticidade apenas pela integridade técnica de um documento.\",\n  \"limitations\": [\n    \"O Registro A enfatiza que a conversa não preserva a atividade intelectual documentada e pode mudar ou ficar indisponível, enquanto o Registro B destaca que a integridade dos bytes não garante a fidelidade da representação ou validade do conhecimento.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.17,
+          "prompt_eval_count": 881,
+          "eval_count": 417,
+          "total_duration_ns": 6166590301
+        }
+      }
+    },
+    {
+      "pair_index": 13,
+      "record_a": {
+        "id": "784c05eb89d5436b942e340d109dcebb",
+        "version": 1,
+        "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo"
+      },
+      "record_b": {
+        "id": "752eab672c1246acb4318bd83d98c5e9",
+        "version": 1,
+        "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais do desenvolvimento e uso do BB-CORE, mas de maneiras distintas: o Registro A trata da distinção entre reconhecimento de identidade e confirmação integral do conteúdo, enquanto o Registro B estabelece critérios para a conclusão de uma etapa de desenvolvimento baseada na suficiência funcional.",
+          "excerpts_a": [
+            "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+          ],
+          "excerpts_b": [
+            "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+          ],
+          "justification": "Ambos os registros lidam com aspectos cruciais da gestão e desenvolvimento do BB-CORE. O Registro A enfoca a distinção entre reconhecimento de identidade e confirmação integral do conteúdo, enquanto o Registro B estabelece critérios para determinar quando uma etapa de desenvolvimento é suficiente funcionalmente. Esses aspectos são interconectados na medida em que ambos tratam da integridade e validação das operações dentro do sistema BB-CORE.",
+          "limitations": [
+            "O Registro A se concentra em um aspecto conceitual, enquanto o Registro B trata de critérios práticos para a conclusão de uma etapa de desenvolvimento. Apesar dessa interconexão, eles abordam diferentes dimensões do processo de desenvolvimento e utilização do BB-CORE."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais do desenvolvimento e uso do BB-CORE, mas de maneiras distintas: o Registro A trata da distinção entre reconhecimento de identidade e confirmação integral do conteúdo, enquanto o Registro B estabelece critérios para a conclusão de uma etapa de desenvolvimento baseada na suficiência funcional.\",\n  \"excerpts_a\": [\n    \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.\"\n  ],\n  \"excerpts_b\": [\n    \"A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.\"\n  ],\n  \"justification\": \"Ambos os registros lidam com aspectos cruciais da gestão e desenvolvimento do BB-CORE. O Registro A enfoca a distinção entre reconhecimento de identidade e confirmação integral do conteúdo, enquanto o Registro B estabelece critérios para determinar quando uma etapa de desenvolvimento é suficiente funcionalmente. Esses aspectos são interconectados na medida em que ambos tratam da integridade e validação das operações dentro do sistema BB-CORE.\",\n  \"limitations\": [\n    \"O Registro A se concentra em um aspecto conceitual, enquanto o Registro B trata de critérios práticos para a conclusão de uma etapa de desenvolvimento. Apesar dessa interconexão, eles abordam diferentes dimensões do processo de desenvolvimento e utilização do BB-CORE.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.22,
+          "prompt_eval_count": 824,
+          "eval_count": 423,
+          "total_duration_ns": 6219968080
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos fundamentais da preservação e verificação de integridade dos dados no contexto do BB-CORE, mas focam em dimensões diferentes: o Registro A trata da suficiência funcional para encerrar uma etapa de desenvolvimento, enquanto o Registro B discute a distinção entre reconhecimento de identidade e confirmação integral do conteúdo.",
+          "excerpts_a": [
+            "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+          ],
+          "excerpts_b": [
+            "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+          ],
+          "justification": "Ambos os registros enfocam aspectos cruciais da integridade e confirmação de dados no BB-CORE. O Registro A estabelece critérios para a conclusão de uma etapa de desenvolvimento, focando na funcionalidade suficiente das operações que garantem a preservação e recuperação corretas dos achados. Já o Registro B discute a distinção entre reconhecer a identidade de um objeto intelectual e confirmar integralmente seu conteúdo, destacando a necessidade de manter diferenças e atribuições específicas ao longo do tempo.",
+          "limitations": [
+            "O Registro A é uma decisão metodológica adotada para encerrar etapas de desenvolvimento, enquanto o Registro B é um achado conceitual proposto que discute aspectos teóricos da identidade e confirmação."
+          ],
+          "abstention_reason": ""
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos fundamentais da preservação e verificação de integridade dos dados no contexto do BB-CORE, mas focam em dimensões diferentes: o Registro A trata da suficiência funcional para encerrar uma etapa de desenvolvimento, enquanto o Registro B discute a distinção entre reconhecimento de identidade e confirmação integral do conteúdo.\",\n  \"excerpts_a\": [\n    \"A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.\"\n  ],\n  \"excerpts_b\": [\n    \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.\"\n  ],\n  \"justification\": \"Ambos os registros enfocam aspectos cruciais da integridade e confirmação de dados no BB-CORE. O Registro A estabelece critérios para a conclusão de uma etapa de desenvolvimento, focando na funcionalidade suficiente das operações que garantem a preservação e recuperação corretas dos achados. Já o Registro B discute a distinção entre reconhecer a identidade de um objeto intelectual e confirmar integralmente seu conteúdo, destacando a necessidade de manter diferenças e atribuições específicas ao longo do tempo.\",\n  \"limitations\": [\n    \"O Registro A é uma decisão metodológica adotada para encerrar etapas de desenvolvimento, enquanto o Registro B é um achado conceitual proposto que discute aspectos teóricos da identidade e confirmação.\"\n  ],\n  \"abstention_reason\": \"\"\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.23,
+          "prompt_eval_count": 824,
+          "eval_count": 432,
+          "total_duration_ns": 6230398054
+        }
+      }
+    },
+    {
+      "pair_index": 14,
+      "record_a": {
+        "id": "784c05eb89d5436b942e340d109dcebb",
+        "version": 1,
+        "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo"
+      },
+      "record_b": {
+        "id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "version": 1,
+        "title": "Continuidade intelectual pela retomada do contexto de origem"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros discutem aspectos da continuidade e preservação do conhecimento intelectual, mas de maneiras distintas: o Registro A foca na distinção entre reconhecimento de identidade e confirmação integral do conteúdo, enquanto o Registro B aborda a retomada dos contextos originais para garantir a continuidade intelectual.",
+          "excerpts_a": [
+            "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, evidências e atribuições são idênticos ou foram preservados."
+          ],
+          "excerpts_b": [
+            "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+          ],
+          "justification": "Ambos os registros lidam com aspectos da preservação e continuidade do conhecimento, mas enfocam diferentes dimensões: o Registro A trata da distinção entre reconhecimento de identidade e confirmação integral do conteúdo, enquanto o Registro B discute a importância da retomada dos contextos originais para garantir a continuidade intelectual. Essa interseção conceitual sugere uma conexão relevante na discussão sobre como preservar e manter a integridade do conhecimento ao longo do tempo.",
+          "limitations": [
+            "O Registro A é baseado em análise estática de código, sem validação empírica. O Registro B é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros discutem aspectos da continuidade e preservação do conhecimento intelectual, mas de maneiras distintas: o Registro A foca na distinção entre reconhecimento de identidade e confirmação integral do conteúdo, enquanto o Registro B aborda a retomada dos contextos originais para garantir a continuidade intelectual.\",\n  \"excerpts_a\": [\n    \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, evidências e atribuições são idênticos ou foram preservados.\"\n  ],\n  \"excerpts_b\": [\n    \"A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.\"\n  ],\n  \"justification\": \"Ambos os registros lidam com aspectos da preservação e continuidade do conhecimento, mas enfocam diferentes dimensões: o Registro A trata da distinção entre reconhecimento de identidade e confirmação integral do conteúdo, enquanto o Registro B discute a importância da retomada dos contextos originais para garantir a continuidade intelectual. Essa interseção conceitual sugere uma conexão relevante na discussão sobre como preservar e manter a integridade do conhecimento ao longo do tempo.\",\n  \"limitations\": [\n    \"O Registro A é baseado em análise estática de código, sem validação empírica. O Registro B é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, evidências e atribuições são idênticos ou foram preservados.",
+            "exact_match": false
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.21,
+          "prompt_eval_count": 879,
+          "eval_count": 419,
+          "total_duration_ns": 6205610572
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos da continuidade e identidade dos objetos intelectuais, mas de maneiras distintas: o Registro A foca na retomada do contexto original para garantir a continuidade intelectual, enquanto o Registro B discute que reconhecer a mesma identidade não implica em conteúdo idêntico ou preservado.",
+          "excerpts_a": [
+            "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade."
+          ],
+          "excerpts_b": [
+            "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+          ],
+          "justification": "Ambos os registros lidam com aspectos da continuidade e identidade intelectual. O Registro A sugere que a retomada do contexto original é uma forma de garantir a continuidade, enquanto o Registro B argumenta que reconhecer a mesma identidade não implica em conteúdo idêntico ou preservado. Essas ideias se conectam na discussão sobre como manter e entender a evolução dos objetos intelectuais ao longo do tempo.",
+          "limitations": [
+            "O Registro A é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente, enquanto o Registro B também é um desenvolvimento conceitual sem validação empírica."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos da continuidade e identidade dos objetos intelectuais, mas de maneiras distintas: o Registro A foca na retomada do contexto original para garantir a continuidade intelectual, enquanto o Registro B discute que reconhecer a mesma identidade não implica em conteúdo idêntico ou preservado.\",\n  \"excerpts_a\": [\n    \"A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.\"\n  ],\n  \"excerpts_b\": [\n    \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.\"\n  ],\n  \"justification\": \"Ambos os registros lidam com aspectos da continuidade e identidade intelectual. O Registro A sugere que a retomada do contexto original é uma forma de garantir a continuidade, enquanto o Registro B argumenta que reconhecer a mesma identidade não implica em conteúdo idêntico ou preservado. Essas ideias se conectam na discussão sobre como manter e entender a evolução dos objetos intelectuais ao longo do tempo.\",\n  \"limitations\": [\n    \"O Registro A é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente, enquanto o Registro B também é um desenvolvimento conceitual sem validação empírica.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.62,
+          "prompt_eval_count": 879,
+          "eval_count": 381,
+          "total_duration_ns": 5622141776
+        }
+      }
+    },
+    {
+      "pair_index": 15,
+      "record_a": {
+        "id": "752eab672c1246acb4318bd83d98c5e9",
+        "version": 1,
+        "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento"
+      },
+      "record_b": {
+        "id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "version": 1,
+        "title": "Continuidade intelectual pela retomada do contexto de origem"
+      },
+      "stability": "CONCORDANT_CONNECTED",
+      "forward_ab": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros discutem aspectos de preservação e continuidade do conhecimento intelectual, mas em contextos diferentes: o Registro A trata da suficiência funcional para encerrar uma etapa de desenvolvimento do BB-CORE, enquanto o Registro B aborda a retomada dos contextos originais como forma de garantir a continuidade intelectual.",
+          "excerpts_a": [
+            "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+          ],
+          "excerpts_b": [
+            "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+          ],
+          "justification": "Ambos os registros lidam com aspectos da preservação e continuidade do conhecimento, mas em perspectivas distintas. O Registro A estabelece critérios para o encerramento de uma etapa de desenvolvimento focando na funcionalidade e integridade das operações, enquanto o Registro B propõe a retomada dos contextos originais como forma de garantir continuidade intelectual. Essa dualidade sugere que ambos os registros buscam assegurar a preservação do conhecimento em diferentes níveis: funcional e contextual.",
+          "limitations": [
+            "O Registro A estabelece critérios para o encerramento de uma etapa, mas não detalha como esses critérios serão aplicados ou validados. O Registro B é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros discutem aspectos de preservação e continuidade do conhecimento intelectual, mas em contextos diferentes: o Registro A trata da suficiência funcional para encerrar uma etapa de desenvolvimento do BB-CORE, enquanto o Registro B aborda a retomada dos contextos originais como forma de garantir a continuidade intelectual.\",\n  \"excerpts_a\": [\n    \"A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.\"\n  ],\n  \"excerpts_b\": [\n    \"A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.\"\n  ],\n  \"justification\": \"Ambos os registros lidam com aspectos da preservação e continuidade do conhecimento, mas em perspectivas distintas. O Registro A estabelece critérios para o encerramento de uma etapa de desenvolvimento focando na funcionalidade e integridade das operações, enquanto o Registro B propõe a retomada dos contextos originais como forma de garantir continuidade intelectual. Essa dualidade sugere que ambos os registros buscam assegurar a preservação do conhecimento em diferentes níveis: funcional e contextual.\",\n  \"limitations\": [\n    \"O Registro A estabelece critérios para o encerramento de uma etapa, mas não detalha como esses critérios serão aplicados ou validados. O Registro B é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 6.47,
+          "prompt_eval_count": 908,
+          "eval_count": 436,
+          "total_duration_ns": 6474038195
+        }
+      },
+      "reverse_ba": {
+        "parsed": {
+          "connection_proposed": true,
+          "connection_nature": "Ambos os registros abordam aspectos de continuidade e preservação do conhecimento em contextos diferentes, mas complementares: o Registro A foca na retomada dos contextos originais para garantir a continuidade intelectual, enquanto o Registro B estabelece critérios funcionais para encerrar etapas de desenvolvimento, mantendo a integridade e a fidelidade do conhecimento.",
+          "excerpts_a": [
+            "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade."
+          ],
+          "excerpts_b": [
+            "Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade;"
+          ],
+          "justification": "Ambos os registros enfatizam a importância de manter a continuidade e a preservação do conhecimento em diferentes estágios. O Registro A discute como a retomada dos contextos originais pode assegurar uma continuidade intelectual, enquanto o Registro B estabelece critérios para garantir que esses princípios sejam mantidos durante o desenvolvimento e a implementação de um sistema.",
+          "limitations": [
+            "O Registro A é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente, enquanto o Registro B estabelece critérios funcionais que podem ser interpretados como uma etapa inicial em direção a uma implementação mais ampla."
+          ],
+          "abstention_reason": null
+        },
+        "raw_response": "{\n  \"connection_proposed\": true,\n  \"connection_nature\": \"Ambos os registros abordam aspectos de continuidade e preservação do conhecimento em contextos diferentes, mas complementares: o Registro A foca na retomada dos contextos originais para garantir a continuidade intelectual, enquanto o Registro B estabelece critérios funcionais para encerrar etapas de desenvolvimento, mantendo a integridade e a fidelidade do conhecimento.\",\n  \"excerpts_a\": [\n    \"A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.\"\n  ],\n  \"excerpts_b\": [\n    \"Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade;\"\n  ],\n  \"justification\": \"Ambos os registros enfatizam a importância de manter a continuidade e a preservação do conhecimento em diferentes estágios. O Registro A discute como a retomada dos contextos originais pode assegurar uma continuidade intelectual, enquanto o Registro B estabelece critérios para garantir que esses princípios sejam mantidos durante o desenvolvimento e a implementação de um sistema.\",\n  \"limitations\": [\n    \"O Registro A é uma proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente, enquanto o Registro B estabelece critérios funcionais que podem ser interpretados como uma etapa inicial em direção a uma implementação mais ampla.\"\n  ],\n  \"abstention_reason\": null\n}",
+        "excerpts_a_check": [
+          {
+            "excerpt": "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.",
+            "exact_match": true
+          }
+        ],
+        "excerpts_b_check": [
+          {
+            "excerpt": "Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade;",
+            "exact_match": true
+          }
+        ],
+        "metrics": {
+          "elapsed_s": 5.65,
+          "prompt_eval_count": 908,
+          "eval_count": 377,
+          "total_duration_ns": 5645162358
+        }
+      }
+    }
+  ]
+}

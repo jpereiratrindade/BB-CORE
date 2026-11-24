@@ -107,6 +107,61 @@ class AnalyticsTests(unittest.TestCase):
         self.assertEqual(cal['subsequent_events'], 2)
         self.assertEqual(cal['without_occurred_at'], 2)  # CRITIQUE_RECORDED + RELATION_PROPOSED
 
+    def test_record_network_topology_and_exp002_loading(self):
+        r1 = self.archive.capture(make_capsule(title='Registro 1', claim='Formulação A'))
+        r2 = self.archive.capture(make_capsule(title='Registro 2', claim='Formulação B'))
+        r3 = self.archive.capture(make_capsule(title='Registro 3', claim='Formulação C'))
+        r4 = self.archive.capture(make_capsule(title='Registro 4 isolado', claim='Formulação D'))
+
+        # Sem results.json externo: todos isolados, sem conexões fabricadas.
+        missing_path = Path(self.tmp.name) / 'missing.json'
+        ov0 = build_overview(self.archive, exp002_path=missing_path)
+        self.assertFalse(ov0['record_network']['source_available'])
+        self.assertEqual(ov0['record_network']['candidate_connections'], [])
+        self.assertEqual(len(ov0['record_network']['topology']['isolated_record_ids']), 4)
+
+        # Com results.json simulando 1 concordante (r1-r2), 1 divergente (r2-r3) e 1 abstenção (r1-r3).
+        exp002_file = Path(self.tmp.name) / 'exp002.json'
+        exp002_file.write_text(json.dumps({
+            'instruction': 'BB-CORE-EXP-002 v0.1.0',
+            'model': 'qwen2.5:14b',
+            'executed_at': '2026-11-24T20:45:00Z',
+            'pairs': [
+                {
+                    'pair_index': 1,
+                    'record_a': {'id': r1['id']}, 'record_b': {'id': r2['id']},
+                    'stability': 'CONCORDANT_CONNECTED',
+                    'forward_ab': {'parsed': {'connection_proposed': True, 'connection_nature': 'Complementaridade', 'justification': 'J1', 'limitations': []}},
+                    'reverse_ba': {'parsed': {'connection_proposed': True, 'connection_nature': 'Complementaridade', 'justification': 'J2', 'limitations': []}},
+                },
+                {
+                    'pair_index': 2,
+                    'record_a': {'id': r2['id']}, 'record_b': {'id': r3['id']},
+                    'stability': 'DIVERGENT_ORDER_DEPENDENT',
+                    'forward_ab': {'parsed': {'connection_proposed': True, 'connection_nature': 'Aproximação', 'justification': 'J3', 'limitations': []}},
+                    'reverse_ba': {'parsed': {'connection_proposed': False, 'abstention_reason': 'Insuficiente', 'justification': 'Sem base', 'limitations': []}},
+                },
+                {
+                    'pair_index': 3,
+                    'record_a': {'id': r1['id']}, 'record_b': {'id': r3['id']},
+                    'stability': 'CONCORDANT_ABSTAINED',
+                    'forward_ab': {'parsed': {'connection_proposed': False}},
+                    'reverse_ba': {'parsed': {'connection_proposed': False}},
+                },
+            ],
+        }), encoding='utf-8')
+        ov1 = build_overview(self.archive, exp002_path=exp002_file)
+        net = ov1['record_network']
+        self.assertTrue(net['source_available'])
+        self.assertEqual(len(net['candidate_connections']), 2)
+        self.assertEqual(net['concordant_connected_count'], 1)
+        self.assertEqual(net['divergent_count'], 1)
+        self.assertEqual(net['abstained_count'], 1)
+        # r2 conecta r1 e r3 -> ponto de articulação (ponte)! r4 isolado!
+        self.assertEqual(net['topology']['bridge_record_ids'], [r2['id']])
+        self.assertEqual(net['topology']['isolated_record_ids'], [r4['id']])
+        self.assertEqual(len(net['topology']['clusters']), 1)
+
 
 class AnalyticsHTTPTests(unittest.TestCase):
     def setUp(self):

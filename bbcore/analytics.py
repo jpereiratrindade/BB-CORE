@@ -7,7 +7,8 @@ forçado para registros sem correspondência lexical.
 from __future__ import annotations
 
 import json
-from collections import OrderedDict
+from collections import OrderedDict, deque
+from pathlib import Path
 
 from .store import stamp
 
@@ -87,8 +88,153 @@ def _extract_fields(record):
     }
 
 
-def build_overview(archive):
-    """Constrói projeção analítica completa (grafo + calendário) em fotografia transacional."""
+def _compute_topology(record_ids, edges):
+    """Calcula componentes conexos emergentes e nós-ponte (articulação) apenas pela topologia."""
+    adj = {rid: set() for rid in record_ids}
+    for u, v in edges:
+        if u in adj and v in adj and u != v:
+            adj[u].add(v)
+            adj[v].add(u)
+
+    visited = set()
+    clusters = []
+    node_cluster = {}
+    for rid in record_ids:
+        if rid in visited:
+            continue
+        comp = []
+        q = deque([rid])
+        visited.add(rid)
+        while q:
+            cur = q.popleft()
+            comp.append(cur)
+            for nxt in adj[cur]:
+                if nxt not in visited:
+                    visited.add(nxt)
+                    q.append(nxt)
+        if len(comp) > 1:
+            cid = f'cluster-{len(clusters) + 1}'
+            clusters.append({'id': cid, 'record_ids': comp, 'size': len(comp)})
+            for member in comp:
+                node_cluster[member] = cid
+
+    # Pontos de articulação (registros que conectam subgrupos distintos dentro de um componente)
+    bridges = set()
+    timer = [0]
+    tin, low, seen = {}, {}, set()
+
+    def dfs(u, parent=None):
+        seen.add(u)
+        timer[0] += 1
+        tin[u] = low[u] = timer[0]
+        children = 0
+        for v in adj[u]:
+            if v == parent:
+                continue
+            if v in seen:
+                low[u] = min(low[u], tin[v])
+            else:
+                dfs(v, u)
+                low[u] = min(low[u], low[v])
+                if parent is not None and low[v] >= tin[u]:
+                    bridges.add(u)
+                children += 1
+        if parent is None and children > 1:
+            bridges.add(u)
+
+    for rid in record_ids:
+        if rid not in seen and adj[rid]:
+            dfs(rid)
+
+    isolated = [rid for rid in record_ids if not adj[rid]]
+    return {
+        'clusters': clusters,
+        'node_cluster': node_cluster,
+        'bridge_record_ids': sorted(bridges),
+        'isolated_record_ids': isolated,
+        'degrees': {rid: len(adj[rid]) for rid in record_ids},
+    }
+
+
+def _load_exp002_network(record_ids, exp002_path=None):
+    path = Path(exp002_path) if exp002_path else (Path(__file__).resolve().parent.parent / 'lab' / 'exp002' / 'results.json')
+    if not path.is_file():
+        return {
+            'source_available': False,
+            'source_path': str(path),
+            'mechanism': None,
+            'executed_at': None,
+            'candidate_connections': [],
+            'abstained_count': 0,
+            'concordant_connected_count': 0,
+            'divergent_count': 0,
+        }
+    raw = json.loads(path.read_text(encoding='utf-8'))
+    valid_ids = set(record_ids)
+    candidates = []
+    abstained = 0
+    concordant = 0
+    divergent = 0
+    for pair in raw.get('pairs', []):
+        aid = (pair.get('record_a') or {}).get('id')
+        bid = (pair.get('record_b') or {}).get('id')
+        if aid not in valid_ids or bid not in valid_ids:
+            continue
+        stability = pair.get('stability')
+        if stability == 'CONCORDANT_ABSTAINED':
+            abstained += 1
+            continue
+        if stability == 'CONCORDANT_CONNECTED':
+            concordant += 1
+        elif stability == 'DIVERGENT_ORDER_DEPENDENT':
+            divergent += 1
+        fwd = pair.get('forward_ab') or {}
+        rev = pair.get('reverse_ba') or {}
+        fwd_p = fwd.get('parsed') or {}
+        rev_p = rev.get('parsed') or {}
+        candidates.append({
+            'id': f"exp002:{pair.get('pair_index')}",
+            'source_id': aid,
+            'target_id': bid,
+            'mechanism': f"{raw.get('instruction', 'BB-CORE-EXP-002')} ({raw.get('model', 'LLM local')})",
+            'executed_at': raw.get('executed_at'),
+            'stability': stability,
+            'epistemic_status': 'CANDIDATE_ANALYTICAL_CONNECTION',
+            'nature': fwd_p.get('connection_nature') or rev_p.get('connection_nature'),
+            'forward_ab': {
+                'connection_proposed': fwd_p.get('connection_proposed'),
+                'connection_nature': fwd_p.get('connection_nature'),
+                'excerpts_a': fwd.get('excerpts_a_check', []),
+                'excerpts_b': fwd.get('excerpts_b_check', []),
+                'justification': fwd_p.get('justification'),
+                'limitations': fwd_p.get('limitations', []),
+                'abstention_reason': fwd_p.get('abstention_reason'),
+            },
+            'reverse_ba': {
+                'connection_proposed': rev_p.get('connection_proposed'),
+                'connection_nature': rev_p.get('connection_nature'),
+                'excerpts_a': rev.get('excerpts_a_check', []),
+                'excerpts_b': rev.get('excerpts_b_check', []),
+                'justification': rev_p.get('justification'),
+                'limitations': rev_p.get('limitations', []),
+                'abstention_reason': rev_p.get('abstention_reason'),
+            },
+        })
+
+    return {
+        'source_available': True,
+        'source_path': str(path),
+        'mechanism': f"{raw.get('instruction', 'BB-CORE-EXP-002')} · {raw.get('model', '')}".strip(' ·'),
+        'executed_at': raw.get('executed_at'),
+        'candidate_connections': candidates,
+        'abstained_count': abstained,
+        'concordant_connected_count': concordant,
+        'divergent_count': divergent,
+    }
+
+
+def build_overview(archive, *, exp002_path=None):
+    """Constrói projeção analítica completa (rede + grafo lexical + calendário) em fotografia transacional."""
     with archive.events.snapshot():
         rows = archive.db.execute(
             'SELECT i.id, i.title, i.claim, i.limitations, i.context, i.status, i.created_at, '
@@ -226,6 +372,12 @@ def build_overview(archive):
             'dimensions': sorted(ev_dims),
         })
 
+    record_ids = [n['id'] for n in nodes]
+    exp002 = _load_exp002_network(record_ids, exp002_path=exp002_path)
+    topology_edges = [(c['source_id'], c['target_id']) for c in exp002['candidate_connections']]
+    topology_edges.extend((r['left_id'], r['right_id']) for r in registered_relations)
+    topology = _compute_topology(record_ids, topology_edges)
+
     return {
         'methodology': {
             'version': METHODOLOGY_VERSION,
@@ -239,9 +391,21 @@ def build_overview(archive):
                 for d in PREDEFINED_DIMENSIONS
             ],
             'epistemic_note': (
-                'Projeção analítica reconstruível somente-leitura. Associações lexicais '
-                'não constituem relações intelectuais reconhecidas nem alteram o acervo.'
+                'Projeção analítica reconstruível somente-leitura. Conexões analíticas candidatas '
+                'e associações lexicais não constituem relações intelectuais reconhecidas nem alteram o acervo.'
             ),
+        },
+        'record_network': {
+            'nodes': nodes,
+            'candidate_connections': exp002['candidate_connections'],
+            'registered_relations': registered_relations,
+            'topology': topology,
+            'source_available': exp002['source_available'],
+            'mechanism': exp002['mechanism'],
+            'executed_at': exp002.get('executed_at'),
+            'abstained_count': exp002['abstained_count'],
+            'concordant_connected_count': exp002['concordant_connected_count'],
+            'divergent_count': exp002['divergent_count'],
         },
         'graph': {
             'anchors': nodes,

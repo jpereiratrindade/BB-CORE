@@ -7,6 +7,10 @@ systemctl --user cat bb-core.service >/dev/null
 mkdir -p "$RUNTIME_DIR/bbcore" "$RUNTIME_DIR/web" "$DROPIN_DIR"
 cp "$SOURCE_DIR"/bbcore/*.py "$RUNTIME_DIR/bbcore/"
 cp "$SOURCE_DIR"/web/index.html "$SOURCE_DIR"/web/style.css "$SOURCE_DIR"/web/app.js "$SOURCE_DIR"/web/analytics.js "$SOURCE_DIR"/web/documents.js "$SOURCE_DIR"/web/mesa.js "$SOURCE_DIR"/web/navigation.js "$SOURCE_DIR"/web/trajectory.js "$SOURCE_DIR"/web/favicon.svg "$RUNTIME_DIR/web/"
+if [ -f "$SOURCE_DIR/lab/exp002/results.json" ]; then
+    mkdir -p "$RUNTIME_DIR/lab/exp002"
+    cp "$SOURCE_DIR/lab/exp002/results.json" "$RUNTIME_DIR/lab/exp002/results.json"
+fi
 cat > "$DROPIN_DIR/local-runtime.conf" <<EOF
 [Unit]
 ConditionPathIsDirectory=

@@ -1,0 +1,1120 @@
+{
+  "instruction": "BB-CORE-EXP-001 v0.1.0",
+  "executed_at": "2026-11-24T20:35:42+00:00",
+  "model": "qwen2.5:14b",
+  "parameters": {
+    "temperature": 0.1,
+    "num_ctx": 16384
+  },
+  "ollama_ps": "NAME           ID              SIZE     PROCESSOR    CONTEXT    UNTIL              \nqwen2.5:14b    7cdf5a0187d5    12 GB    100% GPU     16384      4 minutes from now",
+  "records_analyzed": [
+    {
+      "id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+      "version": 1,
+      "title": "A organização da memória não determina a organização da atividade intelectual"
+    },
+    {
+      "id": "36cae570a28f47b9b36ead9f2c1a4d87",
+      "version": 1,
+      "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual"
+    },
+    {
+      "id": "87f47b767c6e4994a3746c0375ff5348",
+      "version": 1,
+      "title": "Preservação de uma representação não comprova fidelidade à fonte de origem"
+    },
+    {
+      "id": "784c05eb89d5436b942e340d109dcebb",
+      "version": 1,
+      "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo"
+    },
+    {
+      "id": "752eab672c1246acb4318bd83d98c5e9",
+      "version": 1,
+      "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento"
+    },
+    {
+      "id": "d1090ec7e66a43b09dd798f9195a0c44",
+      "version": 1,
+      "title": "Continuidade intelectual pela retomada do contexto de origem"
+    }
+  ],
+  "experiment_a_individual": [
+    {
+      "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+      "title": "A organização da memória não determina a organização da atividade intelectual",
+      "result": {
+        "concepts_identified": [
+          "organização dos objetos intelectuais",
+          "atividade intelectual",
+          "preservação de resultados",
+          "continuidade entre ambientes",
+          "arquitetura de preservação"
+        ],
+        "proposed_dimensions": [
+          {
+            "name": "Independência da organização",
+            "definition": "A separação entre a estruturação dos objetos intelectuais e a dinâmica da atividade que os gera.",
+            "supporting_excerpts": [
+              "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz."
+            ],
+            "justification": "O registro enfatiza explicitamente que a estruturação interna de um sistema pode divergir da dinâmica externa que gera conteúdo para esse sistema."
+          },
+          {
+            "name": "Sustentação da continuidade",
+            "definition": "A capacidade de manter uma relação funcional entre diferentes ambientes, independentemente do local onde a atividade intelectual é realizada.",
+            "supporting_excerpts": [
+              "A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados."
+            ],
+            "justification": "O texto sugere que a interconexão funcional entre diferentes contextos é possível e desejável para manter a relevância dos objetos intelectuais."
+          },
+          {
+            "name": "Arquitetura de preservação",
+            "definition": "A estrutura do sistema responsável por guardar os resultados da atividade intelectual, sem necessariamente ser o centro dessa atividade.",
+            "supporting_excerpts": [
+              "Evita converter uma arquitetura de preservação em um percurso obrigatório de pensamento."
+            ],
+            "justification": "O registro indica que a função principal do sistema é a preservação e não deve se tornar um obstáculo para o desenvolvimento intelectual."
+          }
+        ],
+        "abstentions": [
+          "Relação com achados anteriores",
+          "Confronto sistemático com literatura ou usuários"
+        ],
+        "limitations": [
+          "A proposição é derivada do caso específico BB-CORE e não foi validada extensivamente.",
+          "Não há menção a um confronto sistemático com outros estudos ou feedback de usuários."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 16.12,
+        "prompt_eval_count": 508,
+        "eval_count": 539,
+        "total_duration_ns": 16121154146
+      }
+    },
+    {
+      "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+      "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+      "result": {
+        "concepts_identified": [
+          "recuperação",
+          "acontecimento intelectual",
+          "existência",
+          "conteúdo intelectual",
+          "fundamentos",
+          "atribuições",
+          "evidências",
+          "limitações efetivamente preservadas"
+        ],
+        "proposed_dimensions": [
+          {
+            "name": "Diferenciação entre existência e conteúdo",
+            "definition": "A distinção entre a mera ocorrência de um acontecimento intelectual e os elementos necessários para que ele seja recuperado e examinado.",
+            "supporting_excerpts": [
+              "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação."
+            ],
+            "justification": "O registro enfatiza a necessidade de distinguir entre a existência do evento e os elementos essenciais para sua recuperação e análise, indicando que a mera documentação da ocorrência não é suficiente para permitir uma avaliação intelectual completa."
+          },
+          {
+            "name": "Contexto necessário para recuperação",
+            "definition": "Os fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados que são necessários para a recuperação contextualizada de um acontecimento.",
+            "supporting_excerpts": [
+              "Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+            ],
+            "justification": "O registro sugere que para um evento ser recuperado adequadamente, é necessário ter disponível não apenas sua ocorrência, mas também os elementos contextuais necessários para entender seu significado e impacto intelectual."
+          },
+          {
+            "name": "Suficiência do contexto",
+            "definition": "A adequação dos elementos preservados em relação à finalidade da recuperação.",
+            "supporting_excerpts": [
+              "A suficiência do contexto depende da finalidade da recuperação e ainda não foi avaliada em conversa independente."
+            ],
+            "justification": "O registro menciona que a adequação dos elementos preservados para uma recuperação eficaz varia conforme o propósito específico dessa recuperação, indicando que não há um padrão universalmente aplicável."
+          }
+        ],
+        "abstentions": [
+          "Não foi possível propor dimensões conceituais relacionadas a aspectos como taxonomias ou listas de categorias, pois esses elementos não emergiram dos textos fornecidos e não foram presumidos conforme as regras estabelecidas."
+        ],
+        "limitations": [
+          "A relevância do registro está focada na recuperação contextualizada de acontecimentos intelectuais, mas a avaliação da suficiência do contexto em relação à finalidade específica ainda é um tópico em desenvolvimento e não foi completamente abordado neste documento."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 9.41,
+        "prompt_eval_count": 506,
+        "eval_count": 677,
+        "total_duration_ns": 9410898936
+      }
+    },
+    {
+      "record_id": "87f47b767c6e4994a3746c0375ff5348",
+      "title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+      "result": {
+        "concepts_identified": [
+          "integridade verificável",
+          "documentos",
+          "representações",
+          "atividade intelectual",
+          "fontes externas",
+          "fidelidade da representação",
+          "validade do conhecimento",
+          "preservação técnica",
+          "autenticação de autoria",
+          "comprovação da narrativa de gênese",
+          "validação científica"
+        ],
+        "proposed_dimensions": [
+          {
+            "name": "Integridade vs Fidelidade",
+            "definition": "A distinção entre a integridade verificável de um documento e a fidelidade da representação do conteúdo original.",
+            "supporting_excerpts": [
+              "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+            ],
+            "justification": "O registro enfatiza que a integridade do documento não garante sua fidelidade à origem."
+          },
+          {
+            "name": "Preservação vs Autenticação",
+            "definition": "A separação entre a preservação técnica de um documento e a autenticação da autoria ou validação científica.",
+            "supporting_excerpts": [
+              "Não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia.",
+              "Preservação técnica não é interpretada como autenticação de autoria, comprovação da narrativa de gênese ou validação científica."
+            ],
+            "justification": "O registro alerta que a preservação técnica não implica em autenticação ou validação."
+          },
+          {
+            "name": "Propriedades Distintas",
+            "definition": "A separação entre integridade dos bytes, fidelidade da representação e validade do conhecimento.",
+            "supporting_excerpts": [
+              "A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas."
+            ],
+            "justification": "O registro explicita que esses três aspectos são independentes entre si."
+          }
+        ],
+        "abstentions": [
+          "Não é possível propor uma dimensão conceitual relacionada à integridade dos bytes sem mais detalhes sobre o contexto e as implicações específicas dessa propriedade, pois isso excede os limites do texto fornecido."
+        ],
+        "limitations": [
+          "O documento não aborda a questão da falsidade das fontes ou da representação.",
+          "As conversas integrais não estão incorporadas neste documento."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 8.63,
+        "prompt_eval_count": 509,
+        "eval_count": 608,
+        "total_duration_ns": 8624985073
+      }
+    },
+    {
+      "record_id": "784c05eb89d5436b942e340d109dcebb",
+      "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+      "result": {
+        "concepts_identified": [
+          "Reconhecimento de identidade",
+          "Equivalência de conteúdo",
+          "Modificações no conhecimento",
+          "Preservação da identidade",
+          "Diferenças entre representações",
+          "Inspeção estática do código"
+        ],
+        "proposed_dimensions": [
+          {
+            "name": "Reconhecimento vs. Equivalência de Conteúdo",
+            "definition": "A distinção entre reconhecer que duas representações se referem ao mesmo objeto intelectual e acreditar que todos os seus conteúdos são idênticos.",
+            "supporting_excerpts": [
+              "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+            ],
+            "justification": "O registro enfatiza claramente essa distinção conceitual."
+          },
+          {
+            "name": "Preservação da Identidade",
+            "definition": "A capacidade de manter a identidade do objeto intelectual enquanto o conhecimento sobre ele pode mudar.",
+            "supporting_excerpts": [
+              "A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica."
+            ],
+            "justification": "O registro destaca que a identidade pode ser preservada mesmo com alterações no conhecimento."
+          },
+          {
+            "name": "Limitações da Equivalência Intelectual",
+            "definition": "A impossibilidade de decidir sobre a equivalência intelectual apenas por meio de hashes.",
+            "supporting_excerpts": [
+              "A equivalência intelectual não pode ser decidida apenas por hashes."
+            ],
+            "justification": "O registro menciona explicitamente essa limitação conceitual."
+          }
+        ],
+        "abstentions": [],
+        "limitations": [
+          "A análise é conceitual e apoiada em inspeção estática do código, não em validação empírica.",
+          "Não há base suficiente para propor dimensões que ultrapassem os limites estabelecidos no registro."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 7.08,
+        "prompt_eval_count": 507,
+        "eval_count": 501,
+        "total_duration_ns": 7075711226
+      }
+    },
+    {
+      "record_id": "752eab672c1246acb4318bd83d98c5e9",
+      "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+      "result": {
+        "concepts_identified": [
+          "Suficiência funcional",
+          "Critério de encerramento",
+          "Etapa de desenvolvimento",
+          "Operações de recebimento, exame, confirmação, preservação, recuperação e exportação",
+          "Correções prioritárias",
+          "Melhorias não essenciais",
+          "Uso real",
+          "MCP (out of scope)",
+          "Validação em nova conversa",
+          "Denominação MVP-1"
+        ],
+        "proposed_dimensions": [
+          {
+            "name": "Critérios de Encerramento",
+            "definition": "Condições que determinam quando uma etapa do desenvolvimento deve ser considerada concluída.",
+            "supporting_excerpts": [
+              "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações..."
+            ],
+            "justification": "O registro estabelece claramente que a suficiência funcional é um critério para encerrar uma etapa de desenvolvimento."
+          },
+          {
+            "name": "Tipos de Operações",
+            "definition": "As atividades específicas necessárias para garantir o funcionamento adequado do sistema.",
+            "supporting_excerpts": [
+              "...recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+            ],
+            "justification": "O texto menciona explicitamente essas operações como fundamentais para a suficiência funcional."
+          },
+          {
+            "name": "Prioridades de Correções",
+            "definition": "Classificação das correções necessárias com base em seu impacto na integridade e fidelidade do sistema.",
+            "supporting_excerpts": [
+              "Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade..."
+            ],
+            "justification": "O registro define claramente quais tipos de correções têm prioridade."
+          },
+          {
+            "name": "Diretrizes para Melhorias",
+            "definition": "Princípios que orientam a implementação de melhorias não essenciais.",
+            "supporting_excerpts": [
+              "...melhorias não essenciais devem ser orientadas pelo uso real."
+            ],
+            "justification": "O texto indica que as melhorias não essenciais devem ser baseadas no uso real."
+          },
+          {
+            "name": "Escopo do MCP",
+            "definition": "Determinação de quais partes do sistema estão dentro ou fora da etapa atual.",
+            "supporting_excerpts": [
+              "O MCP permanece fora desta etapa."
+            ],
+            "justification": "É explicitamente mencionado que o MCP está fora do escopo."
+          },
+          {
+            "name": "Validação e Testes",
+            "definition": "Processo de avaliação da eficácia das operações após a implementação.",
+            "supporting_excerpts": [
+              "A validação em nova conversa foi deliberadamente adiada."
+            ],
+            "justification": "O registro menciona que a validação foi postergada, indicando sua importância futura."
+          },
+          {
+            "name": "Denominação de Fases",
+            "definition": "Nomenclatura utilizada para identificar diferentes fases ou marcos do desenvolvimento.",
+            "supporting_excerpts": [
+              "A denominação MVP-1 foi proposta, não consolidada."
+            ],
+            "justification": "O texto menciona a proposição de uma denominação específica."
+          }
+        ],
+        "abstentions": [
+          "Não é possível propor dimensões conceituais para aspectos como 'MCP permanece fora desta etapa' ou 'Validação em nova conversa foi deliberadamente adiada', pois não há suficiente contexto ou detalhamento fornecido no registro para extrair uma dimensão conceitual emergente."
+        ],
+        "limitations": [
+          "A adoção do critério de encerramento não implica que o marco já tenha sido atingido.",
+          "A validação em nova conversa foi adiada, indicando a necessidade de futuras etapas de avaliação.",
+          "A denominação MVP-1 é mencionada como proposta e não consolidada."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 13.09,
+        "prompt_eval_count": 536,
+        "eval_count": 952,
+        "total_duration_ns": 13088398485
+      }
+    },
+    {
+      "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+      "title": "Continuidade intelectual pela retomada do contexto de origem",
+      "result": {
+        "concepts_identified": [
+          "continuidade intelectual",
+          "contexto de origem",
+          "recuperação do conhecimento",
+          "mobilização em novo contexto",
+          "preservação de referências recuperáveis"
+        ],
+        "proposed_dimensions": [
+          {
+            "name": "Mobilidade Contextual",
+            "definition": "A capacidade de um achado intelectual ser retomado e mobilizado entre diferentes contextos.",
+            "supporting_excerpts": [
+              "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+            ],
+            "justification": "O registro sugere que a continuidade intelectual envolve não apenas a preservação do conhecimento, mas também sua mobilização entre diferentes ambientes."
+          },
+          {
+            "name": "Preservação de Contexto",
+            "definition": "A prática de manter referências e contextos originais associados ao conhecimento produzido para facilitar sua recuperação.",
+            "supporting_excerpts": [
+              "Permite conceber o acervo como ponto de acesso tanto aos resultados intelectuais quanto aos ambientes em que foram elaborados."
+            ],
+            "justification": "O registro enfatiza a importância da preservação do contexto original para facilitar a recuperação e continuidade do conhecimento."
+          }
+        ],
+        "abstentions": [
+          "Não foi possível identificar dimensões conceituais relacionadas à validação científica ou taxonomias específicas, pois essas emergem de uma análise mais ampla da literatura e não estão presentes nos textos fornecidos."
+        ],
+        "limitations": [
+          "A proposição é ainda um conceito teórico sem confronto sistemático com a literatura existente.",
+          "As limitações técnicas mencionadas, como a falta de garantia de acesso futuro à conversa e a dependência do relato da equipe para o suporte técnico, podem comprometer a aplicabilidade prática."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 6.91,
+        "prompt_eval_count": 591,
+        "eval_count": 477,
+        "total_duration_ns": 6910409609
+      }
+    }
+  ],
+  "experiment_b_collective": {
+    "result": {
+      "proposed_dimensions": [
+        {
+          "name": "Preservação e Continuidade Intelectual",
+          "definition": "A preservação de registros intelectuais não implica necessariamente na reprodução da atividade que os originou, mas pode permitir a continuidade do pensamento em novos contextos.",
+          "associated_records": [
+            {
+              "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+              "supporting_excerpts": [
+                "A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados."
+              ],
+              "justification": "Este registro estabelece o conceito de que a preservação não precisa reproduzir a atividade intelectual original."
+            },
+            {
+              "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+              "supporting_excerpts": [
+                "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+              ],
+              "justification": "Este registro expande o conceito para incluir a continuidade através da retomada dos contextos originais."
+            }
+          ]
+        },
+        {
+          "name": "Diferenciação entre Preservação e Fidelidade",
+          "definition": "A preservação de um documento não garante que ele seja uma representação fiel ou autêntica da atividade intelectual original.",
+          "associated_records": [
+            {
+              "record_id": "87f47b767c6e4994a3746c0375ff5348",
+              "supporting_excerpts": [
+                "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+              ],
+              "justification": "Este registro estabelece claramente a distinção entre preservação e fidelidade."
+            }
+          ]
+        },
+        {
+          "name": "Reconhecimento de Identidade vs. Conteúdo",
+          "definition": "A identificação de um objeto intelectual não implica que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições sejam idênticos ou preservados.",
+          "associated_records": [
+            {
+              "record_id": "784c05eb89d5436b942e340d109dcebb",
+              "supporting_excerpts": [
+                "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+              ],
+              "justification": "Este registro estabelece claramente a distinção entre identidade e conteúdo."
+            }
+          ]
+        },
+        {
+          "name": "Suficiência Funcional",
+          "definition": "O desenvolvimento de um sistema deve ser interrompido quando atinge uma suficiência funcional que permite operações básicas como recebimento, exame, confirmação, preservação, recuperação e exportação.",
+          "associated_records": [
+            {
+              "record_id": "752eab672c1246acb4318bd83d98c5e9",
+              "supporting_excerpts": [
+                "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+              ],
+              "justification": "Este registro estabelece o critério para interromper a expansão do escopo durante o desenvolvimento."
+            }
+          ]
+        },
+        {
+          "name": "Diferenciação entre Existência e Conteúdo",
+          "definition": "Documentar que um acontecimento intelectual ocorreu não é equivalente à disponibilização de seu conteúdo para uma nova investigação.",
+          "associated_records": [
+            {
+              "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+              "supporting_excerpts": [
+                "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação."
+              ],
+              "justification": "Este registro estabelece claramente a distinção entre documentar a existência e fornecer o conteúdo."
+            }
+          ]
+        }
+      ],
+      "singularities": [
+        "ID: d1090ec7e66a43b09dd798f9195a0c44",
+        "ID: 752eab672c1246acb4318bd83d98c5e9"
+      ],
+      "abstentions": [
+        "Não foram identificadas associações conceituais que exigissem abstenção explícita."
+      ],
+      "limitations": [
+        "As proposições são conceitualmente derivadas do caso BB-CORE e não foram confrontadas sistematicamente com literatura ou experiência independente.",
+        "A adoção de critérios funcionais para encerramento de etapas de desenvolvimento foi proposta, mas ainda não validada em novas conversas."
+      ]
+    },
+    "metrics": {
+      "elapsed_s": 19.4,
+      "prompt_eval_count": 1911,
+      "eval_count": 1314,
+      "total_duration_ns": 19402524702
+    }
+  },
+  "experiment_c1_incremental_chronological": [
+    {
+      "step": 1,
+      "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+      "title": "A organização da memória não determina a organização da atividade intelectual",
+      "result": {
+        "recognized_existing_dimensions": [],
+        "newly_proposed_dimensions": [
+          "Organização da memória vs organização da atividade intelectual"
+        ],
+        "revisions_to_prior_associations": [],
+        "differentiations": [],
+        "dimensions_state": [
+          {
+            "name": "Organização da memória vs organização da atividade intelectual",
+            "definition": "A distinção conceitual entre a estrutura de armazenamento e preservação dos objetos intelectuais e o processo dinâmico que os gera.",
+            "associated_records": [
+              {
+                "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+                "supporting_excerpts": [
+                  "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+                  "Permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual, destacando a separação entre como os objetos intelectuais são organizados e preservados em um sistema e o processo de geração desses objetos. Esta distinção é crucial para entender as implicações do BB-CORE na sustentação da continuidade intelectual."
+              }
+            ]
+          }
+        ],
+        "abstentions": [],
+        "limitations": [
+          "Proposição conceitual derivada do caso BB-CORE; pode constituir desdobramento do achado BB-CORE-INSIGHT-001, mas a relação não foi confirmada.",
+          "Não houve confronto sistemático com literatura ou usuários."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 6.36,
+        "prompt_eval_count": 584,
+        "eval_count": 403,
+        "total_duration_ns": 6356548845
+      }
+    },
+    {
+      "step": 2,
+      "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+      "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+      "result": {
+        "recognized_existing_dimensions": [
+          "Organização da memória vs organização da atividade intelectual"
+        ],
+        "newly_proposed_dimensions": [
+          "Diferenciação entre a existência de um acontecimento e seu conteúdo intelectual"
+        ],
+        "revisions_to_prior_associations": [],
+        "differentiations": [
+          "A nova dimensão proposta se diferencia da anterior por focar na distinção entre o registro da ocorrência de um evento intelectual e a disponibilidade do conteúdo necessário para sua reanálise, enquanto a dimensão existente trata da separação entre a organização dos objetos intelectuais preservados e a atividade que os gera."
+        ],
+        "dimensions_state": [
+          {
+            "name": "Diferenciação entre a existência de um acontecimento e seu conteúdo intelectual",
+            "definition": "A distinção conceitual entre o registro da ocorrência de um evento intelectual e a disponibilidade do conteúdo necessário para sua reanálise.",
+            "associated_records": [
+              {
+                "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+                "supporting_excerpts": [
+                  "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+                  "Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual que enfatiza a necessidade de diferenciar o fato da ocorrência de um evento intelectual do conteúdo necessário para sua reanálise, destacando a importância dessa distinção na recuperação contextualizada e avaliação das informações preservadas."
+              }
+            ]
+          }
+        ],
+        "abstentions": [],
+        "limitations": [
+          "A nova dimensão não pressupõe exportação integral de todas as fontes em toda consulta, indicando que a suficiência do contexto depende da finalidade da recuperação e ainda não foi avaliada em conversa independente."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 7.82,
+        "prompt_eval_count": 837,
+        "eval_count": 522,
+        "total_duration_ns": 7818186549
+      }
+    },
+    {
+      "step": 3,
+      "record_id": "87f47b767c6e4994a3746c0375ff5348",
+      "title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+      "result": {
+        "recognized_existing_dimensions": [
+          "Diferenciação entre a existência de um acontecimento e seu conteúdo intelectual"
+        ],
+        "newly_proposed_dimensions": [
+          "Integridade verificável não implica fidelidade à fonte ou autenticidade da representação",
+          "Propriedades distintas: integridade dos bytes, fidelidade da representação e validade do conhecimento"
+        ],
+        "revisions_to_prior_associations": [],
+        "differentiations": [
+          "A nova dimensão 'Integridade verificável não implica fidelidade à fonte ou autenticidade da representação' se diferencia da existente por focar especificamente na distinção entre a integridade de um documento e sua fidelidade à origem, enquanto a anterior trata mais amplamente sobre a diferença entre o registro de um evento intelectual e seu conteúdo."
+        ],
+        "dimensions_state": [
+          {
+            "name": "Integridade verificável não implica fidelidade à fonte ou autenticidade da representação",
+            "definition": "A integridade verificável de um documento que representa um achado intelectual não garante, por si só, a fidelidade dessa representação em relação ao evento original ou à fonte externa.",
+            "associated_records": [
+              {
+                "record_id": "87f47b767c6e4994a3746c0375ff5348",
+                "supporting_excerpts": [
+                  "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual que enfatiza a necessidade de diferenciar entre a integridade verificável de um documento e sua fidelidade à origem, destacando a importância dessa distinção na interpretação correta da preservação técnica."
+              }
+            ]
+          },
+          {
+            "name": "Propriedades distintas: integridade dos bytes, fidelidade da representação e validade do conhecimento",
+            "definition": "A integridade dos bytes de um documento, a fidelidade de sua representação e a validade do conhecimento que ele transmite são propriedades separadas.",
+            "associated_records": [
+              {
+                "record_id": "87f47b767c6e4994a3746c0375ff5348",
+                "supporting_excerpts": [
+                  "A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual que enfatiza a necessidade de diferenciar entre as várias propriedades associadas à preservação e representação de um achado intelectual, destacando a importância dessa distinção na avaliação correta da informação."
+              }
+            ]
+          }
+        ],
+        "abstentions": [],
+        "limitations": [
+          "O registro não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 11.04,
+        "prompt_eval_count": 862,
+        "eval_count": 763,
+        "total_duration_ns": 11039342279
+      }
+    },
+    {
+      "step": 4,
+      "record_id": "784c05eb89d5436b942e340d109dcebb",
+      "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+      "result": {
+        "recognized_existing_dimensions": [
+          "Integridade verificável não implica fidelidade à fonte ou autenticidade da representação",
+          "Propriedades distintas: integridade dos bytes, fidelidade da representação e validade do conhecimento"
+        ],
+        "newly_proposed_dimensions": [
+          "Reconhecimento de identidade não equivale à confirmação integral do conteúdo"
+        ],
+        "revisions_to_prior_associations": [],
+        "differentiations": [
+          "O novo registro introduz uma nova dimensão conceitual que enfatiza a distinção entre reconhecer a identidade de duas representações e confirmar que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. Esta distinção é crucial para entender como a identidade pode ser mantida mesmo quando o conhecimento sobre o objeto intelectual se modifica."
+        ],
+        "dimensions_state": [
+          {
+            "name": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+            "definition": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não é o mesmo que confirmar que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica.",
+            "associated_records": [
+              {
+                "record_id": "784c05eb89d5436b942e340d109dcebb",
+                "supporting_excerpts": [
+                  "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual que enfatiza a necessidade de diferenciar entre reconhecer a identidade e confirmar integralmente o conteúdo, destacando a importância dessa distinção na preservação correta do conhecimento intelectual."
+              }
+            ]
+          }
+        ],
+        "abstentions": [],
+        "limitations": [
+          "A análise é conceitual e apoiada em inspeção estática do código, não em validação empírica. A equivalência intelectual não pode ser decidida apenas por hashes."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 8.89,
+        "prompt_eval_count": 1082,
+        "eval_count": 596,
+        "total_duration_ns": 8891242413
+      }
+    },
+    {
+      "step": 5,
+      "record_id": "752eab672c1246acb4318bd83d98c5e9",
+      "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+      "result": {
+        "recognized_existing_dimensions": [
+          "O novo registro não se associa diretamente à dimensão 'Reconhecimento de identidade não equivale à confirmação integral do conteúdo', pois trata de critérios para encerrar uma etapa de desenvolvimento e não aborda a distinção entre reconhecer a identidade e confirmar integralmente o conteúdo."
+        ],
+        "newly_proposed_dimensions": [
+          "Suficiência funcional como critério de encerramento",
+          "Priorização de correções essenciais sobre melhorias não essenciais"
+        ],
+        "revisions_to_prior_associations": [],
+        "differentiations": [
+          "O novo registro introduz uma nova dimensão conceitual que trata da suficiência funcional como critério para encerrar uma etapa de desenvolvimento, diferenciando-se claramente do foco anterior sobre a distinção entre reconhecer a identidade e confirmar integralmente o conteúdo."
+        ],
+        "dimensions_state": [
+          {
+            "name": "Suficiência funcional como critério de encerramento",
+            "definition": "Critério que determina quando uma etapa do desenvolvimento deve ser considerada concluída com base na capacidade das operações realizadas para atender às necessidades funcionais.",
+            "associated_records": [
+              {
+                "record_id": "752eab672c1246acb4318bd83d98c5e9",
+                "supporting_excerpts": [
+                  "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual que estabelece critérios para interromper a expansão do escopo durante o desenvolvimento do BB-CORE com base na suficiência funcional das operações realizadas."
+              }
+            ]
+          },
+          {
+            "name": "Priorização de correções essenciais sobre melhorias não essenciais",
+            "definition": "Critério que orienta a prioridade para correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação em detrimento de melhorias não essenciais.",
+            "associated_records": [
+              {
+                "record_id": "752eab672c1246acb4318bd83d98c5e9",
+                "supporting_excerpts": [
+                  "Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade; melhorias não essenciais devem ser orientadas pelo uso real."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual que estabelece critérios para priorizar correções essenciais sobre melhorias não essenciais durante o desenvolvimento do BB-CORE."
+              }
+            ]
+          }
+        ],
+        "abstentions": [
+          "Não há fundamento suficiente para propor associações entre a nova dimensão e as dimensões existentes, pois elas tratam de aspectos distintos da operação intelectual."
+        ],
+        "limitations": [
+          "A adoção do critério não significa que o marco já foi atingido. A validação em nova conversa foi deliberadamente adiada. A denominação MVP-1 foi proposta, não consolidada."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 11.65,
+        "prompt_eval_count": 920,
+        "eval_count": 804,
+        "total_duration_ns": 11652649587
+      }
+    },
+    {
+      "step": 6,
+      "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+      "title": "Continuidade intelectual pela retomada do contexto de origem",
+      "result": {
+        "recognized_existing_dimensions": [
+          "O novo registro não se associa diretamente a nenhuma das dimensões conceituais existentes ('Suficiência funcional como critério de encerramento' e 'Priorização de correções essenciais sobre melhorias não essenciais')."
+        ],
+        "newly_proposed_dimensions": [
+          "Continuidade intelectual pela retomada do contexto de origem",
+          "Definição: A continuidade intelectual é concebida como a capacidade de recuperar tanto os resultados intelectuais quanto o contexto em que foram produzidos, permitindo uma compreensão mais rica e contextualizada desses resultados.",
+          "Justificativa: O registro introduz um novo conceito que expande a noção de continuidade intelectual para além da simples recuperação do conhecimento produzido. Ele sugere que a preservação do contexto original em que o conhecimento foi gerado é igualmente importante para manter a integridade e relevância desse conhecimento."
+        ],
+        "revisions_to_prior_associations": [
+          "Não há necessidade de revisar associações anteriores, pois o novo registro introduz uma nova dimensão conceitual que não se sobrepõe diretamente às existentes."
+        ],
+        "differentiations": [],
+        "dimensions_state": [
+          {
+            "name": "Continuidade intelectual pela retomada do contexto de origem",
+            "definition": "A continuidade intelectual é concebida como a capacidade de recuperar tanto os resultados intelectuais quanto o contexto em que foram produzidos, permitindo uma compreensão mais rica e contextualizada desses resultados.",
+            "associated_records": [
+              {
+                "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+                "supporting_excerpts": [
+                  "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual que expande a noção de continuidade intelectual para além da simples recuperação do conhecimento produzido, sugerindo a importância da preservação do contexto original em que o conhecimento foi gerado."
+              }
+            ]
+          },
+          {
+            "name": "Suficiência funcional como critério de encerramento",
+            "definition": "Critério que determina quando uma etapa do desenvolvimento deve ser considerada concluída com base na capacidade das operações realizadas para atender às necessidades funcionais.",
+            "associated_records": [
+              {
+                "record_id": "752eab672c1246acb4318bd83d98c5e9",
+                "supporting_excerpts": [
+                  "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual que estabelece critérios para interromper a expansão do escopo durante o desenvolvimento do BB-CORE com base na suficiência funcional das operações realizadas."
+              }
+            ]
+          },
+          {
+            "name": "Priorização de correções essenciais sobre melhorias não essenciais",
+            "definition": "Critério que orienta a prioridade para correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação em detrimento de melhorias não essenciais.",
+            "associated_records": [
+              {
+                "record_id": "752eab672c1246acb4318bd83d98c5e9",
+                "supporting_excerpts": [
+                  "Correções que afetam integridade, identidade, proveniência, responsabilidade ou fidelidade da recuperação têm prioridade; melhorias não essenciais devem ser orientadas pelo uso real."
+                ],
+                "justification": "O registro introduz uma nova dimensão conceitual que estabelece critérios para priorizar correções essenciais sobre melhorias não essenciais durante o desenvolvimento do BB-CORE."
+              }
+            ]
+          }
+        ],
+        "abstentions": [
+          "Não há abstenção necessária, pois o novo registro forneceu um fundamento suficiente para a proposta de uma nova dimensão conceitual."
+        ],
+        "limitations": [
+          "A proposição conceitual apresentada no novo registro ainda não foi confrontada sistematicamente com literatura ou experiência independente. Além disso, as limitações mencionadas pelo autor do registro devem ser consideradas ao aplicar essa nova dimensão conceitual."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 16.47,
+        "prompt_eval_count": 1131,
+        "eval_count": 1149,
+        "total_duration_ns": 16466344854
+      }
+    }
+  ],
+  "experiment_c2_incremental_reverse": [
+    {
+      "step": 1,
+      "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+      "title": "Continuidade intelectual pela retomada do contexto de origem",
+      "result": {
+        "recognized_existing_dimensions": [],
+        "newly_proposed_dimensions": [
+          "Continuidade Intelectual",
+          "Contexto de Origem",
+          "Mobilização de Achados"
+        ],
+        "revisions_to_prior_associations": [],
+        "differentiations": [],
+        "dimensions_state": [
+          {
+            "name": "Continuidade Intelectual",
+            "definition": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+            "associated_records": [
+              {
+                "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+                "supporting_excerpts": [
+                  "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento."
+                ],
+                "justification": "O registro explicitamente define e exemplifica o conceito de continuidade intelectual."
+              }
+            ]
+          },
+          {
+            "name": "Contexto de Origem",
+            "definition": "Os contextos em que os achados intelectuais foram originalmente elaborados.",
+            "associated_records": [
+              {
+                "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+                "supporting_excerpts": [
+                  "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade."
+                ],
+                "justification": "O registro sugere que a retomada do contexto original é uma forma de continuidade intelectual."
+              }
+            ]
+          },
+          {
+            "name": "Mobilização de Achados",
+            "definition": "A prática de usar achados em novos contextos.",
+            "associated_records": [
+              {
+                "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+                "supporting_excerpts": [
+                  "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade."
+                ],
+                "justification": "O registro menciona explicitamente a mobilização de achados como uma forma de continuidade intelectual."
+              }
+            ]
+          }
+        ],
+        "abstentions": [],
+        "limitations": [
+          "Proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente.",
+          "Uma URL não preserva a conversa, não comprova sua proveniência e não garante acesso futuro."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 9.82,
+        "prompt_eval_count": 667,
+        "eval_count": 672,
+        "total_duration_ns": 9817392509
+      }
+    },
+    {
+      "step": 2,
+      "record_id": "752eab672c1246acb4318bd83d98c5e9",
+      "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+      "result": {
+        "recognized_existing_dimensions": [
+          "Contexto de Origem",
+          "Mobilização de Achados"
+        ],
+        "newly_proposed_dimensions": [],
+        "revisions_to_prior_associations": [],
+        "differentiations": [
+          "O novo registro não se relaciona diretamente com as dimensões 'Continuidade Intelectual', 'Contexto de Origem' e 'Mobilização de Achados'. No entanto, ele introduz o conceito de 'Suficiência funcional' como critério para encerrar uma etapa do desenvolvimento do BB-CORE. Este novo conceito não se encaixa nas dimensões existentes e requer um tratamento separado."
+        ],
+        "dimensions_state": [
+          {
+            "name": "Suficiência Funcional",
+            "definition": "Critério para determinar o encerramento de uma etapa do desenvolvimento, baseando-se na capacidade funcional adequada das operações do sistema.",
+            "associated_records": [
+              {
+                "record_id": "752eab672c1246acb4318bd83d98c5e9",
+                "supporting_excerpts": [
+                  "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+                ],
+                "justification": "O registro define explicitamente o critério de 'suficiência funcional' para encerrar uma etapa do desenvolvimento do BB-CORE."
+              }
+            ]
+          }
+        ],
+        "abstentions": [
+          "Não há fundamento suficiente no novo registro para associar diretamente a dimensão 'Continuidade Intelectual', pois o conceito de mobilização e retomada de contextos não é abordado neste contexto."
+        ],
+        "limitations": []
+      },
+      "metrics": {
+        "elapsed_s": 6.82,
+        "prompt_eval_count": 1140,
+        "eval_count": 433,
+        "total_duration_ns": 6814553029
+      }
+    },
+    {
+      "step": 3,
+      "record_id": "784c05eb89d5436b942e340d109dcebb",
+      "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+      "result": {
+        "recognized_existing_dimensions": [
+          "Suficiência Funcional"
+        ],
+        "newly_proposed_dimensions": [
+          "Reconhecimento de Identidade vs Confirmação Integral do Conteúdo"
+        ],
+        "revisions_to_prior_associations": [],
+        "differentiations": [
+          "O novo registro diferencia o conceito de reconhecimento de identidade de um objeto intelectual da confirmação integral do conteúdo desse objeto, enquanto a dimensão 'Suficiência Funcional' se concentra na adequação funcional das operações para determinar o encerramento de uma etapa."
+        ],
+        "dimensions_state": [
+          {
+            "name": "Reconhecimento de Identidade vs Confirmação Integral do Conteúdo",
+            "definition": "Critério que estabelece a distinção entre reconhecer que duas representações se referem ao mesmo objeto intelectual e confirmar integralmente o conteúdo, fundamentos, limitações, evidências e atribuições desse objeto.",
+            "associated_records": [
+              {
+                "record_id": "784c05eb89d5436b942e340d109dcebb",
+                "supporting_excerpts": [
+                  "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+                ],
+                "justification": "O registro explicita a distinção entre o reconhecimento de identidade e a confirmação integral do conteúdo, destacando que a identidade pode ser mantida mesmo com modificações no conhecimento sobre o objeto intelectual."
+              }
+            ]
+          }
+        ],
+        "abstentions": [],
+        "limitations": [
+          "A análise é conceitual e apoiada em inspeção estática do código, não em validação empírica. A equivalência intelectual não pode ser decidida apenas por hashes."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 7.06,
+        "prompt_eval_count": 780,
+        "eval_count": 466,
+        "total_duration_ns": 7063494465
+      }
+    },
+    {
+      "step": 4,
+      "record_id": "87f47b767c6e4994a3746c0375ff5348",
+      "title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+      "result": {
+        "recognized_existing_dimensions": [
+          "Reconhecimento de Identidade vs Confirmação Integral do Conteúdo"
+        ],
+        "newly_proposed_dimensions": [],
+        "revisions_to_prior_associations": [
+          "O novo registro reforça a distinção entre reconhecer que duas representações se referem ao mesmo objeto intelectual e confirmar integralmente o conteúdo, fundamentos, limitações, evidências e atribuições desse objeto. A integridade verificável de um documento não implica necessariamente fidelidade à fonte original ou validação científica."
+        ],
+        "differentiations": [
+          "O novo registro diferencia a preservação técnica da autenticação de autoria, narrativa de gênese e validação científica. Isso sugere que a integridade dos bytes não é sinônimo de fidelidade à fonte ou validade do conhecimento."
+        ],
+        "dimensions_state": [
+          {
+            "name": "Reconhecimento de Identidade vs Confirmação Integral do Conteúdo",
+            "definition": "Critério que estabelece a distinção entre reconhecer que duas representações se referem ao mesmo objeto intelectual e confirmar integralmente o conteúdo, fundamentos, limitações, evidências e atribuições desse objeto.",
+            "associated_records": [
+              {
+                "record_id": "784c05eb89d5436b942e340d109dcebb",
+                "supporting_excerpts": [
+                  "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+                ],
+                "justification": "O registro explicita a distinção entre o reconhecimento de identidade e a confirmação integral do conteúdo, destacando que a identidade pode ser mantida mesmo com modificações no conhecimento sobre o objeto intelectual."
+              },
+              {
+                "record_id": "87f47b767c6e4994a3746c0375ff5348",
+                "supporting_excerpts": [
+                  "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+                ],
+                "justification": "O registro reforça a distinção entre preservação técnica e confirmação integral do conteúdo, fundamentos, limitações, evidências e atribuições desse objeto. A integridade dos bytes não implica fidelidade à fonte original ou validade científica."
+              }
+            ]
+          }
+        ],
+        "abstentions": [],
+        "limitations": []
+      },
+      "metrics": {
+        "elapsed_s": 9.63,
+        "prompt_eval_count": 839,
+        "eval_count": 657,
+        "total_duration_ns": 9632185678
+      }
+    },
+    {
+      "step": 5,
+      "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+      "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+      "result": {
+        "recognized_existing_dimensions": [
+          "Reconhecimento de Identidade vs Confirmação Integral do Conteúdo"
+        ],
+        "newly_proposed_dimensions": [],
+        "revisions_to_prior_associations": [],
+        "differentiations": [
+          "O novo registro reforça a distinção entre reconhecer que um acontecimento intelectual ocorreu e disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Isso é consistente com a dimensão 'Reconhecimento de Identidade vs Confirmação Integral do Conteúdo', mas especifica essa distinção no contexto da recuperação de acontecimentos intelectuais."
+        ],
+        "dimensions_state": [
+          {
+            "name": "Reconhecimento de Identidade vs Confirmação Integral do Conteúdo",
+            "definition": "Critério que estabelece a distinção entre reconhecer que duas representações se referem ao mesmo objeto intelectual e confirmar integralmente o conteúdo, fundamentos, limitações, evidências e atribuições desse objeto.",
+            "associated_records": [
+              {
+                "record_id": "784c05eb89d5436b942e340d109dcebb",
+                "supporting_excerpts": [
+                  "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+                ],
+                "justification": "O registro explicita a distinção entre o reconhecimento de identidade e a confirmação integral do conteúdo, destacando que a identidade pode ser mantida mesmo com modificações no conhecimento sobre o objeto intelectual."
+              },
+              {
+                "record_id": "87f47b767c6e4994a3746c0375ff5348",
+                "supporting_excerpts": [
+                  "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+                ],
+                "justification": "O registro reforça a distinção entre preservação técnica e confirmação integral do conteúdo, fundamentos, limitações, evidências e atribuições desse objeto. A integridade dos bytes não implica fidelidade à fonte original ou validade científica."
+              },
+              {
+                "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+                "supporting_excerpts": [
+                  "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+                ],
+                "justification": "O registro reforça a distinção entre reconhecer que um acontecimento intelectual ocorreu e disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Isso é consistente com a dimensão 'Reconhecimento de Identidade vs Confirmação Integral do Conteúdo', mas especifica essa distinção no contexto da recuperação de acontecimentos intelectuais."
+              }
+            ]
+          }
+        ],
+        "abstentions": [],
+        "limitations": [
+          "A relevância e as limitações declaradas pelo novo registro são pertinentes ao contexto específico do desenvolvimento e fundamentos do BB-CORE, mas não alteram a estrutura conceitual estabelecida."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 12.57,
+        "prompt_eval_count": 1008,
+        "eval_count": 871,
+        "total_duration_ns": 12572625190
+      }
+    },
+    {
+      "step": 6,
+      "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+      "title": "A organização da memória não determina a organização da atividade intelectual",
+      "result": {
+        "recognized_existing_dimensions": [
+          "Reconhecimento de Identidade vs Confirmação Integral do Conteúdo"
+        ],
+        "newly_proposed_dimensions": [],
+        "revisions_to_prior_associations": [],
+        "differentiations": [
+          "A nova proposição conceitual introduz uma distinção entre a organização dos objetos intelectuais preservados e a organização da atividade intelectual que os produziu. Isso não se encaixa diretamente na dimensão 'Reconhecimento de Identidade vs Confirmação Integral do Conteúdo', mas expande o escopo para considerar como a estrutura interna dos sistemas de preservação pode diferir da estrutura externa da atividade intelectual. O registro não fornece exemplos diretos que justifiquem uma nova dimensão, mas sugere um novo aspecto conceitual importante."
+        ],
+        "dimensions_state": [
+          {
+            "name": "Reconhecimento de Identidade vs Confirmação Integral do Conteúdo",
+            "definition": "Critério que estabelece a distinção entre reconhecer que duas representações se referem ao mesmo objeto intelectual e confirmar integralmente o conteúdo, fundamentos, limitações, evidências e atribuições desse objeto.",
+            "associated_records": [
+              {
+                "record_id": "784c05eb89d5436b942e340d109dcebb",
+                "supporting_excerpts": [
+                  "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados."
+                ],
+                "justification": "O registro explicita a distinção entre o reconhecimento de identidade e a confirmação integral do conteúdo, destacando que a identidade pode ser mantida mesmo com modificações no conhecimento sobre o objeto intelectual."
+              },
+              {
+                "record_id": "87f47b767c6e4994a3746c0375ff5348",
+                "supporting_excerpts": [
+                  "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido."
+                ],
+                "justification": "O registro reforça a distinção entre preservação técnica e confirmação integral do conteúdo, fundamentos, limitações, evidências e atribuições desse objeto. A integridade dos bytes não implica fidelidade à fonte original ou validade científica."
+              },
+              {
+                "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+                "supporting_excerpts": [
+                  "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+                ],
+                "justification": "O registro reforça a distinção entre reconhecer que um acontecimento intelectual ocorreu e disponibilizar o conteúdo necessário para que ele participe de uma nova investigação. Isso é consistente com a dimensão 'Reconhecimento de Identidade vs Confirmação Integral do Conteúdo', mas especifica essa distinção no contexto da recuperação de acontecimentos intelectuais."
+              },
+              {
+                "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+                "supporting_excerpts": [
+                  "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produziu. A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados."
+                ],
+                "justification": "O registro introduz uma nova distinção conceitual sobre como a organização interna dos sistemas de preservação pode diferir da estrutura externa da atividade intelectual. Embora não se encaixe diretamente na dimensão existente, sugere um novo aspecto importante para considerar."
+              }
+            ]
+          }
+        ],
+        "abstentions": [
+          "Não é possível propor uma nova dimensão com base no registro fornecido sem comprometer a regra de não presumir nenhuma taxonomia ou quantidade de dimensões. A distinção introduzida pelo novo registro é relevante, mas não justifica a criação de uma nova dimensão."
+        ],
+        "limitations": [
+          "O registro '9dac8b5e8e0747b0b7be9ebf2dfd365a' é uma proposição conceitual derivada do caso BB-CORE e não foi confrontado sistemáticamente com literatura ou usuários, o que limita a generalização de sua aplicação."
+        ]
+      },
+      "metrics": {
+        "elapsed_s": 17.34,
+        "prompt_eval_count": 1229,
+        "eval_count": 1207,
+        "total_duration_ns": 17338662381
+      }
+    }
+  ]
+}

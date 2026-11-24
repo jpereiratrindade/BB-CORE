@@ -77,9 +77,36 @@
 .cal-pill{background:#f1f6fa;border:1px solid #d8e4ed;border-radius:999px;padding:3px 10px}
 .cal-pill.warn{background:#fff8eb;border-color:#ebd4a4;color:#724d0b}
 .cal-grid-wrap{overflow-x:auto;padding:8px 0}
-.cal-grid{display:inline-grid;grid-template-rows:repeat(7,14px);grid-auto-flow:column;gap:3px;align-items:center}
-.cal-day-labels{display:inline-grid;grid-template-rows:repeat(7,14px);gap:3px;margin-right:6px;font-size:10px;color:#5d768a;vertical-align:top;line-height:14px}
-.cal-cell{width:14px;height:14px;border-radius:3px;border:1px solid #e1ebf2;background:#f2f6f9;cursor:pointer;padding:0}
+.cal-board{display:inline-flex;flex-direction:column;gap:4px}
+.cal-months{display:grid;grid-auto-flow:column;grid-auto-columns:12px;gap:3px;margin-left:34px;font-size:11px;color:#516b7f;height:15px;line-height:15px}
+.cal-months span{white-space:nowrap;overflow:visible}
+.cal-body{display:flex;align-items:flex-start}
+.cal-grid{display:inline-grid;grid-template-rows:repeat(7,12px);grid-auto-flow:column;gap:3px;align-items:center}
+.cal-day-labels{display:inline-grid;grid-template-rows:repeat(7,12px);gap:3px;width:28px;margin-right:6px;font-size:10px;color:#5d768a;line-height:12px}
+.cal-cell{width:12px;height:12px;border-radius:2px;border:1px solid #e1ebf2;background:#f2f6f9;cursor:pointer;padding:0}
+.cal-footer{display:flex;justify-content:flex-end;align-items:center;gap:5px;margin-top:6px;font-size:11px;color:#5d768a}
+.cal-legend-box{display:inline-block;width:11px;height:11px;border-radius:2px;border:1px solid #e1ebf2;background:#f2f6f9}
+.cal-legend-box.l1{background:#cbe9e8;border-color:#a5d8d6}
+.cal-legend-box.l2{background:#7cc9c7;border-color:#56b4b1}
+.cal-legend-box.l3{background:#289f9c;border-color:#1c8481}
+.cal-legend-box.l4{background:#0b5d69;border-color:#07444d}
+.net-toolbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.net-zoom-group{display:flex;flex-wrap:wrap;gap:6px}
+.net-zoom-group .button{padding:5px 10px;font-size:.84rem}
+.button.outline.active{background:#0b3b66;color:#fff;border-color:#0b3b66}
+.graph-layout.expanded{grid-template-columns:1fr}
+.graph-layout.expanded #analytics-graph{min-height:660px}
+.net-card-node{cursor:pointer}
+.net-card-node rect{transition:stroke-width .12s,filter .12s}
+.net-card-node:hover rect{filter:drop-shadow(0 3px 8px rgba(10,36,62,.12))}
+.net-card-node.dimmed{opacity:.24}
+.net-edge{fill:none;cursor:pointer;transition:opacity .15s}
+.net-edge.dimmed{opacity:.1 !important}
+.net-excerpt{background:#f5f9fc;border-left:3px solid #1c9b98;padding:6px 8px;margin:4px 0;font-size:.8rem;color:#1b364c}
+.net-excerpt.unverified{border-left-color:#c97a16;background:#fffaf0}
+.net-badge{display:inline-block;padding:2px 7px;border-radius:999px;font-size:.75rem;background:#eaf2f8;color:#123450;margin-right:4px}
+.net-badge.divergent{background:#fff3dc;color:#7a4a05}
+.net-badge.registered{background:#e3ecff;color:#0a2c6b}
 .cal-cell.l1{background:#cbe9e8;border-color:#a5d8d6}
 .cal-cell.l2{background:#7cc9c7;border-color:#56b4b1}
 .cal-cell.l3{background:#289f9c;border-color:#1c8481}
