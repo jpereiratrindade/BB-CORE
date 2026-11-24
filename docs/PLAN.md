@@ -64,11 +64,17 @@ A análise anterior de que *nenhuma adaptação de banco seria necessária* foi 
 
 ---
 
-## 5. Marco de suficiência funcional do núcleo (consolidação)
+## 5. Marco de suficiência funcional do núcleo (`v0.1.0-core` — 2026-11-24)
 
-- **Objetivo desta etapa:** alcançar **suficiência funcional** nas operações de recebimento, exame, confirmação, preservação, recuperação e exportação (`BB-CORE-ING-0.2.0` e `BB-CORE-EXP-0.1.0`), mantendo o MCP fora do escopo.
-- **Critério de priorização:** priorizar exclusivamente correções que comprometam integridade, identidade, proveniência, responsabilidade intelectual ou fidelidade da recuperação. Oportunidades de melhoria que não afetem esses pilares ficam documentadas para etapas orientadas pelo uso real.
-- **Critério de encerramento:** após a consolidação e a validação da experiência de continuidade intelectual em nova conversa do ChatGPT, estabelecer um marco versionado de suficiência funcional do núcleo.
+- **Estado:** **Marco estabelecido** para início da utilização regular do núcleo local (`Receber → Examinar → Confirmar → Recuperar/Exportar` sobre `BB-CORE-ING-0.2.0` e `BB-CORE-EXP-0.1.0`), com **47/47** testes unitários/HTTP aprovados e integridade verificada no acervo operacional (`BB-CORE-ACHADOS-20261124`: 5 registros confirmados; backup anterior preservado em `~/.local/share/bb-core/backups/bb.sqlite.bak-20261124`).
+- **Diretriz de suspensão:** novos desenvolvimentos ficam suspensos, exceto correções que se mostrarem necessárias durante a utilização real. O MCP permanece fora do escopo.
+- **Experiência adiada (não impeditiva):** validação da continuidade intelectual entre conversas independentes será realizada posteriormente.
+- **Limitações conhecidas (não impeditivas neste marco):**
+  1. `pending_declared_relations` permanece em `insights.context` sem fluxo de promoção automática para `relations`.
+  2. Recebimentos em `VERSION_CONFLICT` são preservados e examináveis via `/api/receipts/{id}/parametrized`, sem fluxo formal de encerramento.
+  3. Listagem `/api/insights` limitada a 30 itens recentes, busca FTS5 ainda não indexa revisões `FORMULATION_REVISED`, e `Events._verified` re-verifica evidências por leitura completa.
+  4. Mesa de Elaboração experimental permanece oculta da navegação principal (código/dados preservados sem novos investimentos).
+- **Evolução subsequente:** será orientada exclusivamente pelas necessidades efetivamente observadas durante a participação do BB-CORE nas atividades intelectuais.
 
 ---
 
