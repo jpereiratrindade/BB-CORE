@@ -54,14 +54,13 @@ O documento é composto por:
 
 ## 3. Conteúdo intelectual, formulação e autoria
 
-### 3.1 Separação estrita entre formulação, autoria e confirmação
+### 3.1 Separação estrita entre incorporação, origem intelectual, autoria e confirmação
 O contrato **não** confunde três dimensões distintas:
-1. **Origem da formulação (`formulation_origin`):**
-   - `DOCUMENT_EXCERPT`: preservação literal do trecho presente no corpo do Markdown parametrizado (prioritária neste contrato).
+1. **Modalidade de incorporação (`formulation_origin`):** indica *como* a formulação entrou no registro do BB-CORE (sem necessidade de ampliar o enum existente no núcleo):
+   - `DOCUMENT_EXCERPT`: reprodução literal de trecho ancorado no Markdown parametrizado (prioritária neste contrato, mesmo que o documento tenha sido redigido com assistência de IA).
    - `HUMAN_FORMULATION`: formulação posteriormente elaborada/editada pelo humano no exame local.
-   - `EXTERNAL_AI_ASSISTED`: formulação atribuída a assistência por IA em ambiente externo (**nunca** deve ser classificada automaticamente como `HUMAN_FORMULATION`).
-2. **Autoria declarada (`attribution`):** quem formulou/propôs o conteúdo no ambiente de origem (ex.: pesquisador, diálogo com ChatGPT, autor externo), **não** autenticada civilmente.
-3. **Confirmação humana (`confirmed_by_declared` + `confirmed: true`):** ato explícito do operador local autorizando a preservação no acervo do BB-CORE; não transforma texto de IA em autoria humana nem valida cientificamente o conteúdo.
+2. **Origem intelectual e autoria declarada (`attribution`):** quem formulou/propôs o conteúdo no ambiente de origem (`declared_author`, `declared_role`, `external_tool`, `ai_assisted: true/false`, `verified: false`). Uma reprodução literal (`DOCUMENT_EXCERPT`) produzida com assistência de IA preserva `ai_assisted: true` em `attribution`, sem ser classificada como `HUMAN_FORMULATION`.
+3. **Confirmação humana (`confirmed_by_declared` + `confirmed: true`):** ato explícito do operador local autorizando a preservação no acervo do BB-CORE; não transforma texto assistido por IA em autoria humana nem valida cientificamente o conteúdo.
 
 ### 3.2 Campos por item em `records`
 A ausência legítima de informação é representada por `null`, `[]` ou omissão explícita sem inferência silenciosa:
@@ -69,11 +68,11 @@ A ausência legítima de informação é representada por `null`, `[]` ou omiss�
 | Campo | Obrigatório para confirmar | Descrição |
 | ----- | -------------------------- | --------- |
 | `id_local` | Sim (único no documento) | Identificador local do item no documento (ex.: `achado-01`). |
-| `external_record_id` | Recomendado | Identificador intelectual declarado do registro (ex.: `BB-CORE-INSIGHT-001`), usado na detecção de reimportação e divergência. Se omitido e `document.external_id` existir, compõe-se a chave declarada `(document.external_id, id_local)`. |
+| `external_record_id` | Recomendado | Identificador intelectual declarado do registro (ex.: `BB-CORE-INSIGHT-001`), usado na detecção de reimportação e divergência. Se omitido e `document.external_id` existir, compõe-se `(document.external_id, id_local)`; se ambos forem ausentes, permanece `null` (nunca inferido do nome de arquivo). |
 | `kind` | Sim | `CONCEPTUAL_FINDING`, `METHODOLOGICAL_DECISION`, `OPEN_QUESTION` ou `EMPIRICAL_REPORT`. |
 | `work_state` | Sim | Compatível com `kind` (`PROPOSED`, `ADOPTED`, `OPEN`, `REPORTED`). |
 | `title` | Sim (≤ 240 B) | Título declarativo do registro. |
-| `formulation_origin` | Sim | `DOCUMENT_EXCERPT` (padrão quando usa `claim_section`), `EXTERNAL_AI_ASSISTED` ou `HUMAN_FORMULATION`. |
+| `formulation_origin` | Sim | `DOCUMENT_EXCERPT` (padrão quando usa `claim_section`) ou `HUMAN_FORMULATION`. |
 | `claim_section` | Sim* | Nome exato do cabeçalho `## ...` no corpo Markdown contendo a formulação literal a ancorar em bytes UTF-8 (*ou `claim` literal único no documento). |
 | `why_matters_section` / `why_matters` | Sim (≤ 4000 B) | Relevância declarada da preservação. |
 | `limitations_section` / `limitations` | Sim (≤ 10000 B) | Limites epistemológicos, metodológicos e lacunas explícitas. |
@@ -115,10 +114,22 @@ A ausência legítima de informação é representada por `null`, `[]` ou omiss�
 4. **Mesmo `external_id` + mesma `declared_version` + `sha256` diferente:**
    - Gera `VERSION_CONFLICT` na camada documental, preservando o conteúdo divergente sem sobrescrever o original e bloqueando confirmação até exame explícito.
 5. **Nova versão documental (`declared_version` diferente) com registro declarado já existente:**
-   - Se a formulação (`claim_sha256`) for **idêntica** à já confirmada: reconhece como já preservada (`ALREADY_CONFIRMED`), podendo opcionalmente registrar novo vínculo de evidência se autorizado, sem duplicar o insight.
-   - Se a formulação (`claim_sha256`) for **divergente**: sinaliza **`FORMULATION_DIVERGENCE`** entre a nova versão e o `insight_id` existente. **Nunca** revisa, sobrescreve ou substitui automaticamente o registro anterior; o operador decide se mantém, revisa explicitamente (`FORMULATION_REVISED`) ou cria novo registro desdobrado (`supersedes_id`).
+   - Se a formulação (`claim_sha256`) e o conteúdo integral (`content_sha256`, incluindo fundamentos, limitações, evidências e contexto) forem **idênticos** aos já confirmados: reconhece como já preservado (`ALREADY_CONFIRMED`), sem duplicar o insight.
+   - Se a formulação (`claim_sha256`) ou o conteúdo integral (`content_sha256`) forem **divergentes**: sinaliza **`FORMULATION_DIVERGENCE`** (ou divergência de contexto/limitações) entre a nova versão e o `insight_id` existente. Identidade de formulação não implica identidade integral de todos os fundamentos, limitações, evidências e elementos contextuais. **Nunca** revisa, sobrescreve ou substitui automaticamente o registro anterior; o operador decide se mantém, revisa explicitamente (`FORMULATION_REVISED`) ou cria novo registro desdobrado (`supersedes_id`).
+6. **Reconhecimento explícito de registros anteriores a `imported_record_identities`:** registros preservados antes da introdução de `imported_record_identities` são reconhecidos apenas por vínculo explícito de metadados externos já armazenados (`context.external_document_id` + `document_anchors` / vinculação explícita pelo operador), **nunca** por correspondência automática por título ou similaridade textual.
 
-> **Reavaliação de impacto no banco:** para sustentar as regras 3 e 5 sem duplicação silenciosa, **será necessária uma adaptação aditiva no SQLite** (tabela de mapeamento de identidades declaradas de registros importados → `insight_id` e `claim_sha256`), sem alterar o schema das tabelas existentes.
+> **Reavaliação de impacto no banco:** para sustentar as regras 3 e 5 sem duplicação silenciosa, **será necessária uma adaptação aditiva no SQLite** (tabela de mapeamento de identidades declaradas de registros importados → `insight_id`, `claim_sha256` e `content_sha256`), sem alterar o schema das tabelas existentes.
+
+### 5.3 Resolução determinística de seções Markdown
+- A resolução de `*_section` procura exclusivamente cabeçalhos de nível 2 (`## Nome`) fora de blocos de código cercados (```` ``` ```` ou `~~~`).
+- 0 ocorrências ou mais de 1 ocorrência da mesma seção resultam em rejeição explícita (`ParametrizedError`), assim como seções vazias.
+- Os offsets `start_byte` e `end_byte` são calculados sobre os bytes UTF-8 brutos originais (preservando BOM e CRLF/LF).
+
+---
+
+## 8. Perspectiva posterior: exportação contextualizada em Markdown
+
+Mantém-se como perspectiva posterior (fora do escopo imediato deste incremento) a exportação contextualizada de registros intelectuais confirmados em Markdown parametrizado/legível, permitindo sua recuperação e mobilização em novas conversas do ChatGPT ou outros ambientes externos.
 
 ---
 

@@ -27,6 +27,7 @@ records:
       declared_author: "jpereiratrindade (com assistência externa na redação)"
       declared_role: "Proponente do achado conceitual"
       external_tool: "ChatGPT / ambiente externo de elaboração"
+      ai_assisted: true
       verified: false
     context:
       scope: "Fundamentos da interação humana com o BB-CORE"
