@@ -17,6 +17,7 @@ import yaml
 from .documents import KINDS, MAX_DOCUMENT_BYTES
 
 SCHEMA_VERSION = 'BB-CORE-ING-0.2.0'
+CONTENT_HASH_VERSION = 'BB-CORE-HASH-0.2.0'
 MAX_FRONTMATTER_BYTES = 64_000
 MAX_RECORDS = 32
 MAX_YAML_DEPTH = 8
@@ -475,6 +476,17 @@ def compute_content_sha256(
     ).hexdigest()
 
 
+def compute_document_provenance_sha256(doc_meta: dict) -> str:
+    """Hash canônico da proveniência documental declarada (separado do conteúdo do registro)."""
+    payload = {
+        'provenance': doc_meta.get('provenance'),
+        'source_context': doc_meta.get('source_context'),
+    }
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+    ).hexdigest()
+
+
 def parse_parametrized_markdown(raw_bytes: bytes) -> dict:
     """Interpreta deterministicamente um Markdown parametrizado (BB-CORE-ING-0.2.0)."""
     yaml_text, body_start = _split_front_matter(raw_bytes)
@@ -511,10 +523,12 @@ def parse_parametrized_markdown(raw_bytes: bytes) -> dict:
 
     return {
         'schema': SCHEMA_VERSION,
+        'content_hash_version': CONTENT_HASH_VERSION,
         'state': 'INTERPRETED',
         'sha256': hashlib.sha256(raw_bytes).hexdigest(),
         'byte_length': len(raw_bytes),
         'document': doc_meta,
+        'document_provenance_sha256': compute_document_provenance_sha256(doc_meta),
         'records': records,
         'provenance_gaps': gaps,
         'epistemic_notice': (

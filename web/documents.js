@@ -11,6 +11,8 @@ const archiveLabels = {
     ALREADY_CONFIRMED: 'Já confirmado no acervo (sem duplicação)',
     FORMULATION_DIVERGENCE: 'Divergência na formulação em relação ao registro confirmado',
     CONTEXT_DIVERGENCE: 'Formulação idêntica, mas com alteração em limitações, relevância, evidências ou contexto',
+    PROVENANCE_DIVERGENCE: 'Registro idêntico, mas a proveniência documental declarada mudou',
+    HASH_COVERAGE_CHANGED: 'Formulação idêntica, mas o algoritmo/cobertura de hash contextual mudou desde a confirmação anterior',
     LEGACY_MATCH_CANDIDATE: 'Registro legado encontrado para este identificador documental (pré-identidade declarada)',
 };
 
@@ -157,7 +159,7 @@ function renderParametrizedSection(box, doc, param, acceptedReceipts) {
     }
     const defaultActor = acceptedReceipts[0]?.received_by || '';
     for (const rec of param.records) {
-        const cardCls = 'param-card' + (rec.archive_status === 'ALREADY_CONFIRMED' ? ' confirmed' : (rec.archive_status === 'FORMULATION_DIVERGENCE' || rec.archive_status === 'CONTEXT_DIVERGENCE' || rec.archive_status === 'LEGACY_MATCH_CANDIDATE' ? ' conflict' : ''));
+        const cardCls = 'param-card' + (rec.archive_status === 'ALREADY_CONFIRMED' ? ' confirmed' : (rec.archive_status === 'FORMULATION_DIVERGENCE' || rec.archive_status === 'CONTEXT_DIVERGENCE' || rec.archive_status === 'PROVENANCE_DIVERGENCE' || rec.archive_status === 'HASH_COVERAGE_CHANGED' || rec.archive_status === 'LEGACY_MATCH_CANDIDATE' ? ' conflict' : ''));
         const card = make('div', undefined, cardCls);
         card.append(
             make('span', (kinds[rec.kind] || rec.kind) + ' · ' + (states[rec.work_state] || rec.work_state), 'tag'),
@@ -181,7 +183,7 @@ function renderParametrizedSection(box, doc, param, acceptedReceipts) {
             card.append(make('small', rec.anchors.map(a => a.role + ' (bytes ' + a.start_byte + '–' + a.end_byte + ')').join(' · '), 'muted'));
         }
 
-        if (rec.archive_status === 'ALREADY_CONFIRMED' || rec.archive_status === 'FORMULATION_DIVERGENCE' || rec.archive_status === 'CONTEXT_DIVERGENCE') {
+        if (rec.archive_status === 'ALREADY_CONFIRMED' || rec.archive_status === 'FORMULATION_DIVERGENCE' || rec.archive_status === 'CONTEXT_DIVERGENCE' || rec.archive_status === 'PROVENANCE_DIVERGENCE' || rec.archive_status === 'HASH_COVERAGE_CHANGED') {
             const openBtn = make('button', 'Abrir registro existente no acervo →', 'button outline');
             openBtn.type = 'button';
             openBtn.addEventListener('click', async () => {

@@ -223,24 +223,32 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
         self.assertEqual(inspected['records'][0]['archive_status'], 'NEW_CANDIDATE')
         self.assertEqual(inspected['records'][1]['archive_status'], 'NEW_CANDIDATE')
 
-        # 3. Confirmação seletiva apenas do primeiro registro (rec-a).
+        # 3. Rota legada /api/document-records não pode contornar confirmação autoritativa de Markdown parametrizado.
         cand_a = inspected['records'][0]
-        status, confirmed_a = self.call('POST', '/api/document-records', {
+        with self.assertRaises(HTTPError) as bypass_err:
+            self.call('POST', '/api/document-records', {
+                'request_id': str(uuid.uuid4()),
+                'title': cand_a['title'],
+                'claim': cand_a['claim'],
+                'why_matters': cand_a['why_matters'],
+                'genesis': cand_a['genesis'],
+                'limitations': cand_a['limitations'],
+                'kind': cand_a['kind'],
+                'work_state': cand_a['work_state'],
+                'formulation_origin': cand_a['formulation_origin'],
+                'confirmed_by_declared': 'Pesquisador',
+                'confirmed': True,
+                'anchors': [{'receipt_id': rec1['receipt_id'], **cand_a['anchors'][0]}],
+            })
+        self.assertEqual(bypass_err.exception.code, 409)
+
+        # Confirmação seletiva autoritativa apenas do primeiro registro (rec-a).
+        status, confirmed_a = self.call('POST', '/api/documents/confirm-record', {
             'request_id': str(uuid.uuid4()),
-            'title': cand_a['title'],
-            'claim': cand_a['claim'],
-            'why_matters': cand_a['why_matters'],
-            'genesis': cand_a['genesis'],
-            'limitations': cand_a['limitations'],
-            'kind': cand_a['kind'],
-            'work_state': cand_a['work_state'],
-            'formulation_origin': cand_a['formulation_origin'],
+            'receipt_id': rec1['receipt_id'],
+            'id_local': cand_a['id_local'],
             'confirmed_by_declared': 'Pesquisador',
             'confirmed': True,
-            'declared_record_key': cand_a['external_record_id'],
-            'content_sha256': cand_a['content_sha256'],
-            'context': {'external_document_id': 'DOC-MULTI', 'document_version': '0.1.0'},
-            'anchors': [{'receipt_id': rec1['receipt_id'], **cand_a['anchors'][0]}],
         })
         self.assertEqual(status, 201)
 
@@ -429,6 +437,26 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
         self.assertEqual(anon_insp['records'][0]['archive_status'], 'ALREADY_CONFIRMED')
         self.assertEqual(anon_insp['records'][0]['existing_insight_id'], anon_rec['id'])
 
+        # Novo recebimento (RECEIVED_AGAIN) dos mesmos bytes anônimos também bloqueia confirmação repetida.
+        _, d_anon_2 = self.call('POST', '/api/documents', {
+            'request_id': str(uuid.uuid4()),
+            'filename': 'anon-copia.md',
+            'content_base64': base64.b64encode(anon_doc).decode(),
+            'provenance': 'Segundo recebimento dos mesmos bytes',
+            'received_by': 'Pesquisador',
+            'confirmed': True,
+        })
+        self.assertEqual(d_anon_2['outcome'], 'RECEIVED_AGAIN')
+        with self.assertRaises(HTTPError) as anon_dup_2:
+            self.call('POST', '/api/documents/confirm-record', {
+                'request_id': str(uuid.uuid4()),
+                'receipt_id': d_anon_2['receipt_id'],
+                'id_local': 'anon-1',
+                'confirmed_by_declared': 'Pesquisador',
+                'confirmed': True,
+            })
+        self.assertEqual(anon_dup_2.exception.code, 409)
+
         # 5. Confirmação autoritativa no servidor + CONTEXT_DIVERGENCE + exportação Markdown.
         doc_ctx = (
             '---\nschema: "BB-CORE-ING-0.2.0"\ndocument:\n  external_id: "CTX-TEST"\n  version: "0.1.0"\n'
@@ -477,6 +505,30 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
         })
         _, insp_ctx_2 = self.call('GET', f"/api/documents/{d_ctx_2['version_id']}/parametrized")
         self.assertEqual(insp_ctx_2['records'][0]['archive_status'], 'CONTEXT_DIVERGENCE')
+
+        # Alterar apenas proveniência documental dispara PROVENANCE_DIVERGENCE.
+        doc_prov_2 = doc_ctx.replace(b'Sem transcri', b'Transcri').replace(b'0.1.0', b'0.3.0')
+        _, d_prov_2 = self.call('POST', '/api/documents', {
+            'request_id': str(uuid.uuid4()),
+            'filename': 'ctx3.md',
+            'content_base64': base64.b64encode(doc_prov_2).decode(),
+            'external_id': 'CTX-TEST',
+            'declared_version': '0.3.0',
+            'provenance': 'ChatGPT v3',
+            'received_by': 'Pesquisador',
+            'confirmed': True,
+        })
+        _, insp_prov_2 = self.call('GET', f"/api/documents/{d_prov_2['version_id']}/parametrized")
+        self.assertEqual(insp_prov_2['records'][0]['archive_status'], 'PROVENANCE_DIVERGENCE')
+        self.assertTrue(insp_prov_2['records'][0]['provenance_changed'])
+
+        # Alteração de versão do algoritmo de hash é distinguida como HASH_COVERAGE_CHANGED.
+        with self.server.archive.transaction():
+            self.server.archive.db.execute(
+                "UPDATE imported_record_identities SET content_hash_version='LEGACY_UNVERSIONED' WHERE declared_record_key='CTX-TEST:r1'"
+            )
+        _, insp_hash_v = self.call('GET', f"/api/documents/{d_ctx['version_id']}/parametrized")
+        self.assertEqual(insp_hash_v['records'][0]['archive_status'], 'HASH_COVERAGE_CHANGED')
 
         # Exportação Markdown contextualizada (BB-CORE-EXP-0.1.0).
         with self.opener.open(f"http://127.0.0.1:{self.port}/api/insights/{auth_rec['id']}/export.md", timeout=5) as resp:

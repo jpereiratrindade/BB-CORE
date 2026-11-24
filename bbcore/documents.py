@@ -66,6 +66,7 @@ class Documents:
             CREATE TABLE IF NOT EXISTS imported_record_identities (
                 identity_key TEXT PRIMARY KEY,
                 declared_record_key TEXT UNIQUE,
+                document_sha256 TEXT,
                 receipt_id TEXT,
                 id_local TEXT,
                 insight_id TEXT NOT NULL REFERENCES insights(id),
@@ -73,6 +74,8 @@ class Documents:
                 declared_version TEXT,
                 claim_sha256 TEXT NOT NULL,
                 content_sha256 TEXT NOT NULL,
+                content_hash_version TEXT NOT NULL DEFAULT 'BB-CORE-HASH-0.2.0',
+                document_provenance_sha256 TEXT,
                 recognition_kind TEXT NOT NULL DEFAULT 'CONFIRMED_FROM_PARAMETRIZED',
                 confirmed_by_declared TEXT,
                 rationale TEXT,
@@ -81,39 +84,70 @@ class Documents:
             CREATE INDEX IF NOT EXISTS document_anchor_record ON document_anchors(insight_id);
             CREATE INDEX IF NOT EXISTS document_receipt_version ON document_receipts(version_id);
             ''')
-            cols = {r['name'] for r in self.db.execute('PRAGMA table_info(imported_record_identities)')}
-            if 'identity_key' not in cols:
-                self.db.executescript('''
-                ALTER TABLE imported_record_identities RENAME TO imported_record_identities_v1;
-                CREATE TABLE imported_record_identities (
-                    identity_key TEXT PRIMARY KEY,
-                    declared_record_key TEXT UNIQUE,
-                    receipt_id TEXT,
-                    id_local TEXT,
-                    insight_id TEXT NOT NULL REFERENCES insights(id),
-                    document_external_id TEXT,
-                    declared_version TEXT,
-                    claim_sha256 TEXT NOT NULL,
-                    content_sha256 TEXT NOT NULL,
-                    recognition_kind TEXT NOT NULL DEFAULT 'CONFIRMED_FROM_PARAMETRIZED',
-                    confirmed_by_declared TEXT,
-                    rationale TEXT,
-                    confirmed_at TEXT NOT NULL
-                );
-                INSERT INTO imported_record_identities (
-                    identity_key, declared_record_key, insight_id, document_external_id,
-                    declared_version, claim_sha256, content_sha256, confirmed_at
-                )
-                SELECT declared_record_key, declared_record_key, insight_id, document_external_id,
-                       declared_version, claim_sha256, content_sha256, confirmed_at
-                FROM imported_record_identities_v1;
-                DROP TABLE imported_record_identities_v1;
-                ''')
+        with archive.transaction():
+            self._migrate_imported_identities()
             self.db.execute('''
-            CREATE UNIQUE INDEX IF NOT EXISTS imported_record_occurrence
-                ON imported_record_identities(receipt_id, id_local)
-                WHERE receipt_id IS NOT NULL AND id_local IS NOT NULL
+            CREATE UNIQUE INDEX IF NOT EXISTS imported_record_doc_occurrence
+                ON imported_record_identities(document_sha256, id_local)
+                WHERE document_sha256 IS NOT NULL AND id_local IS NOT NULL
             ''')
+
+    def _migrate_imported_identities(self):
+        # Recuperação atômica se uma migração anterior deixou tabela temporária.
+        has_v1 = self.db.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='imported_record_identities_v1'"
+        ).fetchone()
+        has_main = self.db.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='imported_record_identities'"
+        ).fetchone()
+        if has_v1 and not has_main:
+            self.db.execute('ALTER TABLE imported_record_identities_v1 RENAME TO imported_record_identities')
+        cols = {r['name'] for r in self.db.execute('PRAGMA table_info(imported_record_identities)')}
+        if 'document_sha256' in cols and 'content_hash_version' in cols and 'document_provenance_sha256' in cols:
+            return
+        self.db.execute('ALTER TABLE imported_record_identities RENAME TO imported_record_identities_old')
+        self.db.execute('''
+        CREATE TABLE imported_record_identities (
+            identity_key TEXT PRIMARY KEY,
+            declared_record_key TEXT UNIQUE,
+            document_sha256 TEXT,
+            receipt_id TEXT,
+            id_local TEXT,
+            insight_id TEXT NOT NULL REFERENCES insights(id),
+            document_external_id TEXT,
+            declared_version TEXT,
+            claim_sha256 TEXT NOT NULL,
+            content_sha256 TEXT NOT NULL,
+            content_hash_version TEXT NOT NULL DEFAULT 'BB-CORE-HASH-0.2.0',
+            document_provenance_sha256 TEXT,
+            recognition_kind TEXT NOT NULL DEFAULT 'CONFIRMED_FROM_PARAMETRIZED',
+            confirmed_by_declared TEXT,
+            rationale TEXT,
+            confirmed_at TEXT NOT NULL
+        )''')
+        if 'identity_key' in cols:
+            self.db.execute('''
+            INSERT INTO imported_record_identities (
+                identity_key, declared_record_key, receipt_id, id_local, insight_id,
+                document_external_id, declared_version, claim_sha256, content_sha256,
+                content_hash_version, recognition_kind, confirmed_by_declared, rationale, confirmed_at
+            )
+            SELECT identity_key, declared_record_key, receipt_id, id_local, insight_id,
+                   document_external_id, declared_version, claim_sha256, content_sha256,
+                   'LEGACY_UNVERSIONED', recognition_kind, confirmed_by_declared, rationale, confirmed_at
+            FROM imported_record_identities_old
+            ''')
+        else:
+            self.db.execute('''
+            INSERT INTO imported_record_identities (
+                identity_key, declared_record_key, insight_id, document_external_id,
+                declared_version, claim_sha256, content_sha256, content_hash_version, confirmed_at
+            )
+            SELECT declared_record_key, declared_record_key, insight_id, document_external_id,
+                   declared_version, claim_sha256, content_sha256, 'LEGACY_UNVERSIONED', confirmed_at
+            FROM imported_record_identities_old
+            ''')
+        self.db.execute('DROP TABLE imported_record_identities_old')
 
     def _retry(self, data, operation):
         request_id = required_string(data.get('request_id'), 'request_id', 128)
@@ -234,7 +268,7 @@ class Documents:
             item['integrity'] = 'VERIFIED_LOCAL_BYTES'
             return item
 
-    def create_record(self, data):
+    def create_record(self, data, *, _authoritative_parametrized=False):
         if not isinstance(data, dict):
             raise ValueError('Esperado objeto JSON')
         title = required_string(data.get('title'), 'title', 240)
@@ -256,10 +290,13 @@ class Documents:
         if not isinstance(links, list) or not 1 <= len(links) <= 16:
             raise ValueError('De 1 a 16 âncoras obrigatórias')
         supersedes = optional_text(data.get('supersedes_id'), 'supersedes_id', 64)
-        declared_record_key = optional_text(data.get('declared_record_key'), 'declared_record_key', 240)
-        id_local = optional_text(data.get('id_local'), 'id_local', 120)
-        occurrence_receipt_id = optional_text(data.get('occurrence_receipt_id'), 'occurrence_receipt_id', 64)
-        content_sha256 = optional_text(data.get('content_sha256'), 'content_sha256', 64)
+        declared_record_key = optional_text(data.get('declared_record_key'), 'declared_record_key', 240) if _authoritative_parametrized else None
+        id_local = optional_text(data.get('id_local'), 'id_local', 120) if _authoritative_parametrized else None
+        occurrence_receipt_id = optional_text(data.get('occurrence_receipt_id'), 'occurrence_receipt_id', 64) if _authoritative_parametrized else None
+        occurrence_doc_sha256 = optional_text(data.get('occurrence_doc_sha256'), 'occurrence_doc_sha256', 64) if _authoritative_parametrized else None
+        content_sha256 = optional_text(data.get('content_sha256'), 'content_sha256', 64) if _authoritative_parametrized else None
+        content_hash_version = optional_text(data.get('content_hash_version'), 'content_hash_version', 64) if _authoritative_parametrized else None
+        doc_prov_sha256 = optional_text(data.get('document_provenance_sha256'), 'document_provenance_sha256', 64) if _authoritative_parametrized else None
         with self.archive.transaction():
             request_id, signature, retry = self._retry(data, 'document_record')
             if retry is not None:
@@ -273,14 +310,14 @@ class Documents:
                     raise Conflict(
                         f'Registro declarado "{declared_record_key}" já confirmado como {existing_identity["insight_id"]}'
                     )
-            if occurrence_receipt_id and id_local:
+            if occurrence_doc_sha256 and id_local:
                 existing_occ = self.db.execute(
-                    'SELECT * FROM imported_record_identities WHERE receipt_id=? AND id_local=?',
-                    (occurrence_receipt_id, id_local),
+                    'SELECT * FROM imported_record_identities WHERE document_sha256=? AND id_local=?',
+                    (occurrence_doc_sha256, id_local),
                 ).fetchone()
                 if existing_occ:
                     raise Conflict(
-                        f'Ocorrência documental ({occurrence_receipt_id}, {id_local}) já confirmada como {existing_occ["insight_id"]}'
+                        f'Candidato "{id_local}" deste documento ({occurrence_doc_sha256[:12]}…) já confirmado como {existing_occ["insight_id"]}'
                     )
             if supersedes:
                 previous = self.archive._one('SELECT * FROM record_elaborations WHERE insight_id=?', (supersedes,))
@@ -297,6 +334,14 @@ class Documents:
                 body = self.original(receipt['version_id'])
                 if hashlib.sha256(body).hexdigest() != receipt['sha256']:
                     raise Conflict('Recebimento diverge da versão documental')
+                if not _authoritative_parametrized:
+                    from .parametrized import ParametrizedError, parse_parametrized_markdown
+                    try:
+                        parse_parametrized_markdown(body)
+                    except ParametrizedError:
+                        pass
+                    else:
+                        raise Conflict('Documentos Markdown parametrizados devem ser confirmados pelo fluxo autoritativo (/api/documents/confirm-record)')
                 quote = required_string(link.get('quote'), 'quote', 20000, preserve=True)
                 start, end = link.get('start_byte'), link.get('end_byte')
                 if type(start) is not int or type(end) is not int or not 0 <= start < end <= len(body):
@@ -325,14 +370,15 @@ class Documents:
             self.archive.events.registered(iid, request_id)
             if supersedes:
                 self.archive.events.revision_reference(supersedes, iid, actor, request_id)
-            if declared_record_key or (occurrence_receipt_id and id_local):
+            if declared_record_key or (occurrence_doc_sha256 and id_local):
                 claim_sha = hashlib.sha256(claim.encode('utf-8')).hexdigest()
-                identity_key = declared_record_key or f'occurrence:{occurrence_receipt_id}:{id_local}'
+                identity_key = declared_record_key or f'occurrence:{occurrence_doc_sha256}:{id_local}'
                 self.db.execute(
-                    'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                    'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                     (
                         identity_key,
                         declared_record_key,
+                        occurrence_doc_sha256,
                         occurrence_receipt_id,
                         id_local,
                         iid,
@@ -340,6 +386,8 @@ class Documents:
                         optional_text(context.get('document_version') if isinstance(context, dict) else None, 'document_version', 120),
                         claim_sha,
                         content_sha256 or claim_sha,
+                        content_hash_version or 'BB-CORE-HASH-0.2.0',
+                        doc_prov_sha256,
                         'CONFIRMED_FROM_PARAMETRIZED',
                         actor,
                         'Confirmação explícita de candidato parametrizado',
@@ -379,7 +427,7 @@ class Documents:
         return {'document_contents_checked': total, 'document_hash_mismatches': bad, 'document_anchor_failures': anchor_bad}
 
     def inspect_parametrized(self, *, version_id=None, receipt_id=None, content_base64=None):
-        from .parametrized import ParametrizedError, parse_parametrized_markdown
+        from .parametrized import CONTENT_HASH_VERSION, ParametrizedError, parse_parametrized_markdown
 
         if receipt_id is not None:
             raw_bytes = self.original(receipt_id=receipt_id)
@@ -398,15 +446,9 @@ class Documents:
             return {'is_parametrized': False, 'error': str(err)}
 
         ext_doc_id = parsed['document'].get('external_id')
+        doc_sha256 = parsed['sha256']
+        doc_prov_sha256 = parsed['document_provenance_sha256']
         with self.archive.lock:
-            target_receipt_id = receipt_id
-            if target_receipt_id is None and version_id is not None:
-                row = self.db.execute(
-                    "SELECT id FROM document_receipts WHERE version_id=? AND outcome!='VERSION_CONFLICT' ORDER BY received_at,rowid LIMIT 1",
-                    (version_id,),
-                ).fetchone()
-                if row:
-                    target_receipt_id = row['id']
             legacy_rows = []
             if ext_doc_id:
                 legacy_rows = self.db.execute(
@@ -423,20 +465,30 @@ class Documents:
                         'SELECT * FROM imported_record_identities WHERE declared_record_key=?',
                         (key,),
                     ).fetchone()
-                if existing is None and target_receipt_id:
+                if existing is None:
                     existing = self.db.execute(
-                        'SELECT * FROM imported_record_identities WHERE receipt_id=? AND id_local=?',
-                        (target_receipt_id, rec['id_local']),
+                        'SELECT * FROM imported_record_identities WHERE document_sha256=? AND id_local=?',
+                        (doc_sha256, rec['id_local']),
                     ).fetchone()
                 if existing:
+                    prov_diff = (
+                        existing['document_provenance_sha256'] is not None
+                        and existing['document_provenance_sha256'] != doc_prov_sha256
+                    )
                     if existing['claim_sha256'] != rec['claim_sha256']:
                         rec['archive_status'] = 'FORMULATION_DIVERGENCE'
+                    elif existing['content_hash_version'] != CONTENT_HASH_VERSION:
+                        rec['archive_status'] = 'HASH_COVERAGE_CHANGED'
                     elif existing['content_sha256'] != rec['content_sha256']:
                         rec['archive_status'] = 'CONTEXT_DIVERGENCE'
+                    elif prov_diff:
+                        rec['archive_status'] = 'PROVENANCE_DIVERGENCE'
                     else:
                         rec['archive_status'] = 'ALREADY_CONFIRMED'
+                    rec['provenance_changed'] = prov_diff
                     rec['existing_insight_id'] = existing['insight_id']
                     rec['existing_claim_sha256'] = existing['claim_sha256']
+                    rec['existing_hash_version'] = existing['content_hash_version']
                     rec['recognition_kind'] = existing['recognition_kind']
                 elif legacy_rows:
                     rec['archive_status'] = 'LEGACY_MATCH_CANDIDATE'
@@ -453,11 +505,15 @@ class Documents:
         return {
             'is_parametrized': True,
             'hash_coverage': {
+                'content_hash_version': CONTENT_HASH_VERSION,
                 'claim_sha256': 'Cobre exclusivamente o texto da formulação (claim).',
                 'content_sha256': (
                     'Cobre kind, work_state, title, claim, why_matters, limitations, genesis, '
                     'context, evidence, open_questions, formulation_origin, attribution, '
                     'declared_relations e supersedes_id.'
+                ),
+                'document_provenance_sha256': (
+                    'Cobre document.provenance e document.source_context separadamente do conteúdo do registro.'
                 ),
             },
             **parsed,
@@ -537,10 +593,13 @@ class Documents:
             'declared_record_key': rec.get('external_record_id'),
             'id_local': id_local,
             'occurrence_receipt_id': receipt_id,
+            'occurrence_doc_sha256': parsed['sha256'],
             'content_sha256': rec['content_sha256'],
+            'content_hash_version': parsed['content_hash_version'],
+            'document_provenance_sha256': parsed['document_provenance_sha256'],
             'context': stored_context,
             'anchors': anchors,
-        })
+        }, _authoritative_parametrized=True)
 
     def link_legacy_record(self, data):
         """Vincula explicitamente um candidato parametrizado a um insight legado já existente."""
@@ -607,10 +666,11 @@ class Documents:
                 supersedes_id=elab['supersedes_id'] if elab else None,
             )
             self.db.execute(
-                'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
                 (
                     key,
                     key,
+                    parsed['sha256'],
                     receipt_id,
                     id_local,
                     insight_id,
@@ -618,6 +678,8 @@ class Documents:
                     parsed['document'].get('version'),
                     legacy_claim_sha,
                     legacy_content_sha,
+                    parsed['content_hash_version'],
+                    None,
                     'LEGACY_IDENTITY_LINKED',
                     actor,
                     rationale,
