@@ -11,6 +11,10 @@ if [ -f "$SOURCE_DIR/lab/exp002/results.json" ]; then
     mkdir -p "$RUNTIME_DIR/lab/exp002"
     cp "$SOURCE_DIR/lab/exp002/results.json" "$RUNTIME_DIR/lab/exp002/results.json"
 fi
+if [ -f "$SOURCE_DIR/lab/exp003/results.json" ]; then
+    mkdir -p "$RUNTIME_DIR/lab/exp003"
+    cp "$SOURCE_DIR/lab/exp003/results.json" "$RUNTIME_DIR/lab/exp003/results.json"
+fi
 cat > "$DROPIN_DIR/local-runtime.conf" <<EOF
 [Unit]
 ConditionPathIsDirectory=

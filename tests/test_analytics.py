@@ -162,6 +162,86 @@ class AnalyticsTests(unittest.TestCase):
         self.assertEqual(net['topology']['isolated_record_ids'], [r4['id']])
         self.assertEqual(len(net['topology']['clusters']), 1)
 
+    def test_exp003_discoveries_loading_confrontation_and_staleness(self):
+        r1 = self.archive.capture(make_capsule(title='Registro 1', claim='Formulação original 1'))
+        r2 = self.archive.capture(make_capsule(title='Registro 2', claim='Formulação original 2'))
+        exp003_file = Path(self.tmp.name) / 'exp003.json'
+        exp003_file.write_text(json.dumps({
+            'instruction': 'BB-CORE-EXP-003 v0.2.0',
+            'executed_at': '2020-01-01T00:00:00+00:00',
+            'llm_model': 'qwen2.5:14b',
+            'embed_model': 'qwen3-embedding:4b',
+            'records': [
+                {'id': r1['id'], 'version': 1, 'title': 'Registro 1'},
+                {'id': r2['id'], 'version': 1, 'title': 'Registro 2'},
+            ],
+            'embeddings': {'similarity_full': [{'a_id': r1['id'], 'b_id': r2['id'], 'cosine': 0.75}]},
+            'strategy_a_integral': {
+                'discoveries': [{
+                    'discovery_id': 'EXP003-2020-A-01',
+                    'title': 'Descoberta A',
+                    'description': 'Desc',
+                    'nature': 'CONCEPTUAL_DISCOVERY',
+                    'formulation': 'Formulação integrada',
+                    'supporting_records': [
+                        {'record_id': r1['id'], 'excerpts': ['Formulação original 1'], 'specific_contribution': 'C1'},
+                        {'record_id': r2['id'], 'excerpts': ['Formulação original 2'], 'specific_contribution': 'C2'},
+                    ],
+                    'integration_justification': 'Justificativa',
+                    'distinction_from_preserved_content': 'Distinção',
+                    'potential_relevance': 'Relevância',
+                    'limitations_and_counterarguments': ['Limitação'],
+                    'investigation_possibilities': ['Possibilidade'],
+                }],
+                'abstentions': [],
+            },
+            'strategy_b_semantic_neighborhood': {'discoveries': [], 'abstentions': []},
+            'strategy_c_transversal_distant': {'discoveries': [], 'abstentions': []},
+            'strategy_d_incremental': {'final_discoveries': []},
+            'strategy_e_confrontation': {
+                'parsed': {
+                    'assessments': [{
+                        'discovery_id': 'EXP003-2020-A-01',
+                        'already_explicit_in_single_record': False,
+                        'merely_summary_or_classification': False,
+                        'reveals_grounded_transversal_structure': True,
+                        'depends_on_integration': True,
+                        'records_sustain_interpretation': True,
+                        'contradicting_or_limiting_records': [],
+                        'adds_comprehension_or_investigation': True,
+                        'verdict': 'SUSTAINED_CANDIDATE',
+                        'critique': 'Sustentada.',
+                    }],
+                },
+            },
+        }), encoding='utf-8')
+
+        ov0 = build_overview(self.archive, exp003_path=exp003_file)
+        do0 = ov0['discoveries_overview']
+        self.assertTrue(do0['source_available'])
+        self.assertEqual(do0['counts']['sustained'], 1)
+        self.assertEqual(do0['counts']['stale'], 0)
+        self.assertFalse(do0['discoveries'][0]['stale'])
+
+        # Revisar formulação de r1 após executed_at -> descoberta deve ser sinalizada como stale!
+        self.archive.events.append({
+            'request_id': str(uuid.uuid4()),
+            'insight_id': r1['id'],
+            'event_type': 'FORMULATION_REVISED',
+            'mode': 'OBSERVED',
+            'occurred_at': '2026-11-24',
+            'origin': 'Revisão local',
+            'responsible': {'id': 'pesquisador', 'name': 'Pesquisador'},
+            'content': {'summary': 'Revisão posterior', 'changes': {'claim': 'Formulação revista 1'}},
+            'evidence': [],
+            'missing': [],
+            'limitations': 'Sem limitações adicionais.',
+            'confirmed': True,
+        })
+        ov1 = build_overview(self.archive, exp003_path=exp003_file)
+        self.assertEqual(ov1['discoveries_overview']['counts']['stale'], 1)
+        self.assertTrue(ov1['discoveries_overview']['discoveries'][0]['stale'])
+
 
 class AnalyticsHTTPTests(unittest.TestCase):
     def setUp(self):

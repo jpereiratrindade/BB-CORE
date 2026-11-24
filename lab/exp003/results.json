@@ -475,7 +475,7 @@
   "strategy_a_integral": {
     "discoveries": [
       {
-        "discovery_id": "D-01",
+        "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-A-01",
         "title": "Integração entre a preservação de contextos e continuidade intelectual",
         "description": "A integração dos conceitos apresentados nos registros sugere que a preservação eficaz do conhecimento não se limita à recuperação de resultados, mas também inclui a manutenção dos contextos em que esses resultados foram gerados. Isso é crucial para garantir uma continuidade intelectual real entre ambientes distintos de elaboração e preservação.",
         "nature": "CONCEPTUAL_DISCOVERY",
@@ -546,7 +546,8 @@
               }
             ]
           }
-        ]
+        ],
+        "strategy": "A"
       }
     ],
     "abstentions": [],
@@ -565,7 +566,7 @@
     ],
     "discoveries": [
       {
-        "discovery_id": "D-01",
+        "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-B-01",
         "title": "A separação entre organização e atividade intelectual",
         "description": "Os registros sugerem que a estrutura de preservação dos objetos intelectuais pode ser distinta da forma como esses objetos são criados ou utilizados. Isso implica em uma flexibilidade na arquitetura de sistemas de preservação, permitindo que eles sustentem a continuidade entre diferentes ambientes sem necessariamente replicar o processo de criação.",
         "nature": "abstraction",
@@ -606,7 +607,8 @@
               }
             ]
           }
-        ]
+        ],
+        "strategy": "B"
       }
     ],
     "abstentions": [],
@@ -624,7 +626,7 @@
     ],
     "discoveries": [
       {
-        "discovery_id": "D-01",
+        "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-C-01",
         "title": "Complementaridade entre reconhecimento de identidade e continuidade intelectual",
         "description": "A distância temática entre os registros permite observar uma complementaridade interessante: enquanto o registro ID 784c05eb89d5436b942e340d109dcebb enfoca a distinção entre reconhecimento de identidade e confirmação integral do conteúdo, o registro ID d1090ec7e66a43b09dd798f9195a0c44 aborda a continuidade intelectual pela retomada do contexto de origem. Ambos os registros destacam a importância da preservação e reconhecimento dos contextos em que o conhecimento foi gerado, sem confundir isso com uma identidade ou conteúdo integralmente confirmados.",
         "nature": "complementaridade",
@@ -687,7 +689,8 @@
               }
             ]
           }
-        ]
+        ],
+        "strategy": "C"
       }
     ],
     "abstentions": [],
@@ -700,7 +703,7 @@
   "strategy_d_incremental": {
     "final_discoveries": [
       {
-        "discovery_id": "INC-01",
+        "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-01",
         "title": "A independência estrutural da organização intelectual e de preservação",
         "description": "A organização dos objetos intelectuais preservados por um sistema não precisa refletir a organização da atividade intelectual que os produz. A continuidade pode ser mantida entre ambientes distintos, sem necessidade de centralização do processo no mesmo sistema.",
         "nature": "CONCEPTUAL",
@@ -746,10 +749,11 @@
               }
             ]
           }
-        ]
+        ],
+        "strategy": "D"
       },
       {
-        "discovery_id": "INC-02",
+        "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-02",
         "title": "A distinção entre a existência de um acontecimento intelectual e seu conteúdo preservado",
         "description": "Para recuperar adequadamente um evento intelectual, é necessário distinguir sua mera existência do conteúdo efetivamente preservado que permite sua participação em novas investigações. Isso implica na necessidade de avaliar quais informações são suficientes para garantir a recuperação contextualizada.",
         "nature": "CONCEPTUAL",
@@ -795,10 +799,11 @@
               }
             ]
           }
-        ]
+        ],
+        "strategy": "D"
       },
       {
-        "discovery_id": "INC-03",
+        "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-03",
         "title": "A separação entre integridade técnica e autenticidade da representação",
         "description": "A preservação de uma representação intelectual não garante sua fidelidade à fonte original ou atividade intelectual. A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas.",
         "nature": "CONCEPTUAL",
@@ -837,10 +842,11 @@
               }
             ]
           }
-        ]
+        ],
+        "strategy": "D"
       },
       {
-        "discovery_id": "INC-04",
+        "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-04",
         "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
         "description": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não é o mesmo que confirmar que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. A identidade pode ser mantida enquanto o conhecimento sobre o objeto evolui.",
         "nature": "CONCEPTUAL",
@@ -879,10 +885,11 @@
               }
             ]
           }
-        ]
+        ],
+        "strategy": "D"
       },
       {
-        "discovery_id": "INC-05",
+        "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-05",
         "title": "Continuidade intelectual pela retomada do contexto de origem",
         "description": "A continuidade intelectual entre ambientes de elaboração e preservação pode ser mantida tanto pela recuperação dos resultados intelectuais quanto pela retomada dos contextos de atividade que deram origem a esses resultados. Isso permite conceber o acervo como um ponto de acesso não apenas aos resultados, mas também ao ambiente em que foram elaborados.",
         "nature": "CONCEPTUAL",
@@ -921,7 +928,8 @@
               }
             ]
           }
-        ]
+        ],
+        "strategy": "D"
       }
     ],
     "steps": [
@@ -1245,7 +1253,7 @@
     "parsed": {
       "assessments": [
         {
-          "discovery_id": "D-01",
+          "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-A-01",
           "already_explicit_in_single_record": false,
           "merely_summary_or_classification": false,
           "reveals_grounded_transversal_structure": true,
@@ -1257,7 +1265,7 @@
           "critique": "A descoberta integra conceitos de diferentes registros, oferecendo uma interpretação transversal que vai além da mera soma dos elementos individuais."
         },
         {
-          "discovery_id": "INC-01",
+          "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-01",
           "already_explicit_in_single_record": true,
           "merely_summary_or_classification": true,
           "reveals_grounded_transversal_structure": false,
@@ -1269,7 +1277,7 @@
           "critique": "A descoberta é uma reformulação direta do registro 9dac8b5e8e0747b0b7be9ebf2dfd365a e não adiciona novas interpretações ou insights."
         },
         {
-          "discovery_id": "INC-02",
+          "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-02",
           "already_explicit_in_single_record": true,
           "merely_summary_or_classification": true,
           "reveals_grounded_transversal_structure": false,
@@ -1281,7 +1289,7 @@
           "critique": "A descoberta é uma reformulação direta do registro 36cae570a28f47b9b36ead9f2c1a4d87 e não adiciona novas interpretações ou insights."
         },
         {
-          "discovery_id": "INC-03",
+          "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-03",
           "already_explicit_in_single_record": true,
           "merely_summary_or_classification": true,
           "reveals_grounded_transversal_structure": false,
@@ -1293,7 +1301,7 @@
           "critique": "A descoberta é uma reformulação direta do registro 87f47b767c6e4994a3746c0375ff5348 e não adiciona novas interpretações ou insights."
         },
         {
-          "discovery_id": "INC-04",
+          "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-04",
           "already_explicit_in_single_record": true,
           "merely_summary_or_classification": true,
           "reveals_grounded_transversal_structure": false,
@@ -1305,7 +1313,7 @@
           "critique": "A descoberta é uma reformulação direta do registro 784c05eb89d5436b942e340d109dcebb e não adiciona novas interpretações ou insights."
         },
         {
-          "discovery_id": "INC-05",
+          "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-D-05",
           "already_explicit_in_single_record": true,
           "merely_summary_or_classification": true,
           "reveals_grounded_transversal_structure": false,
@@ -1315,6 +1323,30 @@
           "adds_comprehension_or_investigation": false,
           "verdict": "WEAK_OR_REDUNDANT",
           "critique": "A descoberta é uma reformulação direta do registro d1090ec7e66a43b09dd798f9195a0c44 e não adiciona novas interpretações ou insights."
+        },
+        {
+          "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-B-01",
+          "already_explicit_in_single_record": true,
+          "merely_summary_or_classification": true,
+          "reveals_grounded_transversal_structure": false,
+          "depends_on_integration": false,
+          "records_sustain_interpretation": true,
+          "contradicting_or_limiting_records": [],
+          "adds_comprehension_or_investigation": false,
+          "verdict": "WEAK_OR_REDUNDANT",
+          "critique": "A descoberta apenas reformula o conteúdo do registro ID 9dac8b5e8e0747b0b7be9ebf2dfd365a sem adicionar novas ideias ou estruturas transversais."
+        },
+        {
+          "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-C-01",
+          "already_explicit_in_single_record": false,
+          "merely_summary_or_classification": false,
+          "reveals_grounded_transversal_structure": true,
+          "depends_on_integration": true,
+          "records_sustain_interpretation": true,
+          "contradicting_or_limiting_records": [],
+          "adds_comprehension_or_investigation": true,
+          "verdict": "SUSTAINED_CANDIDATE",
+          "critique": "A descoberta combina ideias de registros distintos para sugerir uma nova estrutura transversal, mas ainda precisa ser validada mais profundamente."
         }
       ]
     },
@@ -1323,6 +1355,42 @@
       "elapsed_s": 16.37,
       "prompt_eval_count": 2887,
       "eval_count": 999
+    },
+    "bc_supplement": {
+      "parsed": {
+        "assessments": [
+          {
+            "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-B-01",
+            "already_explicit_in_single_record": true,
+            "merely_summary_or_classification": true,
+            "reveals_grounded_transversal_structure": false,
+            "depends_on_integration": false,
+            "records_sustain_interpretation": true,
+            "contradicting_or_limiting_records": [],
+            "adds_comprehension_or_investigation": false,
+            "verdict": "WEAK_OR_REDUNDANT",
+            "critique": "A descoberta apenas reformula o conteúdo do registro ID 9dac8b5e8e0747b0b7be9ebf2dfd365a sem adicionar novas ideias ou estruturas transversais."
+          },
+          {
+            "discovery_id": "EXP003-2026-11-24T21:01:07+00:00-C-01",
+            "already_explicit_in_single_record": false,
+            "merely_summary_or_classification": false,
+            "reveals_grounded_transversal_structure": true,
+            "depends_on_integration": true,
+            "records_sustain_interpretation": true,
+            "contradicting_or_limiting_records": [],
+            "adds_comprehension_or_investigation": true,
+            "verdict": "SUSTAINED_CANDIDATE",
+            "critique": "A descoberta combina ideias de registros distintos para sugerir uma nova estrutura transversal, mas ainda precisa ser validada mais profundamente."
+          }
+        ]
+      },
+      "raw_response": "{\n  \"assessments\": [\n    {\n      \"discovery_id\": \"EXP003-2026-11-24T21:01:07+00:00-B-01\",\n      \"already_explicit_in_single_record\": true,\n      \"merely_summary_or_classification\": true,\n      \"reveals_grounded_transversal_structure\": false,\n      \"depends_on_integration\": false,\n      \"records_sustain_interpretation\": true,\n      \"contradicting_or_limiting_records\": [],\n      \"adds_comprehension_or_investigation\": false,\n      \"verdict\": \"WEAK_OR_REDUNDANT\",\n      \"critique\": \"A descoberta apenas reformula o conteúdo do registro ID 9dac8b5e8e0747b0b7be9ebf2dfd365a sem adicionar novas ideias ou estruturas transversais.\"\n    },\n    {\n      \"discovery_id\": \"EXP003-2026-11-24T21:01:07+00:00-C-01\",\n      \"already_explicit_in_single_record\": false,\n      \"merely_summary_or_classification\": false,\n      \"reveals_grounded_transversal_structure\": true,\n      \"depends_on_integration\": true,\n      \"records_sustain_interpretation\": true,\n      \"contradicting_or_limiting_records\": [],\n      \"adds_comprehension_or_investigation\": true,\n      \"verdict\": \"SUSTAINED_CANDIDATE\",\n      \"critique\": \"A descoberta combina ideias de registros distintos para sugerir uma nova estrutura transversal, mas ainda precisa ser validada mais profundamente.\"\n    }\n  ]\n}",
+      "metrics": {
+        "elapsed_s": 13.74,
+        "prompt_eval_count": 2366,
+        "eval_count": 388
+      }
     }
   }
 }

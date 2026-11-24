@@ -233,11 +233,144 @@ def _load_exp002_network(record_ids, exp002_path=None):
     }
 
 
-def build_overview(archive, *, exp002_path=None):
-    """Constrói projeção analítica completa (rede + grafo lexical + calendário) em fotografia transacional."""
+def _load_exp003_discoveries(records_by_id, events_raw, exp003_path=None):
+    path = Path(exp003_path) if exp003_path else (Path(__file__).resolve().parent.parent / 'lab' / 'exp003' / 'results.json')
+    if not path.is_file():
+        return {
+            'source_available': False,
+            'source_path': str(path),
+            'instruction': None,
+            'executed_at': None,
+            'llm_model': None,
+            'embed_model': None,
+            'discoveries': [],
+            'semantic_space': None,
+            'abstentions_by_strategy': {},
+            'counts': {'total': 0, 'sustained': 0, 'weak_or_redundant': 0, 'contested': 0, 'not_examined': 0, 'stale': 0},
+        }
+
+    raw = json.loads(path.read_text(encoding='utf-8'))
+    executed_at = raw.get('executed_at')
+    analyzed_versions = {r['id']: r.get('version') for r in raw.get('records', []) if r.get('id')}
+
+    # Detectar reformulações posteriores no diário BB-EVENT-1 para sinalizar descobertas potencialmente desatualizadas.
+    revised_after = {}
+    for ev in events_raw:
+        if ev.get('event_type') == 'FORMULATION_REVISED':
+            rec_at = ev.get('recorded_at') or ''
+            if not executed_at or rec_at > executed_at:
+                revised_after.setdefault(ev['insight_id'], []).append(ev['id'])
+
+    assessments_by_id = {
+        a['discovery_id']: a
+        for a in ((raw.get('strategy_e_confrontation') or {}).get('parsed') or {}).get('assessments', [])
+        if a.get('discovery_id')
+    }
+
+    strategy_specs = [
+        ('A', 'Estratégia A · Leitura integral do acervo', (raw.get('strategy_a_integral') or {}).get('discoveries', [])),
+        ('B', 'Estratégia B · Vizinhança semântica', (raw.get('strategy_b_semantic_neighborhood') or {}).get('discoveries', [])),
+        ('C', 'Estratégia C · Exploração transversal distante', (raw.get('strategy_c_transversal_distant') or {}).get('discoveries', [])),
+        ('D', 'Estratégia D · Incorporação incremental', (raw.get('strategy_d_incremental') or {}).get('final_discoveries', [])),
+    ]
+
+    discoveries = []
+    counts = {'total': 0, 'sustained': 0, 'weak_or_redundant': 0, 'contested': 0, 'not_examined': 0, 'stale': 0}
+
+    for strat_code, strat_label, items in strategy_specs:
+        for idx, d in enumerate(items, 1):
+            did = d.get('discovery_id') or f'EXP003-{executed_at}-{strat_code}-{idx:02d}'
+            ver_map = {v['record_id']: v for v in d.get('verification', []) if v.get('record_id')}
+            stale_reasons = []
+            supporting = []
+            for sr in d.get('supporting_records', []):
+                rid = sr['record_id']
+                cur_rec = records_by_id.get(rid)
+                ver = ver_map.get(rid) or {}
+                if cur_rec is None:
+                    stale_reasons.append(f'Registro {rid} ausente no acervo atual')
+                else:
+                    if rid in analyzed_versions and cur_rec.get('version') != analyzed_versions[rid]:
+                        stale_reasons.append(f'Versão do registro {rid} alterada ({analyzed_versions[rid]} → {cur_rec.get("version")})')
+                    if rid in revised_after:
+                        stale_reasons.append(f'Registro {rid} teve formulação revista após a execução')
+                supporting.append({
+                    'record_id': rid,
+                    'record_title': cur_rec['title'] if cur_rec else rid,
+                    'record_version_analyzed': analyzed_versions.get(rid),
+                    'record_version_current': cur_rec.get('version') if cur_rec else None,
+                    'specific_contribution': sr.get('specific_contribution'),
+                    'excerpts': ver.get('excerpts') or [{'excerpt': ex, 'exact_match': None} for ex in sr.get('excerpts', [])],
+                })
+
+            assess = assessments_by_id.get(did)
+            verdict = assess['verdict'] if assess else 'NOT_EXAMINED'
+            counts['total'] += 1
+            if verdict == 'SUSTAINED_CANDIDATE':
+                counts['sustained'] += 1
+            elif verdict == 'WEAK_OR_REDUNDANT':
+                counts['weak_or_redundant'] += 1
+            elif verdict == 'CONTESTED':
+                counts['contested'] += 1
+            else:
+                counts['not_examined'] += 1
+            if stale_reasons:
+                counts['stale'] += 1
+
+            discoveries.append({
+                'discovery_id': did,
+                'strategy': strat_code,
+                'strategy_label': strat_label,
+                'title': d.get('title'),
+                'description': d.get('description'),
+                'nature': d.get('nature'),
+                'formulation': d.get('formulation'),
+                'supporting_records': supporting,
+                'integration_justification': d.get('integration_justification'),
+                'distinction_from_preserved_content': d.get('distinction_from_preserved_content'),
+                'potential_relevance': d.get('potential_relevance'),
+                'limitations_and_counterarguments': d.get('limitations_and_counterarguments', []),
+                'investigation_possibilities': d.get('investigation_possibilities', []),
+                'added_grounds': d.get('added_grounds', []),
+                'confrontation': assess,
+                'confrontation_status': verdict,
+                'stale': bool(stale_reasons),
+                'stale_reasons': stale_reasons,
+                'epistemic_notice': 'Proposição analítica candidata; veredito automatizado não constitui validação científica nem conhecimento canônico.',
+            })
+
+    emb = raw.get('embeddings') or {}
+    return {
+        'source_available': True,
+        'source_path': str(path),
+        'instruction': raw.get('instruction', 'BB-CORE-EXP-003'),
+        'executed_at': executed_at,
+        'llm_model': raw.get('llm_model'),
+        'embed_model': raw.get('embed_model'),
+        'discoveries': discoveries,
+        'counts': counts,
+        'semantic_space': {
+            'embed_model': raw.get('embed_model'),
+            'timings_s': emb.get('timings_s'),
+            'similarity_full': emb.get('similarity_full', []),
+            'similarity_claim': emb.get('similarity_claim', []),
+            'similarity_why_matters': emb.get('similarity_why_matters', []),
+            'similarity_limitations': emb.get('similarity_limitations', []),
+            'epistemic_note': 'Proximidade vetorial auxiliar de seleção de contexto; não equivale a relação intelectual reconhecida.',
+        },
+        'abstentions_by_strategy': {
+            'A': (raw.get('strategy_a_integral') or {}).get('abstentions', []),
+            'B': (raw.get('strategy_b_semantic_neighborhood') or {}).get('abstentions', []),
+            'C': (raw.get('strategy_c_transversal_distant') or {}).get('abstentions', []),
+        },
+    }
+
+
+def build_overview(archive, *, exp002_path=None, exp003_path=None):
+    """Constrói projeção analítica completa (descobertas + rede + grafo lexical + calendário) em fotografia transacional."""
     with archive.events.snapshot():
         rows = archive.db.execute(
-            'SELECT i.id, i.title, i.claim, i.limitations, i.context, i.status, i.created_at, '
+            'SELECT i.id, i.title, i.claim, i.limitations, i.context, i.status, i.version, i.created_at, '
             'e.kind, e.work_state '
             'FROM insights i LEFT JOIN record_elaborations e ON e.insight_id = i.id '
             'ORDER BY i.created_at DESC, i.rowid DESC'
@@ -373,7 +506,9 @@ def build_overview(archive, *, exp002_path=None):
         })
 
     record_ids = [n['id'] for n in nodes]
+    records_by_id = {r['id']: r for r in records}
     exp002 = _load_exp002_network(record_ids, exp002_path=exp002_path)
+    exp003 = _load_exp003_discoveries(records_by_id, events_raw, exp003_path=exp003_path)
     topology_edges = [(c['source_id'], c['target_id']) for c in exp002['candidate_connections']]
     topology_edges.extend((r['left_id'], r['right_id']) for r in registered_relations)
     topology = _compute_topology(record_ids, topology_edges)
@@ -391,10 +526,11 @@ def build_overview(archive, *, exp002_path=None):
                 for d in PREDEFINED_DIMENSIONS
             ],
             'epistemic_note': (
-                'Projeção analítica reconstruível somente-leitura. Conexões analíticas candidatas '
-                'e associações lexicais não constituem relações intelectuais reconhecidas nem alteram o acervo.'
+                'Projeção analítica reconstruível somente-leitura. Descobertas candidatas, '
+                'conexões analíticas e associações lexicais não constituem relações reconhecidas nem conhecimento canônico.'
             ),
         },
+        'discoveries_overview': exp003,
         'record_network': {
             'nodes': nodes,
             'candidate_connections': exp002['candidate_connections'],
