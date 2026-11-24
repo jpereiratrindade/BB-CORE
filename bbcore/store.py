@@ -373,10 +373,19 @@ class Archive:
         lines.append("")
 
         if traj.get("formulation_revision_count"):
+            cur = traj["current_state"]
+            if cur["title"] != ctx["title"]:
+                lines.extend([
+                    "## Título corrente vs. original",
+                    "",
+                    f"- **Corrente:** {cur['title']}",
+                    f"- **Original preservado:** {ctx['title']}",
+                    "",
+                ])
             lines.extend([
                 f"## Formulação corrente (após {traj['formulation_revision_count']} revisão/ões)",
                 "",
-                traj["current_state"]["claim"],
+                cur["claim"],
                 "",
                 "## Formulação original preservada (histórico)",
                 "",
@@ -397,7 +406,19 @@ class Archive:
             lines.extend(["## Gênese", ""])
             lines.extend(render_kv(ctx["genesis"]))
             lines.append("")
-        lines.extend(["## Limitações", "", ctx["limitations"], ""])
+        if traj.get("formulation_revision_count") and traj["current_state"]["limitations"] != ctx["limitations"]:
+            lines.extend([
+                "## Limitações correntes",
+                "",
+                traj["current_state"]["limitations"],
+                "",
+                "## Limitações originais preservadas (histórico)",
+                "",
+                ctx["limitations"],
+                "",
+            ])
+        else:
+            lines.extend(["## Limitações", "", ctx["limitations"], ""])
 
         ctx_clean = {
             k: v for k, v in ctx["context"].items()
@@ -438,7 +459,8 @@ class Archive:
                 lines.append(f"- **Cobertura:** `{s.get('coverage')}` · **Registrada em:** `{s.get('recorded_at')}`")
                 lines.append("")
                 for q in entry["quotes"]:
-                    lines.append(f"- **Trecho ancorado** (`role`: `{q['role']}`, `start_byte`: `{q['start_byte']}`, `end_byte`: `{q['end_byte']}`):")
+                    receipt_note = f", `receipt_id`: `{q['receipt_id']}`" if q.get("receipt_id") else ""
+                    lines.append(f"- **Trecho ancorado** (`role`: `{q['role']}`{receipt_note}, `start_byte`: `{q['start_byte']}`, `end_byte`: `{q['end_byte']}`):")
                     lines.append("")
                     lines.append("  > " + q["quote"].replace("\n", "\n  > "))
                     lines.append("")
@@ -446,8 +468,30 @@ class Archive:
         lines.extend([f"## Trajetória documentada (`BB-EVENT-1` · {traj.get('event_count', 0)} evento(s))", ""])
         if traj.get("events"):
             for ev in traj["events"]:
-                who = ev["responsible"]["name"] if ev.get("responsible") else "Não informado"
-                lines.append(f"- **Seq {ev['seq']} · `{ev['event_type']}`** (`{ev['mode']}`, registrado em `{ev['recorded_at']}`, responsável `{who}`): {ev['content'].get('summary', '')}")
+                who = f"{ev['responsible']['name']} (`{ev['responsible']['id']}`)" if ev.get("responsible") else "Não informado"
+                lines.append(f"### Seq {ev['seq']} · `{ev['event_type']}` (`{ev['mode']}`)")
+                lines.append("")
+                lines.append(f"- **Resumo:** {ev['content'].get('summary', '')}")
+                lines.append(f"- **Acontecimento (`occurred_at`):** `{ev.get('occurred_at') or 'Não informado'}` · **Registrado em:** `{ev['recorded_at']}`")
+                lines.append(f"- **Responsável declarado:** {who}")
+                lines.append(f"- **Origem declarada:** {ev.get('origin') or 'Não informada'}")
+                lines.append(f"- **Limitações:** {ev['limitations']}")
+                if ev["content"].get("scope"):
+                    lines.append(f"- **Alcance (`scope`):** {ev['content']['scope']}")
+                if ev["content"].get("counterpoint"):
+                    lines.append(f"- **Contraponto:** {ev['content']['counterpoint']}")
+                if ev["content"].get("changes"):
+                    lines.append("- **Alterações declaradas (`changes`):**")
+                    lines.extend(render_kv(ev["content"]["changes"], 1))
+                if ev.get("evidence"):
+                    ev_refs = ", ".join(f"`{r['kind']}:{r['id']}` ({r['role']})" for r in ev["evidence"])
+                    lines.append(f"- **Evidências referenciadas:** {ev_refs}")
+                if ev.get("prior_events"):
+                    priors = ", ".join(f"`{p['relationship']}` → `{p['event_id']}` ({p['basis']})" for p in ev["prior_events"])
+                    lines.append(f"- **Vínculos anteriores:** {priors}")
+                if ev.get("missing"):
+                    lines.append(f"- **Lacunas (`missing`):** {', '.join(ev['missing'])}")
+                lines.append("")
         else:
             lines.append("Nenhum acontecimento registrado no diário para este insight.")
         lines.append("")

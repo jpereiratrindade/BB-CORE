@@ -64,14 +64,23 @@ class Documents:
                 role TEXT NOT NULL
             );
             CREATE TABLE IF NOT EXISTS imported_record_identities (
-                declared_record_key TEXT PRIMARY KEY,
+                identity_key TEXT PRIMARY KEY,
+                declared_record_key TEXT UNIQUE,
+                receipt_id TEXT,
+                id_local TEXT,
                 insight_id TEXT NOT NULL REFERENCES insights(id),
                 document_external_id TEXT,
                 declared_version TEXT,
                 claim_sha256 TEXT NOT NULL,
                 content_sha256 TEXT NOT NULL,
+                recognition_kind TEXT NOT NULL DEFAULT 'CONFIRMED_FROM_PARAMETRIZED',
+                confirmed_by_declared TEXT,
+                rationale TEXT,
                 confirmed_at TEXT NOT NULL
             );
+            CREATE UNIQUE INDEX IF NOT EXISTS imported_record_occurrence
+                ON imported_record_identities(receipt_id, id_local)
+                WHERE receipt_id IS NOT NULL AND id_local IS NOT NULL;
             CREATE INDEX IF NOT EXISTS document_anchor_record ON document_anchors(insight_id);
             CREATE INDEX IF NOT EXISTS document_receipt_version ON document_receipts(version_id);
             ''')
@@ -218,6 +227,8 @@ class Documents:
             raise ValueError('De 1 a 16 âncoras obrigatórias')
         supersedes = optional_text(data.get('supersedes_id'), 'supersedes_id', 64)
         declared_record_key = optional_text(data.get('declared_record_key'), 'declared_record_key', 240)
+        id_local = optional_text(data.get('id_local'), 'id_local', 120)
+        occurrence_receipt_id = optional_text(data.get('occurrence_receipt_id'), 'occurrence_receipt_id', 64)
         content_sha256 = optional_text(data.get('content_sha256'), 'content_sha256', 64)
         with self.archive.transaction():
             request_id, signature, retry = self._retry(data, 'document_record')
@@ -231,6 +242,15 @@ class Documents:
                 if existing_identity:
                     raise Conflict(
                         f'Registro declarado "{declared_record_key}" já confirmado como {existing_identity["insight_id"]}'
+                    )
+            if occurrence_receipt_id and id_local:
+                existing_occ = self.db.execute(
+                    'SELECT * FROM imported_record_identities WHERE receipt_id=? AND id_local=?',
+                    (occurrence_receipt_id, id_local),
+                ).fetchone()
+                if existing_occ:
+                    raise Conflict(
+                        f'Ocorrência documental ({occurrence_receipt_id}, {id_local}) já confirmada como {existing_occ["insight_id"]}'
                     )
             if supersedes:
                 previous = self.archive._one('SELECT * FROM record_elaborations WHERE insight_id=?', (supersedes,))
@@ -275,17 +295,24 @@ class Documents:
             self.archive.events.registered(iid, request_id)
             if supersedes:
                 self.archive.events.revision_reference(supersedes, iid, actor, request_id)
-            if declared_record_key:
+            if declared_record_key or (occurrence_receipt_id and id_local):
                 claim_sha = hashlib.sha256(claim.encode('utf-8')).hexdigest()
+                identity_key = declared_record_key or f'occurrence:{occurrence_receipt_id}:{id_local}'
                 self.db.execute(
-                    'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?)',
+                    'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
                     (
+                        identity_key,
                         declared_record_key,
+                        occurrence_receipt_id,
+                        id_local,
                         iid,
                         optional_text(context.get('external_document_id') if isinstance(context, dict) else None, 'external_document_id', 240),
                         optional_text(context.get('document_version') if isinstance(context, dict) else None, 'document_version', 120),
                         claim_sha,
                         content_sha256 or claim_sha,
+                        'CONFIRMED_FROM_PARAMETRIZED',
+                        actor,
+                        'Confirmação explícita de candidato parametrizado',
                         now,
                     ),
                 )
@@ -342,24 +369,35 @@ class Documents:
 
         ext_doc_id = parsed['document'].get('external_id')
         with self.archive.lock:
+            target_receipt_id = receipt_id
+            if target_receipt_id is None and version_id is not None:
+                row = self.db.execute(
+                    "SELECT id FROM document_receipts WHERE version_id=? AND outcome!='VERSION_CONFLICT' ORDER BY received_at,rowid LIMIT 1",
+                    (version_id,),
+                ).fetchone()
+                if row:
+                    target_receipt_id = row['id']
             legacy_rows = []
             if ext_doc_id:
                 legacy_rows = self.db.execute(
-                    """SELECT id, title, claim, limitations, context, genesis FROM insights
+                    """SELECT id, title, claim FROM insights
                        WHERE json_extract(context, '$.external_document_id')=?
                          AND id NOT IN (SELECT insight_id FROM imported_record_identities)""",
                     (ext_doc_id,),
                 ).fetchall()
             for rec in parsed['records']:
                 key = rec.get('external_record_id')
-                existing = (
-                    self.db.execute(
+                existing = None
+                if key:
+                    existing = self.db.execute(
                         'SELECT * FROM imported_record_identities WHERE declared_record_key=?',
                         (key,),
                     ).fetchone()
-                    if key
-                    else None
-                )
+                if existing is None and target_receipt_id:
+                    existing = self.db.execute(
+                        'SELECT * FROM imported_record_identities WHERE receipt_id=? AND id_local=?',
+                        (target_receipt_id, rec['id_local']),
+                    ).fetchone()
                 if existing:
                     if existing['claim_sha256'] != rec['claim_sha256']:
                         rec['archive_status'] = 'FORMULATION_DIVERGENCE'
@@ -369,6 +407,7 @@ class Documents:
                         rec['archive_status'] = 'ALREADY_CONFIRMED'
                     rec['existing_insight_id'] = existing['insight_id']
                     rec['existing_claim_sha256'] = existing['claim_sha256']
+                    rec['recognition_kind'] = existing['recognition_kind']
                 elif legacy_rows:
                     rec['archive_status'] = 'LEGACY_MATCH_CANDIDATE'
                     rec['legacy_matches'] = [
@@ -381,7 +420,18 @@ class Documents:
                     ]
                 else:
                     rec['archive_status'] = 'NEW_CANDIDATE'
-        return {'is_parametrized': True, **parsed}
+        return {
+            'is_parametrized': True,
+            'hash_coverage': {
+                'claim_sha256': 'Cobre exclusivamente o texto da formulação (claim).',
+                'content_sha256': (
+                    'Cobre kind, work_state, title, claim, why_matters, limitations, genesis, '
+                    'context, evidence, open_questions, formulation_origin, attribution, '
+                    'declared_relations e supersedes_id.'
+                ),
+            },
+            **parsed,
+        }
 
     def confirm_parametrized_record(self, data):
         """Confirma registro diretamente a partir da interpretação autoritativa no servidor."""
@@ -425,9 +475,8 @@ class Documents:
             'attribution': rec.get('attribution'),
             'declared_evidence': rec.get('evidence', []),
             'open_questions': rec.get('open_questions', []),
+            'pending_declared_relations': rec.get('declared_relations', []),
         }
-        if rec.get('declared_relations'):
-            stored_context['pending_declared_relations'] = rec['declared_relations']
 
         anchors = [
             {
@@ -456,6 +505,8 @@ class Documents:
             'confirmed': True,
             'supersedes_id': rec.get('supersedes_id'),
             'declared_record_key': rec.get('external_record_id'),
+            'id_local': id_local,
+            'occurrence_receipt_id': receipt_id,
             'content_sha256': rec['content_sha256'],
             'context': stored_context,
             'anchors': anchors,
@@ -463,14 +514,15 @@ class Documents:
 
     def link_legacy_record(self, data):
         """Vincula explicitamente um candidato parametrizado a um insight legado já existente."""
-        from .parametrized import ParametrizedError, parse_parametrized_markdown
+        from .parametrized import ParametrizedError, compute_content_sha256, parse_parametrized_markdown
 
         if not isinstance(data, dict):
             raise ValueError('Esperado objeto JSON')
         receipt_id = required_string(data.get('receipt_id'), 'receipt_id', 64)
         id_local = required_string(data.get('id_local'), 'id_local', 120)
         insight_id = required_string(data.get('insight_id'), 'insight_id', 64)
-        required_string(data.get('confirmed_by_declared'), 'confirmed_by_declared', 240)
+        actor = required_string(data.get('confirmed_by_declared'), 'confirmed_by_declared', 240)
+        rationale = optional_text(data.get('rationale'), 'rationale', 2000) or 'Reconhecimento explícito de identidade com registro legado existente'
         if data.get('confirmed') is not True:
             raise ValueError('Confirmação humana explícita obrigatória')
 
@@ -497,20 +549,60 @@ class Documents:
                 raise Conflict(f'Identidade declarada "{key}" já vinculada')
 
             insight = self.archive._get(insight_id)
+            elab = self.db.execute('SELECT * FROM record_elaborations WHERE insight_id=?', (insight_id,)).fetchone()
             ext_doc_id = parsed['document'].get('external_id')
             if ext_doc_id and insight['context'].get('external_document_id') != ext_doc_id:
                 raise Conflict('Insight legado não pertence ao mesmo external_document_id declarado')
 
             now = stamp()
             legacy_claim_sha = hashlib.sha256(insight['claim'].encode('utf-8')).hexdigest()
+            legacy_ctx = {
+                k: v for k, v in insight['context'].items()
+                if k in ('scope', 'external_references', 'missing')
+            }
+            legacy_content_sha = compute_content_sha256(
+                kind=elab['kind'] if elab else insight['context'].get('record_kind'),
+                work_state=elab['work_state'] if elab else insight['status'],
+                title=insight['title'],
+                claim=insight['claim'],
+                why_matters=insight['context'].get('why_matters', ''),
+                limitations=insight['limitations'],
+                genesis=insight['genesis'],
+                context=legacy_ctx,
+                evidence=insight['context'].get('declared_evidence', []),
+                open_questions=insight['context'].get('open_questions', []),
+                formulation_origin=elab['formulation_origin'] if elab else None,
+                attribution=insight['context'].get('attribution'),
+                declared_relations=insight['context'].get('pending_declared_relations', []),
+                supersedes_id=elab['supersedes_id'] if elab else None,
+            )
             self.db.execute(
-                'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?)',
-                (key, insight_id, ext_doc_id, parsed['document'].get('version'), legacy_claim_sha, rec['content_sha256'] if insight['claim'] == rec['claim'] else legacy_claim_sha, now),
+                'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                (
+                    key,
+                    key,
+                    receipt_id,
+                    id_local,
+                    insight_id,
+                    ext_doc_id,
+                    parsed['document'].get('version'),
+                    legacy_claim_sha,
+                    legacy_content_sha,
+                    'LEGACY_IDENTITY_LINKED',
+                    actor,
+                    rationale,
+                    now,
+                ),
             )
             return self._remember(request_id, signature, {
                 'linked': True,
+                'recognition_kind': 'LEGACY_IDENTITY_LINKED',
                 'declared_record_key': key,
                 'insight_id': insight_id,
+                'receipt_id': receipt_id,
+                'confirmed_by_declared': actor,
+                'rationale': rationale,
                 'claim_matches': insight['claim'] == rec['claim'],
+                'content_matches': legacy_content_sha == rec['content_sha256'],
                 'linked_at': now,
             })

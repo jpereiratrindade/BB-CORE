@@ -384,9 +384,50 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
             'insight_id': leg_ins['id'],
             'confirmed_by_declared': 'Pesquisador',
             'confirmed': True,
+            'rationale': 'Vínculo explícito verificado manualmente.',
         })
         self.assertTrue(linked['linked'])
+        self.assertEqual(linked['recognition_kind'], 'LEGACY_IDENTITY_LINKED')
+        self.assertFalse(linked['claim_matches'])
+        self.assertFalse(linked['content_matches'])
         self.assertEqual(len(self.server.archive.list()), 1)
+
+        # Mesmo sem external_id no documento, a mesma ocorrência (receipt_id, id_local) não pode ser confirmada duas vezes.
+        anon_doc = (
+            '---\nschema: "BB-CORE-ING-0.2.0"\ndocument: {}\n'
+            'records:\n  - id_local: "anon-1"\n    kind: "OPEN_QUESTION"\n    work_state: "OPEN"\n'
+            '    title: "Questão anônima"\n    formulation_origin: "DOCUMENT_EXCERPT"\n'
+            '    claim_section: "Questão"\n    why_matters: "Importa"\n    limitations: "Limite"\n'
+            '---\n\n## Questão\n\nTexto anônimo.\n'
+        ).encode('utf-8')
+        _, d_anon = self.call('POST', '/api/documents', {
+            'request_id': str(uuid.uuid4()),
+            'filename': 'anon.md',
+            'content_base64': base64.b64encode(anon_doc).decode(),
+            'provenance': 'Sem ID externo',
+            'received_by': 'Pesquisador',
+            'confirmed': True,
+        })
+        status, anon_rec = self.call('POST', '/api/documents/confirm-record', {
+            'request_id': str(uuid.uuid4()),
+            'receipt_id': d_anon['receipt_id'],
+            'id_local': 'anon-1',
+            'confirmed_by_declared': 'Pesquisador',
+            'confirmed': True,
+        })
+        self.assertEqual(status, 201)
+        with self.assertRaises(HTTPError) as anon_dup:
+            self.call('POST', '/api/documents/confirm-record', {
+                'request_id': str(uuid.uuid4()),
+                'receipt_id': d_anon['receipt_id'],
+                'id_local': 'anon-1',
+                'confirmed_by_declared': 'Pesquisador',
+                'confirmed': True,
+            })
+        self.assertEqual(anon_dup.exception.code, 409)
+        _, anon_insp = self.call('GET', f"/api/documents/{d_anon['version_id']}/parametrized")
+        self.assertEqual(anon_insp['records'][0]['archive_status'], 'ALREADY_CONFIRMED')
+        self.assertEqual(anon_insp['records'][0]['existing_insight_id'], anon_rec['id'])
 
         # 5. Confirmação autoritativa no servidor + CONTEXT_DIVERGENCE + exportação Markdown.
         doc_ctx = (
@@ -449,6 +490,7 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
             self.assertIn('Formulação C.', md)
             self.assertIn('CHATGPT_CONVERSATION', md)
             self.assertIn('Nenhuma relação registrada no acervo para este insight.', md)
+            self.assertIn('receipt_id`: `', md)
             self.assertIn('start_byte`: `', md)
             self.assertIn('Trajetória documentada', md)
 
@@ -459,7 +501,7 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
         self.assertFalse(reimport_check['is_parametrized'])
         self.assertIn('exportação', reimport_check['error'].lower())
 
-        # Exportação após reformulação distingue formulação corrente e original.
+        # Exportação após reformulação distingue título, formulação e limitações correntes vs. originais.
         self.call('POST', '/api/events', {
             'request_id': str(uuid.uuid4()),
             'insight_id': auth_rec['id'],
@@ -467,14 +509,28 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
             'mode': 'OBSERVED',
             'origin': 'Exame humano',
             'responsible': {'id': 'local:pesquisador', 'name': 'Pesquisador'},
-            'content': {'summary': 'Refina formulação C.', 'changes': {'claim': 'Formulação C revista.'}},
+            'content': {
+                'summary': 'Refina título, formulação e limitações de C.',
+                'changes': {
+                    'title': 'Achado C revisto',
+                    'claim': 'Formulação C revista.',
+                    'limitations': 'Limitação revista após exame.',
+                },
+            },
             'evidence': [{'kind': 'receipt', 'id': d_ctx['receipt_id'], 'role': 'basis'}],
             'limitations': 'Refinamento após exame.',
             'confirmed': True,
         })
         with self.opener.open(f"http://127.0.0.1:{self.port}/api/insights/{auth_rec['id']}/export.md", timeout=5) as resp2:
             md2 = resp2.read().decode('utf-8')
+            self.assertIn('## Título corrente vs. original', md2)
+            self.assertIn('Achado C revisto', md2)
             self.assertIn('## Formulação corrente (após 1 revisão/ões)', md2)
             self.assertIn('Formulação C revista.', md2)
             self.assertIn('## Formulação original preservada (histórico)', md2)
             self.assertIn('Formulação C.', md2)
+            self.assertIn('## Limitações correntes', md2)
+            self.assertIn('Limitação revista após exame.', md2)
+            self.assertIn('## Limitações originais preservadas (histórico)', md2)
+            self.assertIn('Evidências referenciadas:', md2)
+            self.assertIn('Alterações declaradas (`changes`):', md2)

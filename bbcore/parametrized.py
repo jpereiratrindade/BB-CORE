@@ -403,12 +403,15 @@ def _validate_record(rec: dict, index: int, doc_meta: dict, raw_bytes: bytes, se
 
     genesis_obj = {'summary': genesis_val} if genesis_val is not None else {}
     open_q = _opt_str_list(rec.get('open_questions'), f'{prefix}.open_questions')
+    supersedes_val = _opt_str(rec.get('supersedes_id'), f'{prefix}.supersedes_id', 64)
     claim_sha256 = hashlib.sha256(claim.encode('utf-8')).hexdigest()
-    content_sha256 = hashlib.sha256(json.dumps({
-        'kind': kind, 'work_state': work_state, 'title': title, 'claim': claim,
-        'why_matters': why_matters, 'limitations': limitations, 'genesis': genesis_obj,
-        'context': context, 'evidence': evidence, 'open_questions': open_q,
-    }, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode('utf-8')).hexdigest()
+    content_sha256 = compute_content_sha256(
+        kind=kind, work_state=work_state, title=title, claim=claim,
+        why_matters=why_matters, limitations=limitations, genesis=genesis_obj,
+        context=context, evidence=evidence, open_questions=open_q,
+        formulation_origin=origin, attribution=attribution,
+        declared_relations=declared_relations, supersedes_id=supersedes_val,
+    )
 
     return {
         'id_local': id_local,
@@ -428,9 +431,48 @@ def _validate_record(rec: dict, index: int, doc_meta: dict, raw_bytes: bytes, se
         'evidence': evidence,
         'open_questions': open_q,
         'declared_relations': declared_relations,
-        'supersedes_id': _opt_str(rec.get('supersedes_id'), f'{prefix}.supersedes_id', 64),
+        'supersedes_id': supersedes_val,
         'anchors': anchors,
     }
+
+
+def compute_content_sha256(
+    *,
+    kind,
+    work_state,
+    title,
+    claim,
+    why_matters,
+    limitations,
+    genesis,
+    context,
+    evidence,
+    open_questions,
+    formulation_origin,
+    attribution,
+    declared_relations,
+    supersedes_id,
+) -> str:
+    """Hash canônico integral dos elementos intelectuais e contextuais do registro."""
+    payload = {
+        'kind': kind,
+        'work_state': work_state,
+        'title': title,
+        'claim': claim,
+        'why_matters': why_matters,
+        'limitations': limitations,
+        'genesis': genesis or {},
+        'context': context or {},
+        'evidence': evidence or [],
+        'open_questions': open_questions or [],
+        'formulation_origin': formulation_origin,
+        'attribution': attribution,
+        'declared_relations': declared_relations or [],
+        'supersedes_id': supersedes_id,
+    }
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+    ).hexdigest()
 
 
 def parse_parametrized_markdown(raw_bytes: bytes) -> dict:
