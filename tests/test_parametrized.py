@@ -299,3 +299,182 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
         self.assertEqual(inspected_v2['records'][0]['archive_status'], 'FORMULATION_DIVERGENCE')
         self.assertEqual(inspected_v2['records'][0]['existing_insight_id'], confirmed_a['id'])
         self.assertEqual(self.server.archive.get(confirmed_a['id'])['claim'], 'Formulação original do achado A.')
+
+    def test_authoritative_confirm_context_divergence_version_conflict_legacy_and_export(self):
+        self.call('POST', '/api/local-session', {})
+
+        # 1. Registro legado criado antes de imported_record_identities (simulando BB-CORE-INSIGHT-001).
+        ref_bytes = REF_DOC.read_bytes()
+        _, leg_doc = self.call('POST', '/api/documents', {
+            'request_id': str(uuid.uuid4()),
+            'filename': 'legacy.md',
+            'content_base64': base64.b64encode(b'# Legado\n\nTexto antigo.\n').decode(),
+            'external_id': 'BB-CORE-INSIGHT-001',
+            'declared_version': '0.1.0',
+            'provenance': 'Documento legado',
+            'received_by': 'Pesquisador',
+            'confirmed': True,
+        })
+        _, leg_ins = self.call('POST', '/api/document-records', {
+            'request_id': str(uuid.uuid4()),
+            'title': 'Distinção entre elaboração intelectual e preservação do conhecimento',
+            'claim': 'Texto antigo.',
+            'why_matters': 'Relevância',
+            'genesis': {},
+            'limitations': 'Limites',
+            'kind': 'CONCEPTUAL_FINDING',
+            'work_state': 'PROPOSED',
+            'formulation_origin': 'DOCUMENT_EXCERPT',
+            'confirmed_by_declared': 'Pesquisador',
+            'confirmed': True,
+            'context': {'external_document_id': 'BB-CORE-INSIGHT-001', 'document_version': '0.1.0'},
+            'anchors': [{'receipt_id': leg_doc['receipt_id'], 'quote': 'Texto antigo.', 'start_byte': 10, 'end_byte': 23, 'role': 'primary'}],
+        })
+
+        # 2. Envio de BB-CORE-INSIGHT-001.parametrized.md com mesma versão 0.1.0 gera VERSION_CONFLICT.
+        try:
+            self.call('POST', '/api/documents', {
+                'request_id': str(uuid.uuid4()),
+                'filename': 'BB-CORE-INSIGHT-001.parametrized.md',
+                'content_base64': base64.b64encode(ref_bytes).decode(),
+                'external_id': 'BB-CORE-INSIGHT-001',
+                'declared_version': '0.1.0',
+                'provenance': 'Reenvio parametrizado na mesma versão',
+                'received_by': 'Pesquisador',
+                'confirmed': True,
+            })
+            self.fail('Esperado 409 VERSION_CONFLICT')
+        except HTTPError as conflict_err:
+            self.assertEqual(conflict_err.code, 409)
+            conflict_body = json.loads(conflict_err.read())
+            self.assertEqual(conflict_body['outcome'], 'VERSION_CONFLICT')
+
+        # 3. Exame do recebimento divergente via /api/receipts/{id}/parametrized funciona sem substituir o original.
+        _, div_param = self.call('GET', f"/api/receipts/{conflict_body['receipt_id']}/parametrized")
+        self.assertTrue(div_param['is_parametrized'])
+        self.assertEqual(div_param['records'][0]['archive_status'], 'LEGACY_MATCH_CANDIDATE')
+        self.assertEqual(div_param['records'][0]['legacy_matches'][0]['insight_id'], leg_ins['id'])
+
+        # Confirmação a partir de recebimento em conflito continua bloqueada.
+        with self.assertRaises(HTTPError) as blocked:
+            self.call('POST', '/api/documents/confirm-record', {
+                'request_id': str(uuid.uuid4()),
+                'receipt_id': conflict_body['receipt_id'],
+                'id_local': 'achado-elaboracao-vs-preservacao',
+                'confirmed_by_declared': 'Pesquisador',
+                'confirmed': True,
+            })
+        self.assertEqual(blocked.exception.code, 409)
+
+        # 4. Recebimento como versão 0.2.0 permite vínculo explícito ao registro legado sem duplicar.
+        _, v2_doc = self.call('POST', '/api/documents', {
+            'request_id': str(uuid.uuid4()),
+            'filename': 'BB-CORE-INSIGHT-001.parametrized.md',
+            'content_base64': base64.b64encode(ref_bytes).decode(),
+            'external_id': 'BB-CORE-INSIGHT-001',
+            'declared_version': '0.2.0',
+            'provenance': 'Versão parametrizada',
+            'received_by': 'Pesquisador',
+            'confirmed': True,
+        })
+        _, linked = self.call('POST', '/api/documents/link-legacy', {
+            'request_id': str(uuid.uuid4()),
+            'receipt_id': v2_doc['receipt_id'],
+            'id_local': 'achado-elaboracao-vs-preservacao',
+            'insight_id': leg_ins['id'],
+            'confirmed_by_declared': 'Pesquisador',
+            'confirmed': True,
+        })
+        self.assertTrue(linked['linked'])
+        self.assertEqual(len(self.server.archive.list()), 1)
+
+        # 5. Confirmação autoritativa no servidor + CONTEXT_DIVERGENCE + exportação Markdown.
+        doc_ctx = (
+            '---\nschema: "BB-CORE-ING-0.2.0"\ndocument:\n  external_id: "CTX-TEST"\n  version: "0.1.0"\n'
+            '  source_context:\n    origin_kind: "CHATGPT_CONVERSATION"\n    transcript_included: false\n'
+            '    provenance_gaps:\n      - "Sem transcrição completa"\n'
+            'records:\n  - id_local: "r1"\n    kind: "CONCEPTUAL_FINDING"\n    work_state: "PROPOSED"\n'
+            '    title: "Achado C"\n    formulation_origin: "DOCUMENT_EXCERPT"\n'
+            '    claim_section: "Achado"\n    why_matters: "Importa"\n    limitations: "Limite 1"\n'
+            '    declared_relations:\n      - left_id: "x"\n        right_id: "y"\n'
+            '---\n\n## Achado\n\nFormulação C.\n'
+        ).encode('utf-8')
+        _, d_ctx = self.call('POST', '/api/documents', {
+            'request_id': str(uuid.uuid4()),
+            'filename': 'ctx.md',
+            'content_base64': base64.b64encode(doc_ctx).decode(),
+            'external_id': 'CTX-TEST',
+            'declared_version': '0.1.0',
+            'provenance': 'ChatGPT',
+            'received_by': 'Pesquisador',
+            'confirmed': True,
+        })
+        _, auth_rec = self.call('POST', '/api/documents/confirm-record', {
+            'request_id': str(uuid.uuid4()),
+            'receipt_id': d_ctx['receipt_id'],
+            'id_local': 'r1',
+            'confirmed_by_declared': 'Pesquisador',
+            'confirmed': True,
+        })
+        ctx_saved = self.server.archive.context(auth_rec['id'])
+        self.assertEqual(ctx_saved['context']['source_context']['origin_kind'], 'CHATGPT_CONVERSATION')
+        self.assertIn('Sem transcrição completa', ctx_saved['context']['missing'])
+        self.assertEqual(ctx_saved['relations'], [])
+        self.assertEqual(len(ctx_saved['context']['pending_declared_relations']), 1)
+
+        # Alterar apenas limitações dispara CONTEXT_DIVERGENCE (não FORMULATION_DIVERGENCE).
+        doc_ctx_2 = doc_ctx.replace(b'Limite 1', b'Limite 2 atualizado').replace(b'0.1.0', b'0.2.0')
+        _, d_ctx_2 = self.call('POST', '/api/documents', {
+            'request_id': str(uuid.uuid4()),
+            'filename': 'ctx2.md',
+            'content_base64': base64.b64encode(doc_ctx_2).decode(),
+            'external_id': 'CTX-TEST',
+            'declared_version': '0.2.0',
+            'provenance': 'ChatGPT v2',
+            'received_by': 'Pesquisador',
+            'confirmed': True,
+        })
+        _, insp_ctx_2 = self.call('GET', f"/api/documents/{d_ctx_2['version_id']}/parametrized")
+        self.assertEqual(insp_ctx_2['records'][0]['archive_status'], 'CONTEXT_DIVERGENCE')
+
+        # Exportação Markdown contextualizada (BB-CORE-EXP-0.1.0).
+        with self.opener.open(f"http://127.0.0.1:{self.port}/api/insights/{auth_rec['id']}/export.md", timeout=5) as resp:
+            self.assertEqual(resp.status, 200)
+            md = resp.read().decode('utf-8')
+            self.assertIn('export_schema: "BB-CORE-EXP-0.1.0"', md)
+            self.assertIn('document_role: "EXPORTED_RECORD"', md)
+            self.assertIn(f'insight_id: "{auth_rec["id"]}"', md)
+            self.assertIn('exported_at:', md)
+            self.assertIn('# Achado C', md)
+            self.assertIn('Formulação C.', md)
+            self.assertIn('CHATGPT_CONVERSATION', md)
+            self.assertIn('Nenhuma relação registrada no acervo para este insight.', md)
+            self.assertIn('start_byte`: `', md)
+            self.assertIn('Trajetória documentada', md)
+
+        # Proibição de criar novas identidades pela reimportação do registro exportado.
+        _, reimport_check = self.call('POST', '/api/documents/inspect', {
+            'content_base64': base64.b64encode(md.encode('utf-8')).decode(),
+        })
+        self.assertFalse(reimport_check['is_parametrized'])
+        self.assertIn('exportação', reimport_check['error'].lower())
+
+        # Exportação após reformulação distingue formulação corrente e original.
+        self.call('POST', '/api/events', {
+            'request_id': str(uuid.uuid4()),
+            'insight_id': auth_rec['id'],
+            'event_type': 'FORMULATION_REVISED',
+            'mode': 'OBSERVED',
+            'origin': 'Exame humano',
+            'responsible': {'id': 'local:pesquisador', 'name': 'Pesquisador'},
+            'content': {'summary': 'Refina formulação C.', 'changes': {'claim': 'Formulação C revista.'}},
+            'evidence': [{'kind': 'receipt', 'id': d_ctx['receipt_id'], 'role': 'basis'}],
+            'limitations': 'Refinamento após exame.',
+            'confirmed': True,
+        })
+        with self.opener.open(f"http://127.0.0.1:{self.port}/api/insights/{auth_rec['id']}/export.md", timeout=5) as resp2:
+            md2 = resp2.read().decode('utf-8')
+            self.assertIn('## Formulação corrente (após 1 revisão/ões)', md2)
+            self.assertIn('Formulação C revista.', md2)
+            self.assertIn('## Formulação original preservada (histórico)', md2)
+            self.assertIn('Formulação C.', md2)

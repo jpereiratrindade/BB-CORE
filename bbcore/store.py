@@ -315,3 +315,140 @@ class Archive:
             events = self.events.verify()
             return {"sqlite":check,"sources_checked":total,"hash_mismatches":bad, **documents, **events,
                     "integrity": "VERIFIED" if check=="ok" and not bad and not documents['document_hash_mismatches'] and not documents['document_anchor_failures'] and events['event_integrity']=='VERIFIED' else "FAILED"}
+
+    def export_markdown(self, iid):
+        """Exporta o registro e seu contexto em Markdown (BB-CORE-EXP-0.1.0) para novas conversas."""
+        ctx = self.context(iid)
+        elab = ctx.get("elaboration") or {}
+        traj = ctx.get("trajectory") or {}
+        exported_at = stamp()
+
+        def render_kv(obj, indent=0):
+            pad = "  " * indent
+            out = []
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    if isinstance(v, (dict, list)):
+                        out.append(f"{pad}- **{k}:**")
+                        out.extend(render_kv(v, indent + 1))
+                    else:
+                        out.append(f"{pad}- **{k}:** {v}")
+            elif isinstance(obj, list):
+                for item in obj:
+                    if isinstance(item, (dict, list)):
+                        out.extend(render_kv(item, indent))
+                    else:
+                        out.append(f"{pad}- {item}")
+            else:
+                out.append(f"{pad}- {obj}")
+            return out
+
+        lines = [
+            "---",
+            'export_schema: "BB-CORE-EXP-0.1.0"',
+            'document_role: "EXPORTED_RECORD"',
+            f'exported_at: "{exported_at}"',
+            f'insight_id: "{ctx["id"]}"',
+            f'record_version: {ctx["version"]}',
+            f'created_at: "{ctx["created_at"]}"',
+            "reimport_policy: \"PROHIBITED_AS_NEW_IDENTITY\"",
+            "---",
+            "",
+            f"# {ctx['title']}",
+            "",
+            "> **Documento de exportação (`BB-CORE-EXP-0.1.0`)** — Recuperação contextualizada de registro já preservado no BB-CORE. "
+            "Não é um documento de ingestão (`BB-CORE-ING-0.2.0`) e não deve gerar nova identidade por reimportação. "
+            "Integridade local de bytes não comprova autoria civil nem validade científica.",
+            "",
+            "## Identidade e situação corrente vs. histórico",
+            "",
+            f"- **ID do registro (`insight_id`):** `{ctx['id']}`",
+            f"- **Exportado em (`exported_at`):** `{exported_at}`",
+            f"- **Integridade local verificada:** `{ctx.get('integrity', 'UNKNOWN')}`",
+            f"- **Situação corrente:** estatuto `{ctx['status']}`" + (f" · tipo `{elab['kind']}` · estado de trabalho `{elab['work_state']}`" if elab else ""),
+            f"- **Registro histórico inicial:** criado em `{ctx['created_at']}` (versão `{ctx['version']}`)" + (f", confirmado por `{elab['confirmed_by_declared']}` em `{elab['confirmed_at']}`" if elab else ""),
+        ]
+        if ctx["context"].get("external_document_id"):
+            lines.append(f"- **Documento externo declarado:** `{ctx['context']['external_document_id']}` (versão `{ctx['context'].get('document_version') or 'não informada'}`)")
+        lines.append("")
+
+        if traj.get("formulation_revision_count"):
+            lines.extend([
+                f"## Formulação corrente (após {traj['formulation_revision_count']} revisão/ões)",
+                "",
+                traj["current_state"]["claim"],
+                "",
+                "## Formulação original preservada (histórico)",
+                "",
+                ctx["claim"],
+                "",
+            ])
+        else:
+            lines.extend([
+                "## Formulação preservada (original e corrente)",
+                "",
+                ctx["claim"],
+                "",
+            ])
+
+        if ctx["context"].get("why_matters"):
+            lines.extend(["## Relevância (Por que preservar)", "", str(ctx["context"]["why_matters"]), ""])
+        if ctx.get("genesis"):
+            lines.extend(["## Gênese", ""])
+            lines.extend(render_kv(ctx["genesis"]))
+            lines.append("")
+        lines.extend(["## Limitações", "", ctx["limitations"], ""])
+
+        ctx_clean = {
+            k: v for k, v in ctx["context"].items()
+            if k not in ("why_matters", "record_kind", "epistemic_limit") and v not in (None, [], {})
+        }
+        if ctx_clean:
+            lines.extend(["## Contexto e proveniência", ""])
+            lines.extend(render_kv(ctx_clean))
+            lines.append("")
+
+        lines.extend(["## Relações registradas", ""])
+        if ctx.get("relations"):
+            for rel in ctx["relations"]:
+                lines.append(f"- **Relação `{rel['id']}`** (`{rel['status']}`, `{rel['created_at']}`): `{rel['left_id']}` ↔ `{rel['right_id']}`")
+                lines.append(f"  - **Fundamento:** {rel['rationale']}")
+                lines.append(f"  - **Contraponto:** {rel['counterpoint']}")
+        else:
+            lines.append("Nenhuma relação registrada no acervo para este insight.")
+        lines.append("")
+
+        if ctx.get("sources"):
+            lines.extend(["## Evidências, identificadores e âncoras preservadas", ""])
+            grouped = {}
+            for s in ctx["sources"]:
+                key = s.get("version_id") or s.get("id") or s["sha256"]
+                grouped.setdefault(key, {"meta": s, "quotes": []})["quotes"].append(s)
+            for entry in grouped.values():
+                s = entry["meta"]
+                lines.append(f"### Fonte: `{s['origin']}`")
+                lines.append("")
+                lines.append(f"- **SHA-256 integral:** `{s['sha256']}`")
+                if s.get("version_id"):
+                    lines.append(f"- **ID da versão documental (`version_id`):** `{s['version_id']}`")
+                if s.get("receipt_id"):
+                    lines.append(f"- **ID do recebimento (`receipt_id`):** `{s['receipt_id']}`")
+                if s.get("id") and not s.get("version_id"):
+                    lines.append(f"- **ID da fonte (`source_id`):** `{s['id']}`")
+                lines.append(f"- **Cobertura:** `{s.get('coverage')}` · **Registrada em:** `{s.get('recorded_at')}`")
+                lines.append("")
+                for q in entry["quotes"]:
+                    lines.append(f"- **Trecho ancorado** (`role`: `{q['role']}`, `start_byte`: `{q['start_byte']}`, `end_byte`: `{q['end_byte']}`):")
+                    lines.append("")
+                    lines.append("  > " + q["quote"].replace("\n", "\n  > "))
+                    lines.append("")
+
+        lines.extend([f"## Trajetória documentada (`BB-EVENT-1` · {traj.get('event_count', 0)} evento(s))", ""])
+        if traj.get("events"):
+            for ev in traj["events"]:
+                who = ev["responsible"]["name"] if ev.get("responsible") else "Não informado"
+                lines.append(f"- **Seq {ev['seq']} · `{ev['event_type']}`** (`{ev['mode']}`, registrado em `{ev['recorded_at']}`, responsável `{who}`): {ev['content'].get('summary', '')}")
+        else:
+            lines.append("Nenhum acontecimento registrado no diário para este insight.")
+        lines.append("")
+        return "\n".join(lines).rstrip() + "\n"

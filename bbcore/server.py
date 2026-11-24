@@ -231,6 +231,9 @@ class Handler(BaseHTTPRequestHandler):
             if len(parts) == 4 and parts[1] == 'documents' and parts[3] == 'parametrized':
                 self.send_json(200, self.server.archive.documents.inspect_parametrized(version_id=parts[2]))
                 return
+            if len(parts) == 4 and parts[1] == 'receipts' and parts[3] == 'parametrized':
+                self.send_json(200, self.server.archive.documents.inspect_parametrized(receipt_id=parts[2]))
+                return
             if len(parts) == 4 and parts[3] == 'original':
                 body = self.server.archive.documents.original(**({'version_id': parts[2]} if parts[1] == 'documents' else {'receipt_id': parts[2]}))
                 self.send_response(200)
@@ -262,6 +265,17 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(200,self.server.archive.context(iid));return
             if len(rest)==2 and rest[1]=="trajectory":
                 self.send_json(200,self.server.archive.events.trajectory(iid));return
+            if len(rest)==2 and rest[1]=="export.md":
+                md = self.server.archive.export_markdown(iid).encode('utf-8')
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/markdown; charset=utf-8')
+                self.send_header('Content-Disposition', f'attachment; filename="insight-{iid[:12]}.md"')
+                self.send_header('Content-Length', str(len(md)))
+                self.send_header('Cache-Control', 'no-store')
+                self.send_header('X-Content-Type-Options', 'nosniff')
+                self.end_headers()
+                self.wfile.write(md)
+                return
         if path=="/mcp":
             self.send_json(405,{"error":"Use POST /mcp"},{"Allow":"POST, OPTIONS"});return
         self.send_json(404,{"error":"NOT_FOUND"})
@@ -280,7 +294,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, {'access': 'local_read_and_confirmed_document_ingestion'}, {
                 'Set-Cookie': 'bb_local=' + self.server.browser_token + '; HttpOnly; SameSite=Strict; Path=/'})
             return
-        document_write = path in ('/api/documents', '/api/documents/inspect', '/api/document-records', '/api/events', '/api/elaborations')
+        document_write = path in ('/api/documents', '/api/documents/inspect', '/api/documents/confirm-record', '/api/documents/link-legacy', '/api/document-records', '/api/events', '/api/elaborations')
         if path not in ("/mcp","/api/insights","/api/relations") and not document_write:
             self.send_json(404,{"error":"NOT_FOUND"});return
         local_document_write = document_write and self.local_origin() and self.local_cookie()
@@ -292,6 +306,12 @@ class Handler(BaseHTTPRequestHandler):
             data=self.body()
             if path == '/api/documents/inspect':
                 self.send_json(200, self.server.archive.documents.inspect_parametrized(content_base64=data.get('content_base64')))
+                return
+            if path == '/api/documents/confirm-record':
+                self.send_json(201, self.server.archive.documents.confirm_parametrized_record(data))
+                return
+            if path == '/api/documents/link-legacy':
+                self.send_json(200, self.server.archive.documents.link_legacy_record(data))
                 return
             if path == '/api/events':
                 self.send_json(201, self.server.archive.events.append(data));return

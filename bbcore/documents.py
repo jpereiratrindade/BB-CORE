@@ -321,10 +321,12 @@ class Documents:
                 anchor_bad += 1
         return {'document_contents_checked': total, 'document_hash_mismatches': bad, 'document_anchor_failures': anchor_bad}
 
-    def inspect_parametrized(self, *, version_id=None, content_base64=None):
+    def inspect_parametrized(self, *, version_id=None, receipt_id=None, content_base64=None):
         from .parametrized import ParametrizedError, parse_parametrized_markdown
 
-        if version_id is not None:
+        if receipt_id is not None:
+            raw_bytes = self.original(receipt_id=receipt_id)
+        elif version_id is not None:
             raw_bytes = self.original(version_id=version_id)
         else:
             encoded = required_string(content_base64, 'content_base64', 350_000)
@@ -343,7 +345,7 @@ class Documents:
             legacy_rows = []
             if ext_doc_id:
                 legacy_rows = self.db.execute(
-                    """SELECT id, title, claim FROM insights
+                    """SELECT id, title, claim, limitations, context, genesis FROM insights
                        WHERE json_extract(context, '$.external_document_id')=?
                          AND id NOT IN (SELECT insight_id FROM imported_record_identities)""",
                     (ext_doc_id,),
@@ -359,10 +361,12 @@ class Documents:
                     else None
                 )
                 if existing:
-                    if existing['claim_sha256'] == rec['claim_sha256'] and existing['content_sha256'] == rec['content_sha256']:
-                        rec['archive_status'] = 'ALREADY_CONFIRMED'
-                    else:
+                    if existing['claim_sha256'] != rec['claim_sha256']:
                         rec['archive_status'] = 'FORMULATION_DIVERGENCE'
+                    elif existing['content_sha256'] != rec['content_sha256']:
+                        rec['archive_status'] = 'CONTEXT_DIVERGENCE'
+                    else:
+                        rec['archive_status'] = 'ALREADY_CONFIRMED'
                     rec['existing_insight_id'] = existing['insight_id']
                     rec['existing_claim_sha256'] = existing['claim_sha256']
                 elif legacy_rows:
@@ -378,3 +382,135 @@ class Documents:
                 else:
                     rec['archive_status'] = 'NEW_CANDIDATE'
         return {'is_parametrized': True, **parsed}
+
+    def confirm_parametrized_record(self, data):
+        """Confirma registro diretamente a partir da interpretação autoritativa no servidor."""
+        from .parametrized import ParametrizedError, parse_parametrized_markdown
+
+        if not isinstance(data, dict):
+            raise ValueError('Esperado objeto JSON')
+        receipt_id = required_string(data.get('receipt_id'), 'receipt_id', 64)
+        id_local = required_string(data.get('id_local'), 'id_local', 120)
+        actor = required_string(data.get('confirmed_by_declared'), 'confirmed_by_declared', 240)
+        if data.get('confirmed') is not True:
+            raise ValueError('Confirmação humana explícita obrigatória')
+        request_id = required_string(data.get('request_id'), 'request_id', 128)
+
+        with self.archive.lock:
+            receipt = self.archive._one('SELECT * FROM document_receipts WHERE id=?', (receipt_id,))
+            if receipt['outcome'] == 'VERSION_CONFLICT':
+                raise Conflict('Recebimento em conflito não pode fundamentar confirmação antes de resolução')
+            raw_bytes = self.original(receipt_id=receipt_id)
+
+        try:
+            parsed = parse_parametrized_markdown(raw_bytes)
+        except ParametrizedError as err:
+            raise ValueError(f'Documento não é Markdown parametrizado válido: {err}') from None
+
+        rec = next((item for item in parsed['records'] if item['id_local'] == id_local), None)
+        if rec is None:
+            raise NotFound(f'Registro candidato "{id_local}" não encontrado no documento')
+
+        doc_meta = parsed['document']
+        missing = list(rec['context'].get('missing', []))
+        for gap in parsed.get('provenance_gaps', []):
+            if gap not in missing:
+                missing.append(gap)
+        stored_context = {
+            **rec['context'],
+            'missing': missing,
+            'external_document_id': doc_meta.get('external_id') or receipt.get('declared_external_id'),
+            'document_version': doc_meta.get('version') or receipt.get('declared_version'),
+            'source_context': doc_meta.get('source_context'),
+            'attribution': rec.get('attribution'),
+            'declared_evidence': rec.get('evidence', []),
+            'open_questions': rec.get('open_questions', []),
+        }
+        if rec.get('declared_relations'):
+            stored_context['pending_declared_relations'] = rec['declared_relations']
+
+        anchors = [
+            {
+                'receipt_id': receipt_id,
+                'quote': a['quote'],
+                'start_byte': a['start_byte'],
+                'end_byte': a['end_byte'],
+                'role': a['role'],
+            }
+            for a in rec['anchors']
+        ]
+        if not anchors:
+            raise ValueError('Registro parametrizado sem âncora literal verificável no corpo')
+
+        return self.create_record({
+            'request_id': request_id,
+            'title': rec['title'],
+            'claim': rec['claim'],
+            'why_matters': rec['why_matters'],
+            'genesis': rec['genesis'],
+            'limitations': rec['limitations'],
+            'kind': rec['kind'],
+            'work_state': rec['work_state'],
+            'formulation_origin': rec['formulation_origin'],
+            'confirmed_by_declared': actor,
+            'confirmed': True,
+            'supersedes_id': rec.get('supersedes_id'),
+            'declared_record_key': rec.get('external_record_id'),
+            'content_sha256': rec['content_sha256'],
+            'context': stored_context,
+            'anchors': anchors,
+        })
+
+    def link_legacy_record(self, data):
+        """Vincula explicitamente um candidato parametrizado a um insight legado já existente."""
+        from .parametrized import ParametrizedError, parse_parametrized_markdown
+
+        if not isinstance(data, dict):
+            raise ValueError('Esperado objeto JSON')
+        receipt_id = required_string(data.get('receipt_id'), 'receipt_id', 64)
+        id_local = required_string(data.get('id_local'), 'id_local', 120)
+        insight_id = required_string(data.get('insight_id'), 'insight_id', 64)
+        required_string(data.get('confirmed_by_declared'), 'confirmed_by_declared', 240)
+        if data.get('confirmed') is not True:
+            raise ValueError('Confirmação humana explícita obrigatória')
+
+        with self.archive.transaction():
+            request_id, signature, retry = self._retry(data, 'link_legacy_record')
+            if retry is not None:
+                return retry
+            receipt = self.archive._one('SELECT * FROM document_receipts WHERE id=?', (receipt_id,))
+            if receipt['outcome'] == 'VERSION_CONFLICT':
+                raise Conflict('Recebimento em conflito não pode vincular identidade')
+            raw_bytes = self.original(receipt_id=receipt_id)
+            try:
+                parsed = parse_parametrized_markdown(raw_bytes)
+            except ParametrizedError as err:
+                raise ValueError(f'Documento inválido: {err}') from None
+
+            rec = next((item for item in parsed['records'] if item['id_local'] == id_local), None)
+            if rec is None:
+                raise NotFound(f'Registro candidato "{id_local}" não encontrado')
+            key = rec.get('external_record_id')
+            if not key:
+                raise ValueError('Candidato sem identidade declarada (external_record_id)')
+            if self.db.execute('SELECT 1 FROM imported_record_identities WHERE declared_record_key=?', (key,)).fetchone():
+                raise Conflict(f'Identidade declarada "{key}" já vinculada')
+
+            insight = self.archive._get(insight_id)
+            ext_doc_id = parsed['document'].get('external_id')
+            if ext_doc_id and insight['context'].get('external_document_id') != ext_doc_id:
+                raise Conflict('Insight legado não pertence ao mesmo external_document_id declarado')
+
+            now = stamp()
+            legacy_claim_sha = hashlib.sha256(insight['claim'].encode('utf-8')).hexdigest()
+            self.db.execute(
+                'INSERT INTO imported_record_identities VALUES(?,?,?,?,?,?,?)',
+                (key, insight_id, ext_doc_id, parsed['document'].get('version'), legacy_claim_sha, rec['content_sha256'] if insight['claim'] == rec['claim'] else legacy_claim_sha, now),
+            )
+            return self._remember(request_id, signature, {
+                'linked': True,
+                'declared_record_key': key,
+                'insight_id': insight_id,
+                'claim_matches': insight['claim'] == rec['claim'],
+                'linked_at': now,
+            })

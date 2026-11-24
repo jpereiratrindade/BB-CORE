@@ -9,8 +9,9 @@ const outcomes = {PRESERVED:'Original preservado', RECEIVED_AGAIN:'Novo recebime
 const archiveLabels = {
     NEW_CANDIDATE: 'Novo registro candidato (aguardando confirmação)',
     ALREADY_CONFIRMED: 'Já confirmado no acervo (sem duplicação)',
-    FORMULATION_DIVERGENCE: 'Divergência de formulação em relação ao registro confirmado',
-    LEGACY_MATCH_CANDIDATE: 'Possível vínculo com registro anterior (pré-identidade declarada)',
+    FORMULATION_DIVERGENCE: 'Divergência na formulação em relação ao registro confirmado',
+    CONTEXT_DIVERGENCE: 'Formulação idêntica, mas com alteração em limitações, relevância, evidências ou contexto',
+    LEGACY_MATCH_CANDIDATE: 'Registro legado encontrado para este identificador documental (pré-identidade declarada)',
 };
 
 let bytes = null, selectedDocument = null, pendingDocument = null, receivedVersion = null;
@@ -156,7 +157,7 @@ function renderParametrizedSection(box, doc, param, acceptedReceipts) {
     }
     const defaultActor = acceptedReceipts[0]?.received_by || '';
     for (const rec of param.records) {
-        const cardCls = 'param-card' + (rec.archive_status === 'ALREADY_CONFIRMED' ? ' confirmed' : (rec.archive_status === 'FORMULATION_DIVERGENCE' || rec.archive_status === 'LEGACY_MATCH_CANDIDATE' ? ' conflict' : ''));
+        const cardCls = 'param-card' + (rec.archive_status === 'ALREADY_CONFIRMED' ? ' confirmed' : (rec.archive_status === 'FORMULATION_DIVERGENCE' || rec.archive_status === 'CONTEXT_DIVERGENCE' || rec.archive_status === 'LEGACY_MATCH_CANDIDATE' ? ' conflict' : ''));
         const card = make('div', undefined, cardCls);
         card.append(
             make('span', (kinds[rec.kind] || rec.kind) + ' · ' + (states[rec.work_state] || rec.work_state), 'tag'),
@@ -173,11 +174,14 @@ function renderParametrizedSection(box, doc, param, acceptedReceipts) {
         if (rec.open_questions?.length) {
             card.append(make('p', 'Questões decorrentes:\n• ' + rec.open_questions.join('\n• ')));
         }
+        if (rec.declared_relations?.length) {
+            card.append(make('p', 'Relações declaradas (' + rec.declared_relations.length + '): exigem autorização explícita em etapa própria; não serão criadas automaticamente.', 'muted'));
+        }
         if (rec.anchors?.length) {
             card.append(make('small', rec.anchors.map(a => a.role + ' (bytes ' + a.start_byte + '–' + a.end_byte + ')').join(' · '), 'muted'));
         }
 
-        if (rec.archive_status === 'ALREADY_CONFIRMED' || rec.archive_status === 'FORMULATION_DIVERGENCE') {
+        if (rec.archive_status === 'ALREADY_CONFIRMED' || rec.archive_status === 'FORMULATION_DIVERGENCE' || rec.archive_status === 'CONTEXT_DIVERGENCE') {
             const openBtn = make('button', 'Abrir registro existente no acervo →', 'button outline');
             openBtn.type = 'button';
             openBtn.addEventListener('click', async () => {
@@ -186,88 +190,99 @@ function renderParametrizedSection(box, doc, param, acceptedReceipts) {
                 if (typeof window.show === 'function') await window.show({id: rec.existing_insight_id}, openBtn);
             });
             card.append(openBtn);
-        } else {
-            if (rec.archive_status === 'LEGACY_MATCH_CANDIDATE' && rec.legacy_matches?.length) {
-                for (const m of rec.legacy_matches) {
-                    const legacyBtn = make('button', 'Examinar registro legado vinculado (' + m.title + ') →', 'button outline');
-                    legacyBtn.type = 'button';
-                    legacyBtn.addEventListener('click', async () => {
-                        Reader.close({restoreFocus: false});
-                        BBViews.open('acervo');
-                        if (typeof window.show === 'function') await window.show({id: m.insight_id}, legacyBtn);
+        } else if (rec.archive_status === 'LEGACY_MATCH_CANDIDATE' && rec.legacy_matches?.length) {
+            for (const m of rec.legacy_matches) {
+                const legacyBtn = make('button', 'Examinar registro legado (' + m.title + ') →', 'button outline');
+                legacyBtn.type = 'button';
+                legacyBtn.addEventListener('click', async () => {
+                    Reader.close({restoreFocus: false});
+                    BBViews.open('acervo');
+                    if (typeof window.show === 'function') await window.show({id: m.insight_id}, legacyBtn);
+                });
+                card.append(legacyBtn);
+                if (acceptedReceipts.length) {
+                    const linkForm = make('form', undefined, 'param-confirm-form');
+                    const actorInput = make('input');
+                    actorInput.required = true;
+                    actorInput.maxLength = 240;
+                    actorInput.placeholder = 'Nome de quem reconhece o vínculo';
+                    actorInput.value = defaultActor;
+                    const check = make('input');
+                    check.type = 'checkbox';
+                    check.required = true;
+                    const checkLabel = make('label', undefined, 'check');
+                    checkLabel.append(check, document.createTextNode('Reconheço explicitamente que este candidato corresponde ao registro legado existente (sem criar duplicata).'));
+                    const linkBtn = make('button', 'Reconhecer vínculo com registro legado', 'button primary');
+                    linkBtn.type = 'submit';
+                    const notice = make('p', '', 'muted');
+                    let pendingLink = null;
+                    linkForm.addEventListener('submit', async ev => {
+                        ev.preventDefault();
+                        linkBtn.disabled = true;
+                        try {
+                            pendingLink = requestPayload({
+                                receipt_id: acceptedReceipts[0].id,
+                                id_local: rec.id_local,
+                                insight_id: m.insight_id,
+                                confirmed_by_declared: actorInput.value,
+                                confirmed: check.checked,
+                            }, pendingLink);
+                            await request('/api/documents/link-legacy', pendingLink.payload);
+                            pendingLink = null;
+                            await openDocument(doc.id, {reveal: false});
+                        } catch (err) {
+                            notice.textContent = err.message;
+                        } finally {
+                            linkBtn.disabled = false;
+                        }
                     });
-                    card.append(legacyBtn);
+                    linkForm.append(actorInput, checkLabel, linkBtn, notice);
+                    card.append(linkForm);
                 }
             }
-            if (acceptedReceipts.length) {
-                const form = make('form', undefined, 'param-confirm-form');
-                const actorInput = make('input');
-                actorInput.required = true;
-                actorInput.maxLength = 240;
-                actorInput.placeholder = 'Nome de quem confirma este registro';
-                actorInput.value = defaultActor;
-                const actorLabel = make('label', 'Responsável pela confirmação');
-                actorLabel.append(actorInput);
-                const check = make('input');
-                check.type = 'checkbox';
-                check.required = true;
-                const checkLabel = make('label', undefined, 'check');
-                checkLabel.append(check, document.createTextNode('Examinei os parâmetros, fontes e limitações. Confirmo a preservação deste registro (sem validação científica).'));
-                const btn = make('button', 'Confirmar este registro no acervo', 'button primary');
-                btn.type = 'submit';
-                const notice = make('p', '', 'muted');
-                let pendingConfirm = null;
-                form.addEventListener('submit', async ev => {
-                    ev.preventDefault();
-                    btn.disabled = true;
-                    try {
-                        const receiptId = acceptedReceipts[0].id;
-                        const payloadData = {
-                            title: rec.title,
-                            claim: rec.claim,
-                            why_matters: rec.why_matters,
-                            genesis: rec.genesis || {},
-                            limitations: rec.limitations,
-                            kind: rec.kind,
-                            work_state: rec.work_state,
-                            formulation_origin: rec.formulation_origin,
-                            confirmed_by_declared: actorInput.value,
-                            confirmed: check.checked,
-                            supersedes_id: rec.supersedes_id || null,
-                            declared_record_key: rec.external_record_id || null,
-                            content_sha256: rec.content_sha256,
-                            context: {
-                                ...(rec.context || {}),
-                                external_document_id: param.document?.external_id || null,
-                                document_version: param.document?.version || null,
-                                attribution: rec.attribution || null,
-                                open_questions: rec.open_questions || [],
-                            },
-                            anchors: rec.anchors.map(a => ({
-                                receipt_id: receiptId,
-                                quote: a.quote,
-                                start_byte: a.start_byte,
-                                end_byte: a.end_byte,
-                                role: a.role,
-                            })),
-                        };
-                        pendingConfirm = requestPayload(payloadData, pendingConfirm);
-                        const created = await request('/api/document-records', pendingConfirm.payload);
-                        pendingConfirm = null;
-                        notice.textContent = 'Registro confirmado (' + created.id + ').';
-                        if (typeof window.start === 'function') await window.start();
-                        await openDocument(doc.id, {reveal: false});
-                    } catch (err) {
-                        notice.textContent = err.message;
-                    } finally {
-                        btn.disabled = false;
-                    }
-                });
-                form.append(actorLabel, checkLabel, btn, notice);
-                card.append(form);
-            } else {
-                card.append(make('p', 'Confirmação bloqueada: este recebimento está em conflito de versão.', 'muted'));
-            }
+        } else if (acceptedReceipts.length) {
+            const form = make('form', undefined, 'param-confirm-form');
+            const actorInput = make('input');
+            actorInput.required = true;
+            actorInput.maxLength = 240;
+            actorInput.placeholder = 'Nome de quem confirma este registro';
+            actorInput.value = defaultActor;
+            const actorLabel = make('label', 'Responsável pela confirmação');
+            actorLabel.append(actorInput);
+            const check = make('input');
+            check.type = 'checkbox';
+            check.required = true;
+            const checkLabel = make('label', undefined, 'check');
+            checkLabel.append(check, document.createTextNode('Examinei os parâmetros, fontes e limitações. Confirmo a preservação deste registro (sem validação científica).'));
+            const btn = make('button', 'Confirmar este registro no acervo', 'button primary');
+            btn.type = 'submit';
+            const notice = make('p', '', 'muted');
+            let pendingConfirm = null;
+            form.addEventListener('submit', async ev => {
+                ev.preventDefault();
+                btn.disabled = true;
+                try {
+                    pendingConfirm = requestPayload({
+                        receipt_id: acceptedReceipts[0].id,
+                        id_local: rec.id_local,
+                        confirmed_by_declared: actorInput.value,
+                        confirmed: check.checked,
+                    }, pendingConfirm);
+                    const created = await request('/api/documents/confirm-record', pendingConfirm.payload);
+                    pendingConfirm = null;
+                    notice.textContent = 'Registro confirmado (' + created.id + ').';
+                    if (typeof window.start === 'function') await window.start();
+                    await openDocument(doc.id, {reveal: false});
+                } catch (err) {
+                    notice.textContent = err.message;
+                } finally {
+                    btn.disabled = false;
+                }
+            });
+            form.append(actorLabel, checkLabel, btn, notice);
+            card.append(form);
+        } else {
+            card.append(make('p', 'Confirmação bloqueada: este recebimento está em conflito de versão.', 'muted'));
         }
         section.append(card);
     }
@@ -331,6 +346,28 @@ async function openDocument(id, {reveal = true, trigger} = {}) {
             const a = make('a', r.outcome === 'VERSION_CONFLICT' ? 'Baixar conteúdo divergente preservado' : 'Baixar bytes deste recebimento');
             a.href = '/api/receipts/' + r.id + '/original';
             row.append(a);
+            if (r.outcome === 'VERSION_CONFLICT') {
+                const examBtn = make('button', 'Examinar conteúdo divergente', 'button outline');
+                examBtn.type = 'button';
+                const examBox = make('div');
+                examBtn.addEventListener('click', async () => {
+                    examBtn.disabled = true;
+                    try {
+                        const divParam = await request('/api/receipts/' + encodeURIComponent(r.id) + '/parametrized');
+                        examBox.replaceChildren();
+                        if (divParam.is_parametrized) {
+                            renderParametrizedSection(examBox, doc, divParam, []);
+                        } else {
+                            examBox.append(make('p', 'Recebimento divergente não é Markdown parametrizado válido: ' + divParam.error, 'muted'));
+                        }
+                    } catch (err) {
+                        examBox.replaceChildren(make('p', err.message, 'muted'));
+                    } finally {
+                        examBtn.disabled = false;
+                    }
+                });
+                row.append(examBtn, examBox);
+            }
             box.append(row);
         }
 

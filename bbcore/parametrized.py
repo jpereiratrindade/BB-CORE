@@ -439,6 +439,10 @@ def parse_parametrized_markdown(raw_bytes: bytes) -> dict:
     header = _load_strict_yaml(yaml_text)
     if not isinstance(header, dict):
         raise ParametrizedError('Cabeçalho YAML deve ser um mapeamento')
+    if 'export_schema' in header or header.get('document_role') == 'EXPORTED_RECORD':
+        raise ParametrizedError(
+            'Documento de exportação (BB-CORE-EXP) não pode ser reimportado como novo registro de ingestão'
+        )
     _reject_unknown_keys(header, TOP_KEYS, 'header')
 
     schema = header.get('schema')
