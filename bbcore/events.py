@@ -5,12 +5,13 @@ import uuid
 from contextlib import contextmanager
 from datetime import date, datetime
 
-from .store import Conflict, NotFound, digest, required_string, stamp
+from .store import Conflict, NotFound, digest, required_string, stamp, valid_origin_url
 
 ZERO_HASH = '0' * 64
 MODES = {'OBSERVED', 'REPORTED', 'PROPOSED'}
 PUBLIC_TYPES = {'OCCURRENCE_RECORDED', 'EVIDENCE_REFERENCED', 'CRITIQUE_RECORDED',
-                'INTERPRETATION_PROPOSED', 'FORMULATION_REVISED', 'RELATION_RECOGNIZED', 'RELATION_CONTESTED'}
+                'INTERPRETATION_PROPOSED', 'FORMULATION_REVISED', 'PROVENANCE_SUPPLEMENTED',
+                'RELATION_RECOGNIZED', 'RELATION_CONTESTED'}
 INTERNAL_TYPES = {'INSIGHT_REGISTERED', 'REVISION_REFERENCE_RECORDED', 'RELATION_PROPOSED'}
 LINK_TYPES = {'RESPONDS_TO', 'MOTIVATED_BY', 'CORRECTS', 'CONTESTS'}
 
@@ -360,6 +361,25 @@ class Events:
                 raise ValueError('Revisão exige changes com title, claim e/ou limitations')
             for field, value in changes.items():
                 required_string(value, 'changes.'+field, {'title': 240, 'claim': 4000, 'limitations': 10000}[field])
+        if nature == 'PROVENANCE_SUPPLEMENTED':
+            if actor is None or moment is None:
+                raise ValueError('Complementação de proveniência exige responsável e data explícitos')
+            allowed_keys = {'summary', 'origin_reference', 'origin_kind', 'provenance_gaps'}
+            unknown_keys = set(content) - allowed_keys
+            if unknown_keys:
+                raise ValueError(f'Complementação de proveniência não aceita campos: {", ".join(sorted(unknown_keys))}')
+            normalized_content = {
+                'summary': required_string(content.get('summary'), 'content.summary', 4000),
+                'origin_reference': required_string(content.get('origin_reference'), 'content.origin_reference', 500),
+            }
+            if content.get('origin_kind') is not None:
+                normalized_content['origin_kind'] = required_string(content.get('origin_kind'), 'content.origin_kind', 120)
+            if content.get('provenance_gaps') is not None:
+                gaps = content.get('provenance_gaps')
+                if not isinstance(gaps, list) or len(gaps) > 32:
+                    raise ValueError('content.provenance_gaps deve ser lista de até 32 lacunas')
+                normalized_content['provenance_gaps'] = [required_string(g, 'content.provenance_gaps', 500) for g in gaps]
+            content = normalized_content
         with self.archive.transaction():
             rid, signature, retry = self.archive.documents._retry(data, 'intellectual_event')
             if retry is not None:
@@ -411,6 +431,57 @@ class Events:
                             limitations='Relação proposta pelo sujeito declarado; sem reconhecimento científico automático.')
 
     @staticmethod
+    def _provenance_projection(record, supplements):
+        """Projeta referências de origem sem substituir o contexto inicial nem dar precedência à mais recente."""
+        orig_ctx = (record or {}).get('context') or {}
+        orig_sc = orig_ctx.get('source_context') if isinstance(orig_ctx.get('source_context'), dict) else {}
+        orig_ref = orig_sc.get('origin_reference') or orig_ctx.get('origin_reference')
+        orig_url = valid_origin_url(orig_ref)
+
+        by_url = {}
+        if orig_url:
+            by_url[orig_url] = {
+                'url': orig_url,
+                'sources': [{
+                    'source': 'ORIGINAL_CONTEXT',
+                    'origin_kind': orig_sc.get('origin_kind'),
+                }],
+            }
+        for sup in supplements:
+            if sup['origin_url']:
+                entry = by_url.setdefault(sup['origin_url'], {'url': sup['origin_url'], 'sources': []})
+                entry['sources'].append({
+                    'source': 'PROVENANCE_SUPPLEMENTED',
+                    'event_id': sup['event_id'],
+                    'occurred_at': sup['occurred_at'],
+                    'recorded_at': sup['recorded_at'],
+                    'responsible': sup['responsible'],
+                    'origin_kind': sup['origin_kind'],
+                    'summary': sup['summary'],
+                })
+
+        distinct_urls = list(by_url.values())
+        if not distinct_urls:
+            origin_status = 'NONE'
+            effective_origin_url = None
+        elif len(distinct_urls) == 1:
+            origin_status = 'SINGLE'
+            effective_origin_url = distinct_urls[0]['url']
+        else:
+            origin_status = 'DIVERGENT'
+            effective_origin_url = None
+
+        return {
+            'original_origin_reference': orig_ref,
+            'original_origin_url': orig_url,
+            'origin_status': origin_status,
+            'effective_origin_url': effective_origin_url,
+            'origin_urls': distinct_urls,
+            'supplements': supplements,
+            'supplement_count': len(supplements),
+        }
+
+    @staticmethod
     def replay_bundle(bundle, insight_id, checkpoint=None):
         verification = Events.verify_bundle(bundle, checkpoint)
         events = [event for event in bundle['events'] if insight_id in (event['insight_id'], event['related_insight_id'])]
@@ -418,16 +489,35 @@ class Events:
         if events and baseline is None:
             raise Conflict('Trajetória sem baseline explícita')
         state = json.loads(encoded(baseline['record'])) if baseline else None
-        formulations, relations = [], []
+        formulations, relations, supplements = [], [], []
         for event in events:
             if event['event_type'] == 'FORMULATION_REVISED' and event['insight_id'] == insight_id:
                 state.update(event['content']['changes'])
                 formulations.append({'event_id': event['id'], 'state': json.loads(encoded(state))})
+            if event['event_type'] == 'PROVENANCE_SUPPLEMENTED' and event['insight_id'] == insight_id:
+                ev_content = event.get('content') or {}
+                ev_ref = ev_content.get('origin_reference')
+                supplements.append({
+                    'event_id': event['id'],
+                    'occurred_at': event.get('occurred_at'),
+                    'recorded_at': event.get('recorded_at'),
+                    'responsible': event.get('responsible'),
+                    'mode': event.get('mode'),
+                    'summary': ev_content.get('summary'),
+                    'origin_reference': ev_ref,
+                    'origin_url': valid_origin_url(ev_ref),
+                    'origin_kind': ev_content.get('origin_kind'),
+                    'provenance_gaps': ev_content.get('provenance_gaps', []),
+                    'origin': event.get('origin'),
+                    'limitations': event.get('limitations'),
+                })
             if event['event_type'].startswith('RELATION_'):
                 relations.append(event)
+        provenance = Events._provenance_projection(baseline['record'] if baseline else None, supplements)
         return {'insight_id': insight_id, 'events': events, 'event_count': len(events), 'baseline': baseline,
                 'current_state': state, 'formulations': formulations, 'relation_attributions': relations,
                 'formulation_revision_count': len(formulations),
+                'provenance': provenance,
                 'chain_integrity': verification['integrity'], 'evidence_integrity': 'NOT_RECHECKED_OFFLINE',
                 'order': 'RECORDING_ORDER_NOT_CAUSAL',
                 'limitation': 'Integridade não comprova veracidade, autoria ou influência intelectual.'}
@@ -440,5 +530,6 @@ class Events:
             result['evidence_integrity'] = 'VERIFIED_LOCAL_REFERENCES'
             if not result['events']:
                 result['current_state'] = original
+                result['provenance'] = self._provenance_projection(original, [])
                 result['absence_notice'] = 'Nenhum acontecimento registrado neste diário. Não se presume evolução, relação ou ausência de acontecimentos externos.'
             return result

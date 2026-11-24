@@ -287,6 +287,86 @@ class EventTests(unittest.TestCase):
         with self.assertRaises(Conflict):
             self.archive.events.export()
 
+    def test_provenance_supplemented_preserves_original_rejects_generic_urls_and_handles_divergence(self):
+        iid = self.create()
+        # Acontecimento genérico com URL no resumo NÃO vira referência de origem.
+        self.archive.events.append(event(
+            iid,
+            event_type='OCCURRENCE_RECORDED',
+            content={'summary': 'Conversa mencionada em https://chatgpt.com/c/generico-ignorado'},
+            origin='https://chatgpt.com/c/generico-ignorado',
+        ))
+        ctx0 = self.archive.context(iid)
+        original_context = ctx0['context']
+        self.assertEqual(ctx0['trajectory']['provenance']['origin_status'], 'NONE')
+        self.assertIsNone(ctx0['trajectory']['provenance']['effective_origin_url'])
+        self.assertNotIn('[Retomar conversa original]', self.archive.export_markdown(iid))
+
+        # Validações estritas: exige responsável, data e rejeita edição de formulação.
+        with self.assertRaises(ValueError):
+            self.archive.events.append(event(
+                iid, event_type='PROVENANCE_SUPPLEMENTED', responsible=None,
+                content={'summary': 'Sem ator', 'origin_reference': 'https://chatgpt.com/c/abc'},
+            ))
+        with self.assertRaises(ValueError):
+            self.archive.events.append(event(
+                iid, event_type='PROVENANCE_SUPPLEMENTED', occurred_at=None,
+                content={'summary': 'Sem data', 'origin_reference': 'https://chatgpt.com/c/abc'},
+            ))
+        with self.assertRaises(ValueError):
+            self.archive.events.append(event(
+                iid, event_type='PROVENANCE_SUPPLEMENTED',
+                content={'summary': 'Tentativa de editar', 'origin_reference': 'https://chatgpt.com/c/abc',
+                         'changes': {'claim': 'Alterado'}},
+            ))
+
+        # Complementação explícita válida disponibiliza retomada sem alterar registro original.
+        url1 = 'https://chatgpt.com/c/11111111-1111-1111-1111-111111111111'
+        self.archive.events.append(event(
+            iid,
+            event_type='PROVENANCE_SUPPLEMENTED',
+            mode='OBSERVED',
+            occurred_at='2026-11-24',
+            content={
+                'summary': 'URL privada da conversa informada posteriormente pelo pesquisador.',
+                'origin_reference': url1,
+                'origin_kind': 'CHATGPT_CONVERSATION',
+            },
+            limitations='URL declarada posteriormente; não preserva a conversa.',
+        ))
+        ctx1 = self.archive.context(iid)
+        self.assertEqual(ctx1['context'], original_context)  # contexto inicial preservado
+        self.assertEqual(ctx1['trajectory']['provenance']['origin_status'], 'SINGLE')
+        self.assertEqual(ctx1['trajectory']['provenance']['effective_origin_url'], url1)
+        self.assertIsNone(ctx1['trajectory']['provenance']['original_origin_url'])
+        md1 = self.archive.export_markdown(iid)
+        self.assertIn(f'[Retomar conversa original]({url1})', md1)
+        self.assertIn('PROVENANCE_SUPPLEMENTED', md1)
+
+        # Segunda complementação com URL divergente preserva ambas sem precedência automática.
+        url2 = 'https://chatgpt.com/c/22222222-2222-2222-2222-222222222222'
+        self.archive.events.append(event(
+            iid,
+            event_type='PROVENANCE_SUPPLEMENTED',
+            mode='REPORTED',
+            occurred_at='2026-11-24',
+            content={
+                'summary': 'Segunda referência divergente informada.',
+                'origin_reference': url2,
+                'origin_kind': 'CHATGPT_CONVERSATION',
+            },
+            limitations='Divergência preservada sem resolução automática.',
+        ))
+        ctx2 = self.archive.context(iid)
+        prov2 = ctx2['trajectory']['provenance']
+        self.assertEqual(prov2['origin_status'], 'DIVERGENT')
+        self.assertIsNone(prov2['effective_origin_url'])
+        self.assertEqual([u['url'] for u in prov2['origin_urls']], [url1, url2])
+        md2 = self.archive.export_markdown(iid)
+        self.assertIn('Referências de origem divergentes preservadas', md2)
+        self.assertIn(url1, md2)
+        self.assertIn(url2, md2)
+
 
 if __name__ == '__main__':
     unittest.main()

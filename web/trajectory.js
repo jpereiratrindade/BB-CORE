@@ -10,6 +10,7 @@ function renderTrajectory(container, trajectory) {
         INSIGHT_REGISTERED: 'Registro gravado', OCCURRENCE_RECORDED: 'Acontecimento registrado',
         EVIDENCE_REFERENCED: 'Evidência referenciada', CRITIQUE_RECORDED: 'Crítica registrada',
         INTERPRETATION_PROPOSED: 'Interpretação proposta', FORMULATION_REVISED: 'Formulação revista',
+        PROVENANCE_SUPPLEMENTED: 'Proveniência complementada',
         REVISION_REFERENCE_RECORDED: 'Revisão vinculada explicitamente',
         RELATION_PROPOSED: 'Relação proposta', RELATION_RECOGNIZED: 'Reconhecimento atribuído',
         RELATION_CONTESTED: 'Relação ou reconhecimento contestado',
@@ -52,6 +53,8 @@ function renderTrajectory(container, trajectory) {
         entry(metadata, 'Responsável declarado', event.responsible ? event.responsible.name + ' · ' + event.responsible.id : 'Não informado');
         entry(metadata, 'Origem declarada', event.origin || 'Não informada');
         if (event.content.scope) entry(metadata, 'Alcance declarado', event.content.scope);
+        if (event.content.origin_reference) entry(metadata, 'Referência de origem declarada', event.content.origin_reference);
+        if (event.content.origin_kind) entry(metadata, 'Tipo de origem declarado', event.content.origin_kind);
         entry(metadata, 'Limitações', event.limitations);
         if (event.missing.length) entry(metadata, 'Lacunas preservadas', event.missing.map(item=>missingLabels[item]||item).join('\n'));
         item.append(metadata);

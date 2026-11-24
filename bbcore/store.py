@@ -8,6 +8,7 @@ import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 MAX_SOURCE_BYTES = 256_000
 MAX_SOURCES = 16
@@ -32,6 +33,22 @@ def required_string(value, name, length=MAX_TEXT, *, preserve=False):
     if not isinstance(value, str) or not value.strip() or len(value.encode("utf-8")) > length:
         raise ValueError(f"{name}: texto obrigatório (limite de {length} bytes)")
     return value if preserve else value.strip()
+
+
+def valid_origin_url(value):
+    """Retorna URL http(s) válida se `value` for uma URL de origem segura; caso contrário None."""
+    if not isinstance(value, str):
+        return None
+    raw = value.strip()
+    if not raw or any(ch.isspace() or ord(ch) < 32 for ch in raw):
+        return None
+    try:
+        parsed = urlsplit(raw)
+    except ValueError:
+        return None
+    if parsed.scheme.lower() not in ("http", "https") or not parsed.netloc:
+        return None
+    return raw
 
 
 def object_field(value, name):
@@ -370,6 +387,38 @@ class Archive:
         ]
         if ctx["context"].get("external_document_id"):
             lines.append(f"- **Documento externo declarado:** `{ctx['context']['external_document_id']}` (versão `{ctx['context'].get('document_version') or 'não informada'}`)")
+        sc = ctx["context"].get("source_context") if isinstance(ctx["context"].get("source_context"), dict) else {}
+        prov = traj.get("provenance") or {}
+        origin_ref = prov.get("original_origin_reference") if "original_origin_reference" in prov else (sc.get("origin_reference") or ctx["context"].get("origin_reference"))
+        origin_url = prov.get("original_origin_url") if "original_origin_url" in prov else valid_origin_url(origin_ref)
+        if origin_url:
+            md_url = origin_url.replace("(", "%28").replace(")", "%29")
+            lines.append(
+                f"- **Conversa/origem declarada:** [Retomar conversa original]({md_url}) (`{origin_url}`) — "
+                "*referência declarada; não equivale à preservação integral da conversa nem à verificação de sua proveniência.*"
+            )
+        elif origin_ref:
+            lines.append(f"- **Referência de origem declarada:** {origin_ref}")
+        if prov.get("origin_status") == "SINGLE" and not origin_url and prov.get("effective_origin_url"):
+            eff_url = prov["effective_origin_url"]
+            md_eff = eff_url.replace("(", "%28").replace(")", "%29")
+            lines.append(
+                f"- **Conversa/origem complementada (trajetória):** [Retomar conversa original]({md_eff}) (`{eff_url}`) — "
+                "*complementação explícita declarada; não substitui o contexto inicial nem comprova proveniência ou preservação integral.*"
+            )
+        elif prov.get("origin_status") == "DIVERGENT":
+            lines.append("- **Referências de origem divergentes preservadas (sem precedência automática):**")
+            for entry in prov.get("origin_urls", []):
+                md_entry = entry["url"].replace("(", "%28").replace(")", "%29")
+                src_labels = []
+                for s in entry.get("sources", []):
+                    if s.get("source") == "ORIGINAL_CONTEXT":
+                        src_labels.append("contexto inicial")
+                    else:
+                        who = (s.get("responsible") or {}).get("name") or "responsável não informado"
+                        when = s.get("occurred_at") or s.get("recorded_at") or "data não informada"
+                        src_labels.append(f"complementação por {who} em `{when}`")
+                lines.append(f"  - [Retomar conversa declarada]({md_entry}) (`{entry['url']}`) — {', '.join(src_labels)}")
         lines.append("")
 
         if traj.get("formulation_revision_count"):
@@ -478,6 +527,10 @@ class Archive:
                 lines.append(f"- **Limitações:** {ev['limitations']}")
                 if ev["content"].get("scope"):
                     lines.append(f"- **Alcance (`scope`):** {ev['content']['scope']}")
+                if ev["content"].get("origin_reference"):
+                    lines.append(f"- **Referência de origem declarada:** `{ev['content']['origin_reference']}`")
+                if ev["content"].get("origin_kind"):
+                    lines.append(f"- **Tipo de origem declarado:** `{ev['content']['origin_kind']}`")
                 if ev["content"].get("counterpoint"):
                     lines.append(f"- **Contraponto:** {ev['content']['counterpoint']}")
                 if ev["content"].get("changes"):

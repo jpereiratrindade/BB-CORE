@@ -586,3 +586,89 @@ class ParametrizedHTTPFlowTests(unittest.TestCase):
             self.assertIn('## Limitações originais preservadas (histórico)', md2)
             self.assertIn('Evidências referenciadas:', md2)
             self.assertIn('Alterações declaradas (`changes`):', md2)
+
+    def test_origin_reference_url_preservation_and_resume_link(self):
+        from bbcore.store import valid_origin_url
+
+        self.call('POST', '/api/local-session')
+
+        self.assertEqual(
+            valid_origin_url('  https://chatgpt.com/c/674321ab-1234-5678-9abc-def012345678  '),
+            'https://chatgpt.com/c/674321ab-1234-5678-9abc-def012345678',
+        )
+        self.assertIsNone(valid_origin_url('Discussões de 24/11/2026 sobre avaliações'))
+        self.assertIsNone(valid_origin_url('javascript:alert(1)'))
+        self.assertIsNone(valid_origin_url('data:text/html,<script>alert(1)</script>'))
+        self.assertIsNone(valid_origin_url('https://chatgpt.com/c/abc\nmalicious'))
+
+        chat_url = 'https://chatgpt.com/c/674321ab-1234-5678-9abc-def012345678'
+        doc_url = (
+            '---\nschema: "BB-CORE-ING-0.2.0"\ndocument:\n  external_id: "URL-ORIGIN-1"\n  version: "0.1.0"\n'
+            '  source_context:\n    origin_kind: "CHATGPT_CONVERSATION"\n'
+            f'    origin_reference: "{chat_url}"\n'
+            '    transcript_included: false\n'
+            '    provenance_gaps:\n      - "Conversa privada no ChatGPT não transcrita integralmente"\n'
+            'records:\n  - id_local: "r1"\n    kind: "CONCEPTUAL_FINDING"\n    work_state: "PROPOSED"\n'
+            '    title: "Achado com URL de origem"\n    formulation_origin: "DOCUMENT_EXCERPT"\n'
+            '    claim_section: "Achado"\n    why_matters: "Continuidade intelectual"\n    limitations: "Limite declarado"\n'
+            '---\n\n## Achado\n\nFormulação ligada à conversa.\n'
+        ).encode('utf-8')
+        _, d_res = self.call('POST', '/api/documents', {
+            'request_id': str(uuid.uuid4()),
+            'filename': 'url-origin.md',
+            'content_base64': base64.b64encode(doc_url).decode(),
+            'external_id': 'URL-ORIGIN-1',
+            'declared_version': '0.1.0',
+            'provenance': 'ChatGPT',
+            'received_by': 'Pesquisador',
+            'confirmed': True,
+        })
+        _, rec = self.call('POST', '/api/documents/confirm-record', {
+            'request_id': str(uuid.uuid4()),
+            'receipt_id': d_res['receipt_id'],
+            'id_local': 'r1',
+            'confirmed_by_declared': 'Pesquisador',
+            'confirmed': True,
+        })
+        _, ctx = self.call('GET', f"/api/insights/{rec['id']}/context")
+        self.assertEqual(ctx['context']['source_context']['origin_reference'], chat_url)
+        initial_events = ctx['trajectory']['event_count']
+
+        with self.opener.open(f"http://127.0.0.1:{self.port}/api/insights/{rec['id']}/export.md", timeout=5) as resp:
+            md = resp.read().decode('utf-8')
+            self.assertIn(f'[Retomar conversa original]({chat_url})', md)
+            self.assertIn('não equivale à preservação integral da conversa nem à verificação de sua proveniência', md)
+            self.assertIn(f'**origin_reference:** {chat_url}', md)
+
+        _, ctx_after = self.call('GET', f"/api/insights/{rec['id']}/context")
+        self.assertEqual(ctx_after['trajectory']['event_count'], initial_events)
+
+        # Texto livre ou esquema inseguro em origin_reference não vira link de retomada na exportação.
+        doc_text = doc_url.replace(chat_url.encode('utf-8'), b'javascript:alert(1)').replace(b'URL-ORIGIN-1', b'URL-ORIGIN-2')
+        _, d_txt = self.call('POST', '/api/documents', {
+            'request_id': str(uuid.uuid4()),
+            'filename': 'text-origin.md',
+            'content_base64': base64.b64encode(doc_text).decode(),
+            'external_id': 'URL-ORIGIN-2',
+            'declared_version': '0.1.0',
+            'provenance': 'ChatGPT',
+            'received_by': 'Pesquisador',
+            'confirmed': True,
+        })
+        _, rec_txt = self.call('POST', '/api/documents/confirm-record', {
+            'request_id': str(uuid.uuid4()),
+            'receipt_id': d_txt['receipt_id'],
+            'id_local': 'r1',
+            'confirmed_by_declared': 'Pesquisador',
+            'confirmed': True,
+        })
+        with self.opener.open(f"http://127.0.0.1:{self.port}/api/insights/{rec_txt['id']}/export.md", timeout=5) as resp_txt:
+            md_txt = resp_txt.read().decode('utf-8')
+            self.assertNotIn('[Retomar conversa original]', md_txt)
+
+        # A interface de leitura expõe a operação complementar "Retomar conversa original".
+        with self.opener.open(f"http://127.0.0.1:{self.port}/app.js", timeout=5) as js_resp:
+            js = js_resp.read().decode('utf-8')
+            self.assertIn('Retomar conversa original', js)
+            self.assertIn('Exportar Markdown para nova conversa', js)
+            self.assertIn('noopener noreferrer', js)

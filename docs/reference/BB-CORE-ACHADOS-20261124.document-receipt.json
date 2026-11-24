@@ -1,0 +1,20 @@
+{
+  "document": {
+    "document_id": "350593cb707d474e91338b2ebb82db52",
+    "version_id": "a8da9ce166604dedb6b4e3f18e472fab",
+    "receipt_id": "0d01f6930f5b4105b7754d09ccbd4d38",
+    "sha256": "5542a93288f9e6cda02d078ac2dd3cb524964920fd7acf104c5aa7db89ab4160",
+    "byte_length": 16261,
+    "outcome": "PRESERVED"
+  },
+  "records": [
+    {
+      "id": "d1090ec7e66a43b09dd798f9195a0c44",
+      "kind": "CONCEPTUAL_FINDING",
+      "work_state": "PROPOSED",
+      "status": "INFERRED_CANDIDATE",
+      "confirmed_at": "2026-11-24T19:38:33+00:00"
+    }
+  ],
+  "integrity": "VERIFIED_LOCAL_BYTES"
+}
