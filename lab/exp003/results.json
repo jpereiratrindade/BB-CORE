@@ -1,0 +1,1328 @@
+{
+  "instruction": "BB-CORE-EXP-003 v0.2.0",
+  "executed_at": "2026-11-24T21:01:07+00:00",
+  "llm_model": "qwen2.5:14b",
+  "embed_model": "qwen3-embedding:4b",
+  "ollama_ps": "NAME           ID              SIZE     PROCESSOR    CONTEXT    UNTIL              \nqwen2.5:14b    7cdf5a0187d5    12 GB    100% GPU     16384      4 minutes from now",
+  "records": [
+    {
+      "id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+      "version": 1,
+      "title": "A organização da memória não determina a organização da atividade intelectual"
+    },
+    {
+      "id": "36cae570a28f47b9b36ead9f2c1a4d87",
+      "version": 1,
+      "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual"
+    },
+    {
+      "id": "87f47b767c6e4994a3746c0375ff5348",
+      "version": 1,
+      "title": "Preservação de uma representação não comprova fidelidade à fonte de origem"
+    },
+    {
+      "id": "784c05eb89d5436b942e340d109dcebb",
+      "version": 1,
+      "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo"
+    },
+    {
+      "id": "752eab672c1246acb4318bd83d98c5e9",
+      "version": 1,
+      "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento"
+    },
+    {
+      "id": "d1090ec7e66a43b09dd798f9195a0c44",
+      "version": 1,
+      "title": "Continuidade intelectual pela retomada do contexto de origem"
+    }
+  ],
+  "embeddings": {
+    "timings_s": {
+      "full": 4.688,
+      "claim": 0.468,
+      "why_matters": 0.295,
+      "limitations": 0.32
+    },
+    "similarity_full": [
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.7643
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.7344
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.7317
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "b_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "cosine": 0.7289
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "87f47b767c6e4994a3746c0375ff5348",
+        "b_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "cosine": 0.6791
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "87f47b767c6e4994a3746c0375ff5348",
+        "b_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "cosine": 0.6676
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.6651
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.6257
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.5869
+      },
+      {
+        "a_id": "784c05eb89d5436b942e340d109dcebb",
+        "a_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.5689
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.5674
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.5433
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.5394
+      },
+      {
+        "a_id": "784c05eb89d5436b942e340d109dcebb",
+        "a_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.5064
+      },
+      {
+        "a_id": "752eab672c1246acb4318bd83d98c5e9",
+        "a_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.4394
+      }
+    ],
+    "similarity_claim": [
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.6457
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.6242
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.6125
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "87f47b767c6e4994a3746c0375ff5348",
+        "b_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "cosine": 0.5978
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.5441
+      },
+      {
+        "a_id": "784c05eb89d5436b942e340d109dcebb",
+        "a_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.5422
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.5215
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "b_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "cosine": 0.5178
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.5159
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "87f47b767c6e4994a3746c0375ff5348",
+        "b_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "cosine": 0.4962
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.4958
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.4642
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.4067
+      },
+      {
+        "a_id": "784c05eb89d5436b942e340d109dcebb",
+        "a_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.4052
+      },
+      {
+        "a_id": "752eab672c1246acb4318bd83d98c5e9",
+        "a_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.402
+      }
+    ],
+    "similarity_why_matters": [
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.5452
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.5412
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.5242
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.5198
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "87f47b767c6e4994a3746c0375ff5348",
+        "b_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "cosine": 0.51
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.4888
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "b_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "cosine": 0.4794
+      },
+      {
+        "a_id": "784c05eb89d5436b942e340d109dcebb",
+        "a_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.449
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.4354
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "87f47b767c6e4994a3746c0375ff5348",
+        "b_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "cosine": 0.3915
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.3503
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.3463
+      },
+      {
+        "a_id": "752eab672c1246acb4318bd83d98c5e9",
+        "a_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.3008
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.2899
+      },
+      {
+        "a_id": "784c05eb89d5436b942e340d109dcebb",
+        "a_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.2848
+      }
+    ],
+    "similarity_limitations": [
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.6548
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "87f47b767c6e4994a3746c0375ff5348",
+        "b_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "cosine": 0.5418
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.528
+      },
+      {
+        "a_id": "784c05eb89d5436b942e340d109dcebb",
+        "a_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.52
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.5157
+      },
+      {
+        "a_id": "752eab672c1246acb4318bd83d98c5e9",
+        "a_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "b_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "b_title": "Continuidade intelectual pela retomada do contexto de origem",
+        "cosine": 0.5055
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.4675
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.4419
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "b_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "cosine": 0.4303
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.4179
+      },
+      {
+        "a_id": "784c05eb89d5436b942e340d109dcebb",
+        "a_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.3935
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "752eab672c1246acb4318bd83d98c5e9",
+        "b_title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "cosine": 0.3782
+      },
+      {
+        "a_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "a_title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.3531
+      },
+      {
+        "a_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "a_title": "A organização da memória não determina a organização da atividade intelectual",
+        "b_id": "87f47b767c6e4994a3746c0375ff5348",
+        "b_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "cosine": 0.3527
+      },
+      {
+        "a_id": "87f47b767c6e4994a3746c0375ff5348",
+        "a_title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "b_id": "784c05eb89d5436b942e340d109dcebb",
+        "b_title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "cosine": 0.3431
+      }
+    ]
+  },
+  "strategy_a_integral": {
+    "discoveries": [
+      {
+        "discovery_id": "D-01",
+        "title": "Integração entre a preservação de contextos e continuidade intelectual",
+        "description": "A integração dos conceitos apresentados nos registros sugere que a preservação eficaz do conhecimento não se limita à recuperação de resultados, mas também inclui a manutenção dos contextos em que esses resultados foram gerados. Isso é crucial para garantir uma continuidade intelectual real entre ambientes distintos de elaboração e preservação.",
+        "nature": "CONCEPTUAL_DISCOVERY",
+        "formulation": "A integração da organização dos objetos intelectuais com a recuperação contextualizada permite que o BB-CORE sustente uma continuidade intelectual não apenas através do conteúdo, mas também através do contexto de origem. Isso é essencial para manter a validade e relevância das informações preservadas.",
+        "supporting_records": [
+          {
+            "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+            "excerpts": [
+              "A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados."
+            ],
+            "specific_contribution": "Estabelece o princípio de que a continuidade intelectual não depende da centralização do processo de pensamento."
+          },
+          {
+            "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+            "excerpts": [
+              "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade."
+            ],
+            "specific_contribution": "Propõe que a continuidade intelectual pode ser alcançada tanto pela recuperação do conhecimento quanto pelo retorno ao contexto de origem."
+          },
+          {
+            "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+            "excerpts": [
+              "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação."
+            ],
+            "specific_contribution": "Destaca a necessidade de distinguir entre a existência do evento e seu conteúdo efetivamente preservado."
+          }
+        ],
+        "integration_justification": "A combinação desses conceitos permite entender que a continuidade intelectual é sustentada não apenas pela recuperação dos resultados, mas também pelo contexto em que esses resultados foram gerados. Isso evita a necessidade de centralizar o processo de pensamento no mesmo sistema de preservação e garante uma compreensão mais rica do conhecimento recuperado.",
+        "distinction_from_preserved_content": "Esta descoberta emerge da integração dos conceitos apresentados, não sendo explicitamente formulada em nenhum registro individual. Ela transcende a mera preservação de resultados para incluir o contexto intelectual que os gerou, oferecendo uma visão mais abrangente sobre como sustentar a continuidade do conhecimento.",
+        "potential_relevance": "Esta descoberta pode ser relevante para projetos que buscam manter a integridade e validade de informações ao longo do tempo, especialmente em ambientes onde o contexto de geração é tão importante quanto os resultados finais.",
+        "limitations_and_counterarguments": [
+          "A proposição ainda não foi confrontada sistematicamente com literatura ou experiência independente (limitações dos registros 9dac8b5e8e0747b0b7be9ebf2dfd365a, d1090ec7e66a43b09dd798f9195a0c44 e 36cae570a28f47b9b36ead9f2c1a4d87).",
+          "A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas (registro 87f47b767c6e4994a3746c0375ff5348).",
+          "A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica (registro 784c05eb89d5436b942e340d109dcebb)"
+        ],
+        "investigation_possibilities": [
+          "Investigar como os contextos de origem podem ser preservados e recuperados efetivamente.",
+          "Explorar a relação entre a integridade dos bytes, fidelidade da representação e validade do conhecimento em diferentes ambientes."
+        ],
+        "verification": [
+          {
+            "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.",
+                "exact_match": true
+              }
+            ]
+          },
+          {
+            "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.",
+                "exact_match": true
+              }
+            ]
+          },
+          {
+            "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+                "exact_match": true
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "abstentions": [],
+    "metrics": {
+      "elapsed_s": 25.68,
+      "prompt_eval_count": 1968,
+      "eval_count": 1123
+    },
+    "raw_response": "{\n  \"discoveries\": [\n    {\n      \"title\": \"Integração entre a preservação de contextos e continuidade intelectual\",\n      \"description\": \"A integração dos conceitos apresentados nos registros sugere que a preservação eficaz do conhecimento não se limita à recuperação de resultados, mas também inclui a manutenção dos contextos em que esses resultados foram gerados. Isso é crucial para garantir uma continuidade intelectual real entre ambientes distintos de elaboração e preservação.\",\n      \"nature\": \"CONCEPTUAL_DISCOVERY\",\n      \"formulation\": \"A integração da organização dos objetos intelectuais com a recuperação contextualizada permite que o BB-CORE sustente uma continuidade intelectual não apenas através do conteúdo, mas também através do contexto de origem. Isso é essencial para manter a validade e relevância das informações preservadas.\",\n      \"supporting_records\": [\n        {\n          \"record_id\": \"9dac8b5e8e0747b0b7be9ebf2dfd365a\",\n          \"excerpts\": [\"A continuidade pode ser sustentada entre ambientes distintos, sem centralizar a elaboração no mesmo sistema que preserva seus resultados.\"],\n          \"specific_contribution\": \"Estabelece o princípio de que a continuidade intelectual não depende da centralização do processo de pensamento.\"\n        },\n        {\n          \"record_id\": \"d1090ec7e66a43b09dd798f9195a0c44\",\n          \"excerpts\": [\"A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.\"],\n          \"specific_contribution\": \"Propõe que a continuidade intelectual pode ser alcançada tanto pela recuperação do conhecimento quanto pelo retorno ao contexto de origem.\"\n        },\n        {\n          \"record_id\": \"36cae570a28f47b9b36ead9f2c1a4d87\",\n          \"excerpts\": [\"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.\"],\n          \"specific_contribution\": \"Destaca a necessidade de distinguir entre a existência do evento e seu conteúdo efetivamente preservado.\"\n        }\n      ],\n      \"integration_justification\": \"A combinação desses conceitos permite entender que a continuidade intelectual é sustentada não apenas pela recuperação dos resultados, mas também pelo contexto em que esses resultados foram gerados. Isso evita a necessidade de centralizar o processo de pensamento no mesmo sistema de preservação e garante uma compreensão mais rica do conhecimento recuperado.\",\n      \"distinction_from_preserved_content\": \"Esta descoberta emerge da integração dos conceitos apresentados, não sendo explicitamente formulada em nenhum registro individual. Ela transcende a mera preservação de resultados para incluir o contexto intelectual que os gerou, oferecendo uma visão mais abrangente sobre como sustentar a continuidade do conhecimento.\",\n      \"potential_relevance\": \"Esta descoberta pode ser relevante para projetos que buscam manter a integridade e validade de informações ao longo do tempo, especialmente em ambientes onde o contexto de geração é tão importante quanto os resultados finais.\",\n      \"limitations_and_counterarguments\": [\n        \"A proposição ainda não foi confrontada sistematicamente com literatura ou experiência independente (limitações dos registros 9dac8b5e8e0747b0b7be9ebf2dfd365a, d1090ec7e66a43b09dd798f9195a0c44 e 36cae570a28f47b9b36ead9f2c1a4d87).\",\n        \"A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas (registro 87f47b767c6e4994a3746c0375ff5348).\",\n        \"A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica (registro 784c05eb89d5436b942e340d109dcebb)\"\n      ],\n      \"investigation_possibilities\": [\n        \"Investigar como os contextos de origem podem ser preservados e recuperados efetivamente.\",\n        \"Explorar a relação entre a integridade dos bytes, fidelidade da representação e validade do conhecimento em diferentes ambientes.\"\n      ]\n    }\n  ],\n  \"abstentions\": []\n}"
+  },
+  "strategy_b_semantic_neighborhood": {
+    "subset_ids": [
+      "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+      "36cae570a28f47b9b36ead9f2c1a4d87",
+      "d1090ec7e66a43b09dd798f9195a0c44"
+    ],
+    "discoveries": [
+      {
+        "discovery_id": "D-01",
+        "title": "A separação entre organização e atividade intelectual",
+        "description": "Os registros sugerem que a estrutura de preservação dos objetos intelectuais pode ser distinta da forma como esses objetos são criados ou utilizados. Isso implica em uma flexibilidade na arquitetura de sistemas de preservação, permitindo que eles sustentem a continuidade entre diferentes ambientes sem necessariamente replicar o processo de criação.",
+        "nature": "abstraction",
+        "formulation": "A organização da memória e a organização da atividade intelectual podem ser tratadas como entidades separadas, com a primeira não sendo obrigada a refletir diretamente a segunda. Isso permite que diferentes ambientes de preservação e elaboração coexistam sem conflito.",
+        "supporting_records": [
+          {
+            "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+            "excerpts": [
+              "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+              "Permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes."
+            ],
+            "specific_contribution": "Estabelece o princípio de separação entre a estrutura de preservação e a dinâmica de criação."
+          }
+        ],
+        "integration_justification": "A ideia central desses registros é que a organização da memória pode ser independente da atividade intelectual, permitindo uma flexibilidade na arquitetura do sistema sem comprometer a continuidade entre diferentes ambientes de trabalho e preservação. Isso emerge como um princípio abstrato quando os três registros são considerados juntos, pois todos enfatizam a necessidade de distinguir o contexto de criação dos objetos intelectuais da estrutura que os preserva e recupera.",
+        "distinction_from_preserved_content": "A separação entre organização e atividade intelectual é uma descoberta abstrata que emerge da análise conjunta dos registros, não sendo explicitamente formulada em nenhum deles individualmente. Ela representa um princípio geral derivado das observações específicas sobre a recuperação de acontecimentos intelectuais e a continuidade entre ambientes distintos.",
+        "potential_relevance": "Este princípio pode ser relevante para o design de sistemas que buscam preservar e recuperar conhecimento, permitindo uma maior flexibilidade na estruturação desses sistemas sem comprometer sua capacidade de sustentar a continuidade intelectual entre diferentes ambientes de trabalho e preservação.",
+        "limitations_and_counterarguments": [
+          "A proposição ainda não foi confrontada sistematicamente com literatura ou experiência independente, o que limita sua validade geral.",
+          "As limitações específicas mencionadas em cada registro devem ser consideradas ao aplicar esse princípio."
+        ],
+        "investigation_possibilities": [
+          "Explorar como a separação entre organização e atividade intelectual pode ser implementada em sistemas de preservação.",
+          "Investigar o impacto dessa separação na recuperação contextualizada do conhecimento."
+        ],
+        "verification": [
+          {
+            "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+                "exact_match": true
+              },
+              {
+                "excerpt": "Permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.",
+                "exact_match": true
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "abstentions": [],
+    "metrics": {
+      "elapsed_s": 11.78,
+      "prompt_eval_count": 1152,
+      "eval_count": 756
+    }
+  },
+  "strategy_c_transversal_distant": {
+    "subset_ids": [
+      "784c05eb89d5436b942e340d109dcebb",
+      "752eab672c1246acb4318bd83d98c5e9",
+      "d1090ec7e66a43b09dd798f9195a0c44"
+    ],
+    "discoveries": [
+      {
+        "discovery_id": "D-01",
+        "title": "Complementaridade entre reconhecimento de identidade e continuidade intelectual",
+        "description": "A distância temática entre os registros permite observar uma complementaridade interessante: enquanto o registro ID 784c05eb89d5436b942e340d109dcebb enfoca a distinção entre reconhecimento de identidade e confirmação integral do conteúdo, o registro ID d1090ec7e66a43b09dd798f9195a0c44 aborda a continuidade intelectual pela retomada do contexto de origem. Ambos os registros destacam a importância da preservação e reconhecimento dos contextos em que o conhecimento foi gerado, sem confundir isso com uma identidade ou conteúdo integralmente confirmados.",
+        "nature": "complementaridade",
+        "formulation": "A distinção entre reconhecer a identidade de um objeto intelectual e confirmar integralmente seu conteúdo (ID 784c05eb89d5436b942e340d109dcebb) é complementada pela ideia de que a continuidade intelectual pode ser alcançada através da retomada do contexto original em que o conhecimento foi gerado (ID d1090ec7e66a43b09dd798f9195a0c44). Ambas as abordagens enfatizam a importância de preservar e reconhecer os contextos intelectuais, sem confundir isso com uma identidade ou conteúdo integralmente confirmados.",
+        "supporting_records": [
+          {
+            "record_id": "784c05eb89d5436b942e340d109dcebb",
+            "excerpts": [
+              "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram incorporados.",
+              "A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica."
+            ],
+            "specific_contribution": "Este registro estabelece uma distinção entre reconhecimento de identidade e confirmação integral, enfatizando que a preservação da identidade não implica necessariamente a integridade ou o conteúdo completo."
+          },
+          {
+            "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+            "excerpts": [
+              "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+              "Permite conceber o acervo como ponto de acesso tanto aos resultados intelectuais quanto aos ambientes em que foram elaborados."
+            ],
+            "specific_contribution": "Este registro propõe que a continuidade intelectual pode ser alcançada através da retomada do contexto original, destacando a importância de preservar e reconhecer esses contextos."
+          }
+        ],
+        "integration_justification": "Ambas as abordagens enfatizam a necessidade de distinguir entre identidade e conteúdo integralmente confirmado, bem como a importância da continuidade intelectual através do contexto original. Essa complementaridade sugere que o reconhecimento de identidade deve ser distinto da confirmação integral do conteúdo para preservar a integridade dos contextos originais em que o conhecimento foi gerado, sem assumir que esses contextos são idênticos ou completamente confirmados.",
+        "distinction_from_preserved_content": "A complementaridade emergente não é explicitamente mencionada nos registros preservados. Ela surge da análise conjunta das distinções e proposições conceituais apresentadas em cada registro, destacando a importância de distinguir entre reconhecimento de identidade e confirmação integral do conteúdo, bem como a continuidade intelectual através dos contextos originais de geração de conhecimento. Essa complementaridade não é uma proposição direta nos registros preservados, mas emerge da análise conjunta das ideias apresentadas em cada registro.",
+        "potential_relevance": "Essa descoberta pode ser relevante para a implementação e compreensão do BB-CORE, pois destaca a necessidade de distinguir entre reconhecimento de identidade e confirmação integral do conteúdo, bem como a importância da continuidade intelectual através dos contextos originais em que o conhecimento foi gerado. Isso pode ter implicações significativas para a preservação e recuperação de conhecimentos no BB-CORE.",
+        "limitations_and_counterarguments": [
+          "A complementaridade emergente é uma interpretação da análise conjunta dos registros, não um conceito diretamente proposto nos registros preservados. Portanto, ela deve ser verificada e validada em contextos adicionais para confirmar sua relevância.",
+          "Ambas as proposições conceituais (reconhecimento de identidade vs confirmação integral do conteúdo e continuidade intelectual através dos contextos originais) são ainda propostas ou não consolidadas, o que significa que a complementaridade emergente também deve ser tratada com cautela até que seja validada em contextos adicionais."
+        ],
+        "investigation_possibilities": [
+          "Investigar como as distinções entre reconhecimento de identidade e confirmação integral do conteúdo podem ser aplicadas na prática para preservar a integridade dos contextos originais.",
+          "Explorar como a continuidade intelectual através dos contextos originais pode ser implementada no BB-CORE, considerando as distinções entre reconhecimento de identidade e confirmação integral do conteúdo."
+        ],
+        "verification": [
+          {
+            "record_id": "784c05eb89d5436b942e340d109dcebb",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram incorporados.",
+                "exact_match": false
+              },
+              {
+                "excerpt": "A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica.",
+                "exact_match": true
+              }
+            ]
+          },
+          {
+            "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+                "exact_match": true
+              },
+              {
+                "excerpt": "Permite conceber o acervo como ponto de acesso tanto aos resultados intelectuais quanto aos ambientes em que foram elaborados.",
+                "exact_match": true
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "abstentions": [],
+    "metrics": {
+      "elapsed_s": 20.24,
+      "prompt_eval_count": 1191,
+      "eval_count": 1393
+    }
+  },
+  "strategy_d_incremental": {
+    "final_discoveries": [
+      {
+        "discovery_id": "INC-01",
+        "title": "A independência estrutural da organização intelectual e de preservação",
+        "description": "A organização dos objetos intelectuais preservados por um sistema não precisa refletir a organização da atividade intelectual que os produz. A continuidade pode ser mantida entre ambientes distintos, sem necessidade de centralização do processo no mesmo sistema.",
+        "nature": "CONCEPTUAL",
+        "formulation": "A proposição conceitual sugere que a arquitetura de preservação não deve se tornar um caminho obrigatório para o pensamento. Isso permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.",
+        "supporting_records": [
+          {
+            "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+            "excerpts": [
+              "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+              "Permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes."
+            ],
+            "specific_contribution": "Fundamenta a proposição de uma estrutura conceitual independente."
+          }
+        ],
+        "integration_justification": "O registro introduz um novo paradigma sobre como a organização da memória pode ser distinta da atividade intelectual, semelhante à ideia de que a preservação não precisa centralizar o pensamento. Isso é uma nova descoberta em relação ao estado atual das descobertas acumuladas.",
+        "distinction_from_preserved_content": "O registro apresenta uma abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de independência estrutural entre organização intelectual e preservação.",
+        "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais flexível das funcionalidades baseada em sua contribuição à continuidade entre ambientes distintos.",
+        "limitations_and_counterarguments": [
+          "Proposição conceitual derivada do caso BB-CORE; pode constituir desdobramento do achado BB-CORE-INSIGHT-001, mas a relação não foi confirmada. Não houve confronto sistemático com literatura ou usuários."
+        ],
+        "investigation_possibilities": [
+          "Investigar o impacto dessa estrutura conceitual em outros sistemas de preservação e desenvolver métodos para avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes."
+        ],
+        "added_grounds": [
+          {
+            "step": 5,
+            "record_id": "752eab672c1246acb4318bd83d98c5e9",
+            "reason": "O novo registro fornece um exemplo prático da independência estrutural entre a organização intelectual e de preservação, alinhando-se com o conceito apresentado em INC-01. A formulação do novo registro sugere que as operações de desenvolvimento podem ser delimitadas pela funcionalidade suficiente, independentemente da arquitetura de preservação."
+          }
+        ],
+        "verification": [
+          {
+            "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+                "exact_match": true
+              },
+              {
+                "excerpt": "Permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.",
+                "exact_match": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "discovery_id": "INC-02",
+        "title": "A distinção entre a existência de um acontecimento intelectual e seu conteúdo preservado",
+        "description": "Para recuperar adequadamente um evento intelectual, é necessário distinguir sua mera existência do conteúdo efetivamente preservado que permite sua participação em novas investigações. Isso implica na necessidade de avaliar quais informações são suficientes para garantir a recuperação contextualizada.",
+        "nature": "CONCEPTUAL",
+        "formulation": "Documentar um acontecimento intelectual não é equivalente à disponibilização do conteúdo necessário para sua participação em novas investigações. A recuperação de uma trajetória deve distinguir a existência do evento dos fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+        "supporting_records": [
+          {
+            "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+            "excerpts": [
+              "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+              "Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+            ],
+            "specific_contribution": "Fundamenta a proposição de que a recuperação contextualizada exige uma distinção entre a mera existência de um evento intelectual e seu conteúdo efetivamente preservado."
+          }
+        ],
+        "integration_justification": "O registro introduz uma nova abordagem sobre como a recuperação de eventos intelectuais deve ser tratada, separando a existência do evento de seus conteúdos preservados. Isso é uma descoberta independente e não está em conflito com as descobertas atuais.",
+        "distinction_from_preserved_content": "O registro apresenta uma nova abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de distinção entre existência e conteúdo preservado de eventos intelectuais.",
+        "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa das informações necessárias para a recuperação contextualizada de eventos intelectuais.",
+        "limitations_and_counterarguments": [
+          "Não pressupõe exportação integral de todas as fontes em toda consulta. A suficiência do contexto depende da finalidade da recuperação e ainda não foi avaliada em conversa independente."
+        ],
+        "investigation_possibilities": [
+          "Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar quais informações são suficientes para garantir a recuperação contextualizada de eventos intelectuais."
+        ],
+        "added_grounds": [
+          {
+            "step": 5,
+            "record_id": "752eab672c1246acb4318bd83d98c5e9",
+            "reason": "O novo registro fornece uma aplicação prática da distinção entre a existência de um evento intelectual e seu conteúdo preservado, alinhando-se com o conceito apresentado em INC-02. A formulação do novo registro sugere que a avaliação funcional é necessária para determinar se as informações suficientes foram preservadas para garantir uma recuperação contextualizada."
+          }
+        ],
+        "verification": [
+          {
+            "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+                "exact_match": true
+              },
+              {
+                "excerpt": "Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+                "exact_match": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "discovery_id": "INC-03",
+        "title": "A separação entre integridade técnica e autenticidade da representação",
+        "description": "A preservação de uma representação intelectual não garante sua fidelidade à fonte original ou atividade intelectual. A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas.",
+        "nature": "CONCEPTUAL",
+        "formulation": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido. A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas.",
+        "supporting_records": [
+          {
+            "record_id": "87f47b767c6e4994a3746c0375ff5348",
+            "excerpts": [
+              "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+              "A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas."
+            ],
+            "specific_contribution": "Fundamenta a proposição de que a preservação técnica não é garantia de autenticidade ou fidelidade à fonte original."
+          }
+        ],
+        "integration_justification": "O registro introduz uma nova abordagem sobre como a integridade verificável de um documento não pode ser confundida com sua fidelidade à origem, separando propriedades distintas da representação intelectual.",
+        "distinction_from_preserved_content": "O registro apresenta uma nova abstração conceitual que vai além da mera descrição técnica, introduzindo a ideia de distinção entre integridade e fidelidade na preservação de conhecimento.",
+        "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa da autenticidade e validade das representações intelectuais preservadas.",
+        "limitations_and_counterarguments": [
+          "Não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia."
+        ],
+        "investigation_possibilities": [
+          "Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar a distinção entre integridade técnica e autenticidade da representação intelectual."
+        ],
+        "verification": [
+          {
+            "record_id": "87f47b767c6e4994a3746c0375ff5348",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+                "exact_match": true
+              },
+              {
+                "excerpt": "A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas.",
+                "exact_match": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "discovery_id": "INC-04",
+        "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "description": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não é o mesmo que confirmar que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. A identidade pode ser mantida enquanto o conhecimento sobre o objeto evolui.",
+        "nature": "CONCEPTUAL",
+        "formulation": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica.",
+        "supporting_records": [
+          {
+            "record_id": "784c05eb89d5436b942e340d109dcebb",
+            "excerpts": [
+              "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+              "A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica."
+            ],
+            "specific_contribution": "Fundamenta a proposição de que reconhecer a identidade não é equivalente à confirmação integral do conteúdo."
+          }
+        ],
+        "integration_justification": "O registro introduz uma nova abordagem sobre como o reconhecimento da identidade de um objeto intelectual pode ser distinto da confirmação integral de seu conteúdo, separando propriedades distintas da representação.",
+        "distinction_from_preserved_content": "O registro apresenta uma nova abstração conceitual que vai além da mera descrição técnica ou funcional, introduzindo a ideia de distinção entre reconhecimento e confirmação integral do conteúdo.",
+        "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa da identidade e integridade dos objetos intelectuais preservados.",
+        "limitations_and_counterarguments": [
+          "A análise é conceitual e apoiada em inspeção estática do código, não em validação empírica. A equivalência intelectual não pode ser decidida apenas por hashes."
+        ],
+        "investigation_possibilities": [
+          "Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar a distinção entre reconhecimento de identidade e confirmação integral do conteúdo."
+        ],
+        "verification": [
+          {
+            "record_id": "784c05eb89d5436b942e340d109dcebb",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+                "exact_match": true
+              },
+              {
+                "excerpt": "A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica.",
+                "exact_match": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "discovery_id": "INC-05",
+        "title": "Continuidade intelectual pela retomada do contexto de origem",
+        "description": "A continuidade intelectual entre ambientes de elaboração e preservação pode ser mantida tanto pela recuperação dos resultados intelectuais quanto pela retomada dos contextos de atividade que deram origem a esses resultados. Isso permite conceber o acervo como um ponto de acesso não apenas aos resultados, mas também ao ambiente em que foram elaborados.",
+        "nature": "CONCEPTUAL",
+        "formulation": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento. A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.",
+        "supporting_records": [
+          {
+            "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+            "excerpts": [
+              "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+              "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade."
+            ],
+            "specific_contribution": "Fundamenta a proposição de que a continuidade intelectual pode ser mantida tanto pela recuperação dos resultados quanto pela retomada do contexto de origem."
+          }
+        ],
+        "integration_justification": "O registro introduz uma nova abordagem sobre como conceber a continuidade intelectual, separando a recuperação de conhecimento da retomada do contexto original em que esse conhecimento foi produzido. Isso é uma descoberta independente e não está em conflito com as descobertas atuais.",
+        "distinction_from_preserved_content": "O registro apresenta uma nova abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de continuidade intelectual através da retomada do contexto original.",
+        "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa das possibilidades complementares de continuidade intelectual.",
+        "limitations_and_counterarguments": [
+          "Proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente. Uma URL não preserva a conversa, não comprova sua proveniência e não garante acesso futuro."
+        ],
+        "investigation_possibilities": [
+          "Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar as possibilidades complementares de continuidade intelectual."
+        ],
+        "verification": [
+          {
+            "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+            "record_exists": true,
+            "excerpts": [
+              {
+                "excerpt": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+                "exact_match": true
+              },
+              {
+                "excerpt": "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.",
+                "exact_match": true
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "step": 1,
+        "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+        "title": "A organização da memória não determina a organização da atividade intelectual",
+        "parsed": {
+          "operations": [
+            {
+              "action": "PROPOSE_NEW_DISCOVERY",
+              "target_discovery_id": null,
+              "reason": "O novo registro apresenta uma nova estrutura conceitual que não está presente nas descobertas acumuladas, sugerindo que a organização da memória de um sistema pode ser distinta da organização da atividade intelectual que gera esses objetos. Isso é fundamentado na proposição de que a continuidade entre ambientes distintos pode ser mantida sem centralizar o processo no mesmo sistema.",
+              "new_or_updated_discovery": {
+                "title": "A independência estrutural da organização intelectual e de preservação",
+                "description": "A organização dos objetos intelectuais preservados por um sistema não precisa refletir a organização da atividade intelectual que os produz. A continuidade pode ser mantida entre ambientes distintos, sem necessidade de centralização do processo no mesmo sistema.",
+                "nature": "CONCEPTUAL",
+                "formulation": "A proposição conceitual sugere que a arquitetura de preservação não deve se tornar um caminho obrigatório para o pensamento. Isso permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.",
+                "supporting_records": [
+                  {
+                    "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+                    "excerpts": [
+                      "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+                      "Permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes."
+                    ],
+                    "specific_contribution": "Fundamenta a proposição de uma estrutura conceitual independente."
+                  }
+                ],
+                "integration_justification": "O registro introduz um novo paradigma sobre como a organização da memória pode ser distinta da atividade intelectual, semelhante à ideia de que a preservação não precisa centralizar o pensamento. Isso é uma nova descoberta em relação ao estado atual das descobertas acumuladas.",
+                "distinction_from_preserved_content": "O registro apresenta uma abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de independência estrutural entre organização intelectual e preservação.",
+                "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais flexível das funcionalidades baseada em sua contribuição à continuidade entre ambientes distintos.",
+                "limitations_and_counterarguments": [
+                  "Proposição conceitual derivada do caso BB-CORE; pode constituir desdobramento do achado BB-CORE-INSIGHT-001, mas a relação não foi confirmada. Não houve confronto sistemático com literatura ou usuários."
+                ],
+                "investigation_possibilities": [
+                  "Investigar o impacto dessa estrutura conceitual em outros sistemas de preservação e desenvolver métodos para avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes."
+                ]
+              }
+            }
+          ]
+        },
+        "raw_response": "{\n  \"operations\": [\n    {\n      \"action\": \"PROPOSE_NEW_DISCOVERY\",\n      \"target_discovery_id\": null,\n      \"reason\": \"O novo registro apresenta uma nova estrutura conceitual que não está presente nas descobertas acumuladas, sugerindo que a organização da memória de um sistema pode ser distinta da organização da atividade intelectual que gera esses objetos. Isso é fundamentado na proposição de que a continuidade entre ambientes distintos pode ser mantida sem centralizar o processo no mesmo sistema.\",\n      \"new_or_updated_discovery\": {\n        \"title\": \"A independência estrutural da organização intelectual e de preservação\",\n        \"description\": \"A organização dos objetos intelectuais preservados por um sistema não precisa refletir a organização da atividade intelectual que os produz. A continuidade pode ser mantida entre ambientes distintos, sem necessidade de centralização do processo no mesmo sistema.\",\n        \"nature\": \"CONCEPTUAL\",\n        \"formulation\": \"A proposição conceitual sugere que a arquitetura de preservação não deve se tornar um caminho obrigatório para o pensamento. Isso permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.\",\n        \"supporting_records\": [\n          {\n            \"record_id\": \"9dac8b5e8e0747b0b7be9ebf2dfd365a\",\n            \"excerpts\": [\"A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.\", \"Permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.\"],\n            \"specific_contribution\": \"Fundamenta a proposição de uma estrutura conceitual independente.\"\n          }\n        ],\n        \"integration_justification\": \"O registro introduz um novo paradigma sobre como a organização da memória pode ser distinta da atividade intelectual, semelhante à ideia de que a preservação não precisa centralizar o pensamento. Isso é uma nova descoberta em relação ao estado atual das descobertas acumuladas.\",\n        \"distinction_from_preserved_content\": \"O registro apresenta uma abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de independência estrutural entre organização intelectual e preservação.\",\n        \"potential_relevance\": \"A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais flexível das funcionalidades baseada em sua contribuição à continuidade entre ambientes distintos.\",\n        \"limitations_and_counterarguments\": [\"Proposição conceitual derivada do caso BB-CORE; pode constituir desdobramento do achado BB-CORE-INSIGHT-001, mas a relação não foi confirmada. Não houve confronto sistemático com literatura ou usuários.\"],\n        \"investigation_possibilities\": [\"Investigar o impacto dessa estrutura conceitual em outros sistemas de preservação e desenvolver métodos para avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.\"]\n      }\n    }\n  ]\n}",
+        "metrics": {
+          "elapsed_s": 11.21,
+          "prompt_eval_count": 665,
+          "eval_count": 752
+        }
+      },
+      {
+        "step": 2,
+        "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+        "title": "A recuperação de um acontecimento exige distinguir sua existência de seu conteúdo intelectual",
+        "parsed": {
+          "operations": [
+            {
+              "action": "PROPOSE_NEW_DISCOVERY",
+              "target_discovery_id": null,
+              "reason": "O novo registro apresenta uma nova estrutura conceitual que vai além das descobertas existentes, introduzindo a ideia de que a recuperação de um acontecimento intelectual exige distinguir sua existência do conteúdo efetivamente preservado. Esta é uma abstração significativa e não está diretamente relacionada às descobertas atuais.",
+              "new_or_updated_discovery": {
+                "title": "A distinção entre a existência de um acontecimento intelectual e seu conteúdo preservado",
+                "description": "Para recuperar adequadamente um evento intelectual, é necessário distinguir sua mera existência do conteúdo efetivamente preservado que permite sua participação em novas investigações. Isso implica na necessidade de avaliar quais informações são suficientes para garantir a recuperação contextualizada.",
+                "nature": "CONCEPTUAL",
+                "formulation": "Documentar um acontecimento intelectual não é equivalente à disponibilização do conteúdo necessário para sua participação em novas investigações. A recuperação de uma trajetória deve distinguir a existência do evento dos fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+                "supporting_records": [
+                  {
+                    "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+                    "excerpts": [
+                      "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+                      "Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+                    ],
+                    "specific_contribution": "Fundamenta a proposição de que a recuperação contextualizada exige uma distinção entre a mera existência de um evento intelectual e seu conteúdo efetivamente preservado."
+                  }
+                ],
+                "integration_justification": "O registro introduz uma nova abordagem sobre como a recuperação de eventos intelectuais deve ser tratada, separando a existência do evento de seus conteúdos preservados. Isso é uma descoberta independente e não está em conflito com as descobertas atuais.",
+                "distinction_from_preserved_content": "O registro apresenta uma nova abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de distinção entre existência e conteúdo preservado de eventos intelectuais.",
+                "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa das informações necessárias para a recuperação contextualizada de eventos intelectuais.",
+                "limitations_and_counterarguments": [
+                  "Não pressupõe exportação integral de todas as fontes em toda consulta. A suficiência do contexto depende da finalidade da recuperação e ainda não foi avaliada em conversa independente."
+                ],
+                "investigation_possibilities": [
+                  "Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar quais informações são suficientes para garantir a recuperação contextualizada de eventos intelectuais."
+                ]
+              }
+            }
+          ]
+        },
+        "raw_response": "{\n  \"operations\": [\n    {\n      \"action\": \"PROPOSE_NEW_DISCOVERY\",\n      \"target_discovery_id\": null,\n      \"reason\": \"O novo registro apresenta uma nova estrutura conceitual que vai além das descobertas existentes, introduzindo a ideia de que a recuperação de um acontecimento intelectual exige distinguir sua existência do conteúdo efetivamente preservado. Esta é uma abstração significativa e não está diretamente relacionada às descobertas atuais.\",\n      \"new_or_updated_discovery\": {\n        \"title\": \"A distinção entre a existência de um acontecimento intelectual e seu conteúdo preservado\",\n        \"description\": \"Para recuperar adequadamente um evento intelectual, é necessário distinguir sua mera existência do conteúdo efetivamente preservado que permite sua participação em novas investigações. Isso implica na necessidade de avaliar quais informações são suficientes para garantir a recuperação contextualizada.\",\n        \"nature\": \"CONCEPTUAL\",\n        \"formulation\": \"Documentar um acontecimento intelectual não é equivalente à disponibilização do conteúdo necessário para sua participação em novas investigações. A recuperação de uma trajetória deve distinguir a existência do evento dos fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\",\n        \"supporting_records\": [\n          {\n            \"record_id\": \"36cae570a28f47b9b36ead9f2c1a4d87\",\n            \"excerpts\": [\n              \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.\",\n              \"Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\"\n            ],\n            \"specific_contribution\": \"Fundamenta a proposição de que a recuperação contextualizada exige uma distinção entre a mera existência de um evento intelectual e seu conteúdo efetivamente preservado.\"\n          }\n        ],\n        \"integration_justification\": \"O registro introduz uma nova abordagem sobre como a recuperação de eventos intelectuais deve ser tratada, separando a existência do evento de seus conteúdos preservados. Isso é uma descoberta independente e não está em conflito com as descobertas atuais.\",\n        \"distinction_from_preserved_content\": \"O registro apresenta uma nova abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de distinção entre existência e conteúdo preservado de eventos intelectuais.\",\n        \"potential_relevance\": \"A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa das informações necessárias para a recuperação contextualizada de eventos intelectuais.\",\n        \"limitations_and_counterarguments\": [\n          \"Não pressupõe exportação integral de todas as fontes em toda consulta. A suficiência do contexto depende da finalidade da recuperação e ainda não foi avaliada em conversa independente.\"\n        ],\n        \"investigation_possibilities\": [\n          \"Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar quais informações são suficientes para garantir a recuperação contextualizada de eventos intelectuais.\"\n        ]\n      }\n    }\n  ]\n}",
+        "metrics": {
+          "elapsed_s": 11.77,
+          "prompt_eval_count": 1283,
+          "eval_count": 805
+        }
+      },
+      {
+        "step": 3,
+        "record_id": "87f47b767c6e4994a3746c0375ff5348",
+        "title": "Preservação de uma representação não comprova fidelidade à fonte de origem",
+        "parsed": {
+          "operations": [
+            {
+              "action": "PROPOSE_NEW_DISCOVERY",
+              "target_discovery_id": null,
+              "reason": "O novo registro introduz uma nova abstração conceitual que vai além das descobertas existentes, destacando a distinção entre a integridade verificável de um documento e sua fidelidade à fonte original ou atividade intelectual. Isso é relevante para o desenvolvimento do BB-CORE e outros sistemas similares.",
+              "new_or_updated_discovery": {
+                "title": "A separação entre integridade técnica e autenticidade da representação",
+                "description": "A preservação de uma representação intelectual não garante sua fidelidade à fonte original ou atividade intelectual. A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas.",
+                "nature": "CONCEPTUAL",
+                "formulation": "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido. A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas.",
+                "supporting_records": [
+                  {
+                    "record_id": "87f47b767c6e4994a3746c0375ff5348",
+                    "excerpts": [
+                      "A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.",
+                      "A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas."
+                    ],
+                    "specific_contribution": "Fundamenta a proposição de que a preservação técnica não é garantia de autenticidade ou fidelidade à fonte original."
+                  }
+                ],
+                "integration_justification": "O registro introduz uma nova abordagem sobre como a integridade verificável de um documento não pode ser confundida com sua fidelidade à origem, separando propriedades distintas da representação intelectual.",
+                "distinction_from_preserved_content": "O registro apresenta uma nova abstração conceitual que vai além da mera descrição técnica, introduzindo a ideia de distinção entre integridade e fidelidade na preservação de conhecimento.",
+                "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa da autenticidade e validade das representações intelectuais preservadas.",
+                "limitations_and_counterarguments": [
+                  "Não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia."
+                ],
+                "investigation_possibilities": [
+                  "Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar a distinção entre integridade técnica e autenticidade da representação intelectual."
+                ]
+              }
+            }
+          ]
+        },
+        "raw_response": "{\n  \"operations\": [\n    {\n      \"action\": \"PROPOSE_NEW_DISCOVERY\",\n      \"target_discovery_id\": null,\n      \"reason\": \"O novo registro introduz uma nova abstração conceitual que vai além das descobertas existentes, destacando a distinção entre a integridade verificável de um documento e sua fidelidade à fonte original ou atividade intelectual. Isso é relevante para o desenvolvimento do BB-CORE e outros sistemas similares.\",\n      \"new_or_updated_discovery\": {\n        \"title\": \"A separação entre integridade técnica e autenticidade da representação\",\n        \"description\": \"A preservação de uma representação intelectual não garante sua fidelidade à fonte original ou atividade intelectual. A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas.\",\n        \"nature\": \"CONCEPTUAL\",\n        \"formulation\": \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido. A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas.\",\n        \"supporting_records\": [\n          {\n            \"record_id\": \"87f47b767c6e4994a3746c0375ff5348\",\n            \"excerpts\": [\n              \"A integridade verificável de um documento que representa um achado não demonstra, por si só, que esse documento reproduz fielmente a atividade intelectual ou a fonte externa de que declara ter emergido.\",\n              \"A integridade dos bytes, a fidelidade da representação e a validade do conhecimento são propriedades distintas.\"\n            ],\n            \"specific_contribution\": \"Fundamenta a proposição de que a preservação técnica não é garantia de autenticidade ou fidelidade à fonte original.\"\n          }\n        ],\n        \"integration_justification\": \"O registro introduz uma nova abordagem sobre como a integridade verificável de um documento não pode ser confundida com sua fidelidade à origem, separando propriedades distintas da representação intelectual.\",\n        \"distinction_from_preserved_content\": \"O registro apresenta uma nova abstração conceitual que vai além da mera descrição técnica, introduzindo a ideia de distinção entre integridade e fidelidade na preservação de conhecimento.\",\n        \"potential_relevance\": \"A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa da autenticidade e validade das representações intelectuais preservadas.\",\n        \"limitations_and_counterarguments\": [\n          \"Não constitui demonstração de falsidade das fontes ou da representação; apenas delimita o alcance da garantia.\"\n        ],\n        \"investigation_possibilities\": [\n          \"Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar a distinção entre integridade técnica e autenticidade da representação intelectual.\"\n        ]\n      }\n    }\n  ]\n}",
+        "metrics": {
+          "elapsed_s": 11.81,
+          "prompt_eval_count": 1976,
+          "eval_count": 757
+        }
+      },
+      {
+        "step": 4,
+        "record_id": "784c05eb89d5436b942e340d109dcebb",
+        "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+        "parsed": {
+          "operations": [
+            {
+              "action": "PROPOSE_NEW_DISCOVERY",
+              "target_discovery_id": null,
+              "reason": "O novo registro introduz uma nova abstração conceitual que vai além das descobertas existentes, destacando a distinção entre reconhecer a identidade de um objeto intelectual e confirmar integralmente seu conteúdo. Isso é relevante para o desenvolvimento do BB-CORE e outros sistemas similares.",
+              "new_or_updated_discovery": {
+                "title": "Reconhecimento de identidade não equivale à confirmação integral do conteúdo",
+                "description": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não é o mesmo que confirmar que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. A identidade pode ser mantida enquanto o conhecimento sobre o objeto evolui.",
+                "nature": "CONCEPTUAL",
+                "formulation": "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica.",
+                "supporting_records": [
+                  {
+                    "record_id": "784c05eb89d5436b942e340d109dcebb",
+                    "excerpts": [
+                      "Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.",
+                      "A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica."
+                    ],
+                    "specific_contribution": "Fundamenta a proposição de que reconhecer a identidade não é equivalente à confirmação integral do conteúdo."
+                  }
+                ],
+                "integration_justification": "O registro introduz uma nova abordagem sobre como o reconhecimento da identidade de um objeto intelectual pode ser distinto da confirmação integral de seu conteúdo, separando propriedades distintas da representação.",
+                "distinction_from_preserved_content": "O registro apresenta uma nova abstração conceitual que vai além da mera descrição técnica ou funcional, introduzindo a ideia de distinção entre reconhecimento e confirmação integral do conteúdo.",
+                "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa da identidade e integridade dos objetos intelectuais preservados.",
+                "limitations_and_counterarguments": [
+                  "A análise é conceitual e apoiada em inspeção estática do código, não em validação empírica. A equivalência intelectual não pode ser decidida apenas por hashes."
+                ],
+                "investigation_possibilities": [
+                  "Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar a distinção entre reconhecimento de identidade e confirmação integral do conteúdo."
+                ]
+              }
+            }
+          ]
+        },
+        "raw_response": "{\n  \"operations\": [\n    {\n      \"action\": \"PROPOSE_NEW_DISCOVERY\",\n      \"target_discovery_id\": null,\n      \"reason\": \"O novo registro introduz uma nova abstração conceitual que vai além das descobertas existentes, destacando a distinção entre reconhecer a identidade de um objeto intelectual e confirmar integralmente seu conteúdo. Isso é relevante para o desenvolvimento do BB-CORE e outros sistemas similares.\",\n      \"new_or_updated_discovery\": {\n        \"title\": \"Reconhecimento de identidade não equivale à confirmação integral do conteúdo\",\n        \"description\": \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não é o mesmo que confirmar que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. A identidade pode ser mantida enquanto o conhecimento sobre o objeto evolui.\",\n        \"nature\": \"CONCEPTUAL\",\n        \"formulation\": \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados. A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica.\",\n        \"supporting_records\": [\n          {\n            \"record_id\": \"784c05eb89d5436b942e340d109dcebb\",\n            \"excerpts\": [\n              \"Reconhecer que duas representações se referem ao mesmo objeto intelectual não equivale a reconhecer que todos os seus conteúdos, fundamentos, limitações, evidências e atribuições são idênticos ou foram preservados.\",\n              \"A identidade pode permanecer enquanto o conhecimento a respeito do objeto se modifica.\"\n            ],\n            \"specific_contribution\": \"Fundamenta a proposição de que reconhecer a identidade não é equivalente à confirmação integral do conteúdo.\"\n          }\n        ],\n        \"integration_justification\": \"O registro introduz uma nova abordagem sobre como o reconhecimento da identidade de um objeto intelectual pode ser distinto da confirmação integral de seu conteúdo, separando propriedades distintas da representação.\",\n        \"distinction_from_preserved_content\": \"O registro apresenta uma nova abstração conceitual que vai além da mera descrição técnica ou funcional, introduzindo a ideia de distinção entre reconhecimento e confirmação integral do conteúdo.\",\n        \"potential_relevance\": \"A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa da identidade e integridade dos objetos intelectuais preservados.\",\n        \"limitations_and_counterarguments\": [\n          \"A análise é conceitual e apoiada em inspeção estática do código, não em validação empírica. A equivalência intelectual não pode ser decidida apenas por hashes.\"\n        ],\n        \"investigation_possibilities\": [\n          \"Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar a distinção entre reconhecimento de identidade e confirmação integral do conteúdo.\"\n        ]\n      }\n    }\n  ]\n}",
+        "metrics": {
+          "elapsed_s": 12.56,
+          "prompt_eval_count": 2621,
+          "eval_count": 766
+        }
+      },
+      {
+        "step": 5,
+        "record_id": "752eab672c1246acb4318bd83d98c5e9",
+        "title": "Suficiência funcional como critério de encerramento de uma etapa de desenvolvimento",
+        "parsed": {
+          "operations": [
+            {
+              "action": "ADD_GROUND_TO_EXISTING",
+              "target_discovery_id": "INC-02",
+              "reason": "O novo registro fornece uma aplicação prática da distinção entre a existência de um evento intelectual e seu conteúdo preservado, alinhando-se com o conceito apresentado em INC-02. A formulação do novo registro sugere que a avaliação funcional é necessária para determinar se as informações suficientes foram preservadas para garantir uma recuperação contextualizada.",
+              "new_or_updated_discovery": {
+                "title": "A distinção entre a existência de um acontecimento intelectual e seu conteúdo preservado",
+                "description": "Para recuperar adequadamente um evento intelectual, é necessário distinguir sua mera existência do conteúdo efetivamente preservado que permite sua participação em novas investigações. Isso implica na necessidade de avaliar quais informações são suficientes para garantir a recuperação contextualizada.",
+                "nature": "CONCEPTUAL",
+                "formulation": "Documentar um acontecimento intelectual não é equivalente à disponibilização do conteúdo necessário para que ele participe de uma nova investigação. A recuperação de uma trajetória deve distinguir a existência do evento dos fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.",
+                "supporting_records": [
+                  {
+                    "record_id": "36cae570a28f47b9b36ead9f2c1a4d87",
+                    "excerpts": [
+                      "Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.",
+                      "Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados."
+                    ],
+                    "specific_contribution": "Fundamenta a proposição de que a recuperação contextualizada exige uma distinção entre a mera existência de um evento intelectual e seu conteúdo efetivamente preservado."
+                  },
+                  {
+                    "record_id": "752eab672c1246acb4318bd83d98c5e9",
+                    "excerpts": [
+                      "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+                    ],
+                    "specific_contribution": "Aplica a distinção entre existência e conteúdo efetivamente preservado em um contexto prático de desenvolvimento."
+                  }
+                ],
+                "integration_justification": "O registro introduz uma nova abordagem sobre como a recuperação de eventos intelectuais deve ser tratada, separando a existência do evento de seus conteúdos preservados. Isso é uma descoberta independente e não está em conflito com as descobertas atuais.",
+                "distinction_from_preserved_content": "O registro apresenta uma nova abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de distinção entre existência e conteúdo preservado de eventos intelectuais.",
+                "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa das informações necessárias para a recuperação contextualizada de eventos intelectuais.",
+                "limitations_and_counterarguments": [
+                  "Não pressupõe exportação integral de todas as fontes em toda consulta. A suficiência do contexto depende da finalidade da recuperação e ainda não foi avaliada em conversa independente."
+                ],
+                "investigation_possibilities": [
+                  "Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar quais informações são suficientes para garantir a recuperação contextualizada de eventos intelectuais."
+                ]
+              }
+            },
+            {
+              "action": "ADD_GROUND_TO_EXISTING",
+              "target_discovery_id": "INC-01",
+              "reason": "O novo registro fornece um exemplo prático da independência estrutural entre a organização intelectual e de preservação, alinhando-se com o conceito apresentado em INC-01. A formulação do novo registro sugere que as operações de desenvolvimento podem ser delimitadas pela funcionalidade suficiente, independentemente da arquitetura de preservação.",
+              "new_or_updated_discovery": {
+                "title": "A independência estrutural da organização intelectual e de preservação",
+                "description": "A organização dos objetos intelectuais preservados por um sistema não precisa refletir a organização da atividade intelectual que os produz. A continuidade pode ser mantida entre ambientes distintos, sem necessidade de centralização do processo no mesmo sistema.",
+                "nature": "CONCEPTUAL",
+                "formulation": "A proposição conceitual sugere que a arquitetura de preservação não deve se tornar um caminho obrigatório para o pensamento. Isso permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.",
+                "supporting_records": [
+                  {
+                    "record_id": "9dac8b5e8e0747b0b7be9ebf2dfd365a",
+                    "excerpts": [
+                      "A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.",
+                      "Permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes."
+                    ],
+                    "specific_contribution": "Fundamenta a proposição de uma estrutura conceitual independente."
+                  },
+                  {
+                    "record_id": "752eab672c1246acb4318bd83d98c5e9",
+                    "excerpts": [
+                      "A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados."
+                    ],
+                    "specific_contribution": "Aplica a independência estrutural entre organização intelectual e preservação em um contexto prático de desenvolvimento."
+                  }
+                ],
+                "integration_justification": "O registro introduz um novo paradigma sobre como a organização da memória pode ser distinta da atividade intelectual, semelhante à ideia de que a preservação não precisa centralizar o pensamento. Isso é uma nova descoberta em relação ao estado atual das descobertas acumuladas.",
+                "distinction_from_preserved_content": "O registro apresenta uma abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de independência estrutural entre organização intelectual e preservação.",
+                "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais flexível das funcionalidades baseada em sua contribuição à continuidade entre ambientes distintos.",
+                "limitations_and_counterarguments": [
+                  "Proposição conceitual derivada do caso BB-CORE; pode constituir desdobramento do achado BB-CORE-INSIGHT-001, mas a relação não foi confirmada. Não houve confronto sistemático com literatura ou usuários."
+                ],
+                "investigation_possibilities": [
+                  "Investigar o impacto dessa estrutura conceitual em outros sistemas de preservação e desenvolver métodos para avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes."
+                ]
+              }
+            }
+          ]
+        },
+        "raw_response": "{\n  \"operations\": [\n    {\n      \"action\": \"ADD_GROUND_TO_EXISTING\",\n      \"target_discovery_id\": \"INC-02\",\n      \"reason\": \"O novo registro fornece uma aplicação prática da distinção entre a existência de um evento intelectual e seu conteúdo preservado, alinhando-se com o conceito apresentado em INC-02. A formulação do novo registro sugere que a avaliação funcional é necessária para determinar se as informações suficientes foram preservadas para garantir uma recuperação contextualizada.\",\n      \"new_or_updated_discovery\": {\n        \"title\": \"A distinção entre a existência de um acontecimento intelectual e seu conteúdo preservado\",\n        \"description\": \"Para recuperar adequadamente um evento intelectual, é necessário distinguir sua mera existência do conteúdo efetivamente preservado que permite sua participação em novas investigações. Isso implica na necessidade de avaliar quais informações são suficientes para garantir a recuperação contextualizada.\",\n        \"nature\": \"CONCEPTUAL\",\n        \"formulation\": \"Documentar um acontecimento intelectual não é equivalente à disponibilização do conteúdo necessário para que ele participe de uma nova investigação. A recuperação de uma trajetória deve distinguir a existência do evento dos fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\",\n        \"supporting_records\": [\n          {\n            \"record_id\": \"36cae570a28f47b9b36ead9f2c1a4d87\",\n            \"excerpts\": [\n              \"Documentar que um acontecimento intelectual ocorreu não equivale a disponibilizar o conteúdo necessário para que ele participe de uma nova investigação.\",\n              \"Uma trajetória recuperável deve distinguir a existência do acontecimento de seus fundamentos, conteúdo, atribuições, evidências e limitações efetivamente preservados.\"\n            ],\n            \"specific_contribution\": \"Fundamenta a proposição de que a recuperação contextualizada exige uma distinção entre a mera existência de um evento intelectual e seu conteúdo efetivamente preservado.\"\n          },\n          {\n            \"record_id\": \"752eab672c1246acb4318bd83d98c5e9\",\n            \"excerpts\": [\n              \"A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.\"\n            ],\n            \"specific_contribution\": \"Aplica a distinção entre existência e conteúdo efetivamente preservado em um contexto prático de desenvolvimento.\"\n          }\n        ],\n        \"integration_justification\": \"O registro introduz uma nova abordagem sobre como a recuperação de eventos intelectuais deve ser tratada, separando a existência do evento de seus conteúdos preservados. Isso é uma descoberta independente e não está em conflito com as descobertas atuais.\",\n        \"distinction_from_preserved_content\": \"O registro apresenta uma nova abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de distinção entre existência e conteúdo preservado de eventos intelectuais.\",\n        \"potential_relevance\": \"A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa das informações necessárias para a recuperação contextualizada de eventos intelectuais.\",\n        \"limitations_and_counterarguments\": [\n          \"Não pressupõe exportação integral de todas as fontes em toda consulta. A suficiência do contexto depende da finalidade da recuperação e ainda não foi avaliada em conversa independente.\"\n        ],\n        \"investigation_possibilities\": [\n          \"Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar quais informações são suficientes para garantir a recuperação contextualizada de eventos intelectuais.\"\n        ]\n      }\n    },\n    {\n      \"action\": \"ADD_GROUND_TO_EXISTING\",\n      \"target_discovery_id\": \"INC-01\",\n      \"reason\": \"O novo registro fornece um exemplo prático da independência estrutural entre a organização intelectual e de preservação, alinhando-se com o conceito apresentado em INC-01. A formulação do novo registro sugere que as operações de desenvolvimento podem ser delimitadas pela funcionalidade suficiente, independentemente da arquitetura de preservação.\",\n      \"new_or_updated_discovery\": {\n        \"title\": \"A independência estrutural da organização intelectual e de preservação\",\n        \"description\": \"A organização dos objetos intelectuais preservados por um sistema não precisa refletir a organização da atividade intelectual que os produz. A continuidade pode ser mantida entre ambientes distintos, sem necessidade de centralização do processo no mesmo sistema.\",\n        \"nature\": \"CONCEPTUAL\",\n        \"formulation\": \"A proposição conceitual sugere que a arquitetura de preservação não deve se tornar um caminho obrigatório para o pensamento. Isso permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.\",\n        \"supporting_records\": [\n          {\n            \"record_id\": \"9dac8b5e8e0747b0b7be9ebf2dfd365a\",\n            \"excerpts\": [\n              \"A organização dos objetos intelectuais preservados por um sistema não precisa reproduzir a organização da atividade intelectual que os produz.\",\n              \"Permite avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.\"\n            ],\n            \"specific_contribution\": \"Fundamenta a proposição de uma estrutura conceitual independente.\"\n          },\n          {\n            \"record_id\": \"752eab672c1246acb4318bd83d98c5e9\",\n            \"excerpts\": [\n              \"A etapa atual do BB-CORE deve ser delimitada pela suficiência das operações de recebimento, exame, confirmação, preservação, recuperação e exportação de achados.\"\n            ],\n            \"specific_contribution\": \"Aplica a independência estrutural entre organização intelectual e preservação em um contexto prático de desenvolvimento.\"\n          }\n        ],\n        \"integration_justification\": \"O registro introduz um novo paradigma sobre como a organização da memória pode ser distinta da atividade intelectual, semelhante à ideia de que a preservação não precisa centralizar o pensamento. Isso é uma nova descoberta em relação ao estado atual das descobertas acumuladas.\",\n        \"distinction_from_preserved_content\": \"O registro apresenta uma abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de independência estrutural entre organização intelectual e preservação.\",\n        \"potential_relevance\": \"A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais flexível das funcionalidades baseada em sua contribuição à continuidade entre ambientes distintos.\",\n        \"limitations_and_counterarguments\": [\n          \"Proposição conceitual derivada do caso BB-CORE; pode constituir desdobramento do achado BB-CORE-INSIGHT-001, mas a relação não foi confirmada. Não houve confronto sistemático com literatura ou usuários.\"\n        ],\n        \"investigation_possibilities\": [\n          \"Investigar o impacto dessa estrutura conceitual em outros sistemas de preservação e desenvolver métodos para avaliar funcionalidades segundo sua contribuição à continuidade entre ambientes.\"\n        ]\n      }\n    }\n  ]\n}",
+        "metrics": {
+          "elapsed_s": 27.93,
+          "prompt_eval_count": 3311,
+          "eval_count": 1811
+        }
+      },
+      {
+        "step": 6,
+        "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+        "title": "Continuidade intelectual pela retomada do contexto de origem",
+        "parsed": {
+          "operations": [
+            {
+              "action": "PROPOSE_NEW_DISCOVERY",
+              "target_discovery_id": null,
+              "reason": "O novo registro introduz uma nova abstração conceitual que vai além das descobertas existentes, sugerindo que a continuidade intelectual pode ser mantida tanto pela recuperação de conhecimento quanto pela retomada dos contextos originais em que esse conhecimento foi produzido. Isso oferece uma nova perspectiva sobre como conceber o acervo não apenas como um ponto de acesso aos resultados, mas também ao ambiente de sua elaboração.",
+              "new_or_updated_discovery": {
+                "title": "Continuidade intelectual pela retomada do contexto de origem",
+                "description": "A continuidade intelectual entre ambientes de elaboração e preservação pode ser mantida tanto pela recuperação dos resultados intelectuais quanto pela retomada dos contextos de atividade que deram origem a esses resultados. Isso permite conceber o acervo como um ponto de acesso não apenas aos resultados, mas também ao ambiente em que foram elaborados.",
+                "nature": "CONCEPTUAL",
+                "formulation": "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento. A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.",
+                "supporting_records": [
+                  {
+                    "record_id": "d1090ec7e66a43b09dd798f9195a0c44",
+                    "excerpts": [
+                      "A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.",
+                      "A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade."
+                    ],
+                    "specific_contribution": "Fundamenta a proposição de que a continuidade intelectual pode ser mantida tanto pela recuperação dos resultados quanto pela retomada do contexto de origem."
+                  }
+                ],
+                "integration_justification": "O registro introduz uma nova abordagem sobre como conceber a continuidade intelectual, separando a recuperação de conhecimento da retomada do contexto original em que esse conhecimento foi produzido. Isso é uma descoberta independente e não está em conflito com as descobertas atuais.",
+                "distinction_from_preserved_content": "O registro apresenta uma nova abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de continuidade intelectual através da retomada do contexto original.",
+                "potential_relevance": "A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa das possibilidades complementares de continuidade intelectual.",
+                "limitations_and_counterarguments": [
+                  "Proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente. Uma URL não preserva a conversa, não comprova sua proveniência e não garante acesso futuro."
+                ],
+                "investigation_possibilities": [
+                  "Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar as possibilidades complementares de continuidade intelectual."
+                ]
+              }
+            }
+          ]
+        },
+        "raw_response": "{\n  \"operations\": [\n    {\n      \"action\": \"PROPOSE_NEW_DISCOVERY\",\n      \"target_discovery_id\": null,\n      \"reason\": \"O novo registro introduz uma nova abstração conceitual que vai além das descobertas existentes, sugerindo que a continuidade intelectual pode ser mantida tanto pela recuperação de conhecimento quanto pela retomada dos contextos originais em que esse conhecimento foi produzido. Isso oferece uma nova perspectiva sobre como conceber o acervo não apenas como um ponto de acesso aos resultados, mas também ao ambiente de sua elaboração.\",\n      \"new_or_updated_discovery\": {\n        \"title\": \"Continuidade intelectual pela retomada do contexto de origem\",\n        \"description\": \"A continuidade intelectual entre ambientes de elaboração e preservação pode ser mantida tanto pela recuperação dos resultados intelectuais quanto pela retomada dos contextos de atividade que deram origem a esses resultados. Isso permite conceber o acervo como um ponto de acesso não apenas aos resultados, mas também ao ambiente em que foram elaborados.\",\n        \"nature\": \"CONCEPTUAL\",\n        \"formulation\": \"A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento. A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.\",\n        \"supporting_records\": [\n          {\n            \"record_id\": \"d1090ec7e66a43b09dd798f9195a0c44\",\n            \"excerpts\": [\n              \"A continuidade intelectual não se restringe à recuperação do conhecimento produzido. Ela também pode ocorrer pela retomada dos contextos de atividade intelectual que deram origem a esse conhecimento.\",\n              \"A mobilização de um achado em um novo contexto e a retomada de seu contexto original constituem possibilidades complementares de continuidade.\"\n            ],\n            \"specific_contribution\": \"Fundamenta a proposição de que a continuidade intelectual pode ser mantida tanto pela recuperação dos resultados quanto pela retomada do contexto de origem.\"\n          }\n        ],\n        \"integration_justification\": \"O registro introduz uma nova abordagem sobre como conceber a continuidade intelectual, separando a recuperação de conhecimento da retomada do contexto original em que esse conhecimento foi produzido. Isso é uma descoberta independente e não está em conflito com as descobertas atuais.\",\n        \"distinction_from_preserved_content\": \"O registro apresenta uma nova abstração conceitual que vai além da mera descrição de um sistema, introduzindo a ideia de continuidade intelectual através da retomada do contexto original.\",\n        \"potential_relevance\": \"A descoberta pode ter implicações significativas para o desenvolvimento futuro do BB-CORE e outros sistemas similares, permitindo uma avaliação mais precisa das possibilidades complementares de continuidade intelectual.\",\n        \"limitations_and_counterarguments\": [\n          \"Proposição conceitual ainda não confrontada sistematicamente com literatura ou experiência independente. Uma URL não preserva a conversa, não comprova sua proveniência e não garante acesso futuro.\"\n        ],\n        \"investigation_possibilities\": [\n          \"Investigar o impacto dessa estrutura conceitual na eficácia de sistemas de preservação e desenvolver métodos para avaliar as possibilidades complementares de continuidade intelectual.\"\n        ]\n      }\n    }\n  ]\n}",
+        "metrics": {
+          "elapsed_s": 14.98,
+          "prompt_eval_count": 3656,
+          "eval_count": 850
+        }
+      }
+    ]
+  },
+  "strategy_e_confrontation": {
+    "parsed": {
+      "assessments": [
+        {
+          "discovery_id": "D-01",
+          "already_explicit_in_single_record": false,
+          "merely_summary_or_classification": false,
+          "reveals_grounded_transversal_structure": true,
+          "depends_on_integration": true,
+          "records_sustain_interpretation": true,
+          "contradicting_or_limiting_records": [],
+          "adds_comprehension_or_investigation": true,
+          "verdict": "SUSTAINED_CANDIDATE",
+          "critique": "A descoberta integra conceitos de diferentes registros, oferecendo uma interpretação transversal que vai além da mera soma dos elementos individuais."
+        },
+        {
+          "discovery_id": "INC-01",
+          "already_explicit_in_single_record": true,
+          "merely_summary_or_classification": true,
+          "reveals_grounded_transversal_structure": false,
+          "depends_on_integration": false,
+          "records_sustain_interpretation": true,
+          "contradicting_or_limiting_records": [],
+          "adds_comprehension_or_investigation": false,
+          "verdict": "WEAK_OR_REDUNDANT",
+          "critique": "A descoberta é uma reformulação direta do registro 9dac8b5e8e0747b0b7be9ebf2dfd365a e não adiciona novas interpretações ou insights."
+        },
+        {
+          "discovery_id": "INC-02",
+          "already_explicit_in_single_record": true,
+          "merely_summary_or_classification": true,
+          "reveals_grounded_transversal_structure": false,
+          "depends_on_integration": false,
+          "records_sustain_interpretation": true,
+          "contradicting_or_limiting_records": [],
+          "adds_comprehension_or_investigation": false,
+          "verdict": "WEAK_OR_REDUNDANT",
+          "critique": "A descoberta é uma reformulação direta do registro 36cae570a28f47b9b36ead9f2c1a4d87 e não adiciona novas interpretações ou insights."
+        },
+        {
+          "discovery_id": "INC-03",
+          "already_explicit_in_single_record": true,
+          "merely_summary_or_classification": true,
+          "reveals_grounded_transversal_structure": false,
+          "depends_on_integration": false,
+          "records_sustain_interpretation": true,
+          "contradicting_or_limiting_records": [],
+          "adds_comprehension_or_investigation": false,
+          "verdict": "WEAK_OR_REDUNDANT",
+          "critique": "A descoberta é uma reformulação direta do registro 87f47b767c6e4994a3746c0375ff5348 e não adiciona novas interpretações ou insights."
+        },
+        {
+          "discovery_id": "INC-04",
+          "already_explicit_in_single_record": true,
+          "merely_summary_or_classification": true,
+          "reveals_grounded_transversal_structure": false,
+          "depends_on_integration": false,
+          "records_sustain_interpretation": true,
+          "contradicting_or_limiting_records": [],
+          "adds_comprehension_or_investigation": false,
+          "verdict": "WEAK_OR_REDUNDANT",
+          "critique": "A descoberta é uma reformulação direta do registro 784c05eb89d5436b942e340d109dcebb e não adiciona novas interpretações ou insights."
+        },
+        {
+          "discovery_id": "INC-05",
+          "already_explicit_in_single_record": true,
+          "merely_summary_or_classification": true,
+          "reveals_grounded_transversal_structure": false,
+          "depends_on_integration": false,
+          "records_sustain_interpretation": true,
+          "contradicting_or_limiting_records": [],
+          "adds_comprehension_or_investigation": false,
+          "verdict": "WEAK_OR_REDUNDANT",
+          "critique": "A descoberta é uma reformulação direta do registro d1090ec7e66a43b09dd798f9195a0c44 e não adiciona novas interpretações ou insights."
+        }
+      ]
+    },
+    "raw_response": "{\n  \"assessments\": [\n    {\n      \"discovery_id\": \"D-01\",\n      \"already_explicit_in_single_record\": false,\n      \"merely_summary_or_classification\": false,\n      \"reveals_grounded_transversal_structure\": true,\n      \"depends_on_integration\": true,\n      \"records_sustain_interpretation\": true,\n      \"contradicting_or_limiting_records\": [],\n      \"adds_comprehension_or_investigation\": true,\n      \"verdict\": \"SUSTAINED_CANDIDATE\",\n      \"critique\": \"A descoberta integra conceitos de diferentes registros, oferecendo uma interpretação transversal que vai além da mera soma dos elementos individuais.\"\n    },\n    {\n      \"discovery_id\": \"INC-01\",\n      \"already_explicit_in_single_record\": true,\n      \"merely_summary_or_classification\": true,\n      \"reveals_grounded_transversal_structure\": false,\n      \"depends_on_integration\": false,\n      \"records_sustain_interpretation\": true,\n      \"contradicting_or_limiting_records\": [],\n      \"adds_comprehension_or_investigation\": false,\n      \"verdict\": \"WEAK_OR_REDUNDANT\",\n      \"critique\": \"A descoberta é uma reformulação direta do registro 9dac8b5e8e0747b0b7be9ebf2dfd365a e não adiciona novas interpretações ou insights.\"\n    },\n    {\n      \"discovery_id\": \"INC-02\",\n      \"already_explicit_in_single_record\": true,\n      \"merely_summary_or_classification\": true,\n      \"reveals_grounded_transversal_structure\": false,\n      \"depends_on_integration\": false,\n      \"records_sustain_interpretation\": true,\n      \"contradicting_or_limiting_records\": [],\n      \"adds_comprehension_or_investigation\": false,\n      \"verdict\": \"WEAK_OR_REDUNDANT\",\n      \"critique\": \"A descoberta é uma reformulação direta do registro 36cae570a28f47b9b36ead9f2c1a4d87 e não adiciona novas interpretações ou insights.\"\n    },\n    {\n      \"discovery_id\": \"INC-03\",\n      \"already_explicit_in_single_record\": true,\n      \"merely_summary_or_classification\": true,\n      \"reveals_grounded_transversal_structure\": false,\n      \"depends_on_integration\": false,\n      \"records_sustain_interpretation\": true,\n      \"contradicting_or_limiting_records\": [],\n      \"adds_comprehension_or_investigation\": false,\n      \"verdict\": \"WEAK_OR_REDUNDANT\",\n      \"critique\": \"A descoberta é uma reformulação direta do registro 87f47b767c6e4994a3746c0375ff5348 e não adiciona novas interpretações ou insights.\"\n    },\n    {\n      \"discovery_id\": \"INC-04\",\n      \"already_explicit_in_single_record\": true,\n      \"merely_summary_or_classification\": true,\n      \"reveals_grounded_transversal_structure\": false,\n      \"depends_on_integration\": false,\n      \"records_sustain_interpretation\": true,\n      \"contradicting_or_limiting_records\": [],\n      \"adds_comprehension_or_investigation\": false,\n      \"verdict\": \"WEAK_OR_REDUNDANT\",\n      \"critique\": \"A descoberta é uma reformulação direta do registro 784c05eb89d5436b942e340d109dcebb e não adiciona novas interpretações ou insights.\"\n    },\n    {\n      \"discovery_id\": \"INC-05\",\n      \"already_explicit_in_single_record\": true,\n      \"merely_summary_or_classification\": true,\n      \"reveals_grounded_transversal_structure\": false,\n      \"depends_on_integration\": false,\n      \"records_sustain_interpretation\": true,\n      \"contradicting_or_limiting_records\": [],\n      \"adds_comprehension_or_investigation\": false,\n      \"verdict\": \"WEAK_OR_REDUNDANT\",\n      \"critique\": \"A descoberta é uma reformulação direta do registro d1090ec7e66a43b09dd798f9195a0c44 e não adiciona novas interpretações ou insights.\"\n    }\n  ]\n}",
+    "metrics": {
+      "elapsed_s": 16.37,
+      "prompt_eval_count": 2887,
+      "eval_count": 999
+    }
+  }
+}
