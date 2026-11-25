@@ -262,6 +262,54 @@ def _resolve_exp003_results_path(exp003_path=None, run_id=None) -> Path:
     return base / 'results.json'
 
 
+def build_investigation_corpus(archive) -> dict:
+    """Retorna o universo completo e ordenado de registros canônicos sem limite de paginação,
+    explicitando o uso das formulações originais preservadas na tabela insights.
+    """
+    with archive.events.snapshot():
+        rows = archive.db.execute(
+            'SELECT i.id, i.title, i.claim, i.limitations, i.context, i.genesis, i.status, i.version, i.created_at, '
+            'e.kind, e.work_state '
+            'FROM insights i LEFT JOIN record_elaborations e ON e.insight_id = i.id '
+            'ORDER BY i.created_at ASC, i.rowid ASC'
+        ).fetchall()
+        bundle = archive.events._verified()
+        events_by_insight: dict[str, list[dict]] = {}
+        for ev in bundle['events']:
+            events_by_insight.setdefault(ev['insight_id'], []).append(ev)
+
+    records = []
+    for row in rows:
+        rec = dict(row)
+        ctx = json.loads(rec['context']) if isinstance(rec['context'], str) else (rec['context'] or {})
+        gen = json.loads(rec['genesis']) if isinstance(rec['genesis'], str) else (rec['genesis'] or {})
+        evs = events_by_insight.get(rec['id'], [])
+        records.append({
+            'id': rec['id'],
+            'version': rec['version'],
+            'created_at': rec['created_at'],
+            'title': rec['title'],
+            'kind': rec['kind'],
+            'work_state': rec['work_state'],
+            'claim': rec['claim'],
+            'why_matters': ctx.get('why_matters') or '',
+            'scope': ctx.get('scope') or '',
+            'limitations': rec['limitations'],
+            'genesis': gen,
+            'provenance_status': 'WITH_TRAJECTORY' if evs else 'ORIGINAL_ONLY',
+            'event_count': len(evs),
+        })
+    return {
+        'formulation_basis': 'ORIGINAL_CANONICAL_RECORDS',
+        'formulation_basis_note': (
+            'Formulações originais preservadas na tabela insights; revisões posteriores na trajetória '
+            '(FORMULATION_REVISED) são sinalizadas como potencial desatualização e não sobrescrevem o original.'
+        ),
+        'total_records': len(records),
+        'records': records,
+    }
+
+
 def list_exp003_runs(exp003_dir=None) -> list[dict]:
     """Lista execuções preservadas em lab/exp003/runs/, ordenadas da mais recente para a mais antiga."""
     base = Path(exp003_dir) if exp003_dir else _default_exp003_dir()
@@ -281,6 +329,9 @@ def list_exp003_runs(exp003_dir=None) -> list[dict]:
                 'run_id': m.get('run_id') or sub.name,
                 'status': m.get('status'),
                 'profile': m.get('profile'),
+                'config_version': m.get('config_version'),
+                'formulation_basis': m.get('formulation_basis', 'ORIGINAL_CANONICAL_RECORDS'),
+                'source_run_id': (m.get('verification_source') or {}).get('source_run_id'),
                 'started_at': m.get('started_at'),
                 'finished_at': m.get('finished_at'),
                 'corpus_sha256': m.get('corpus_sha256'),
@@ -360,15 +411,20 @@ def build_discovery_continuity(exp003_dir=None) -> dict:
             if tok_sim < 0.25 and rec_sim < 0.5:
                 continue
             if a['record_ids'] == b['record_ids'] and tok_sim >= 0.45:
-                kind = 'RECURRENCE'
-            elif (a['record_ids'] < b['record_ids'] or b['record_ids'] > a['record_ids']) and tok_sim >= 0.30:
-                kind = 'GROUND_EXPANSION'
+                signal_type = 'CANDIDATE_LEXICAL_OVERLAP_SAME_GROUNDS'
+            elif (
+                a['record_ids'] != b['record_ids']
+                and (a['record_ids'].issubset(b['record_ids']) or b['record_ids'].issubset(a['record_ids']))
+                and tok_sim >= 0.30
+            ):
+                signal_type = 'CANDIDATE_LEXICAL_OVERLAP_EXPANDED_GROUNDS'
             elif rec_inter and tok_sim >= 0.20:
-                kind = 'CONCEPTUAL_REFORMULATION'
+                signal_type = 'CANDIDATE_SHARED_GROUNDS_LEXICAL_SHIFT'
             else:
-                kind = 'EXPERIMENTAL_SENSITIVITY'
+                signal_type = 'CANDIDATE_RUN_SPECIFIC_OCCURRENCE'
             links.append({
-                'kind': kind,
+                'kind': signal_type,
+                'heuristic_only': True,
                 'left_run_id': a['run_id'],
                 'left_discovery_id': a['discovery_id'],
                 'left_title': a['title'],
@@ -379,7 +435,7 @@ def build_discovery_continuity(exp003_dir=None) -> dict:
                 'right_profile': b['profile'],
                 'lexical_overlap': round(tok_sim, 3),
                 'shared_records': sorted(rec_inter),
-                'note': 'Sinal candidato de continuidade entre execuções; não constitui fusão automática nem equivalência reconhecida.',
+                'note': 'Sinal heurístico candidato baseado em sobreposição lexical e de registros; não estabelece continuidade, identidade nem equivalência conceitual.',
             })
 
     return {'runs_compared': len(run_ids_seen), 'links': links}
@@ -513,8 +569,12 @@ def _load_exp003_discoveries(records_by_id, events_raw, exp003_path=None, run_id
         'source_available': True,
         'source_path': str(path),
         'run_id': raw.get('run_id'),
+        'batch_id': raw.get('batch_id'),
+        'source_run_id': raw.get('source_run_id'),
         'profile': raw.get('profile'),
+        'config_version': raw.get('config_version'),
         'config_used': raw.get('config_used'),
+        'formulation_basis': raw.get('formulation_basis', 'ORIGINAL_CANONICAL_RECORDS'),
         'corpus_sha256': raw.get('corpus_sha256'),
         'instruction': raw.get('instruction', 'BB-CORE-EXP-003'),
         'executed_at': executed_at,
@@ -755,13 +815,15 @@ def get_exp003_status():
         return dict(_EXP003_STATE)
 
 
-def _run_exp003_worker(run_script: Path, confront_script: Path, workdir: Path, config: dict | None):
+def _run_exp003_worker(run_script: Path, confront_script: Path, workdir: Path, config: dict | None, config_version: int | None):
     cfg_file = None
     try:
         cfg = dict(config or {})
         profile = cfg.get('profile', 'reference')
         repetitions = int(cfg.get('exploratory_repetitions', 1)) if profile == 'exploration' else 1
         base_seed = int(cfg.get('seed', 42))
+        batch_id = f"batch-{stamp().replace(':', '').replace('-', '')}" if repetitions > 1 else None
+        frozen_corpus_path = None
 
         if cfg:
             cfg_file = workdir / '.active_run_config.json'
@@ -775,10 +837,25 @@ def _run_exp003_worker(run_script: Path, confront_script: Path, workdir: Path, c
             cmd1 = [sys.executable, str(run_script), '--seed', str(rep_seed)]
             if cfg_file is not None:
                 cmd1.extend(['--config-json', str(cfg_file)])
+            if config_version is not None:
+                cmd1.extend(['--config-version', str(config_version)])
+            if batch_id is not None:
+                cmd1.extend(['--batch-id', batch_id])
+            if frozen_corpus_path is not None:
+                cmd1.extend(['--replay-corpus', str(frozen_corpus_path)])
+
             res1 = subprocess.run(cmd1, cwd=str(workdir), capture_output=True, text=True, check=False)
             if res1.returncode != 0:
                 err_msg = (res1.stderr or res1.stdout or f'Código de saída {res1.returncode}').strip().splitlines()[-1]
                 raise RuntimeError(f'Falha na etapa de síntese: {err_msg}')
+
+            if frozen_corpus_path is None and repetitions > 1:
+                pending_file = workdir / '.pending_run'
+                if pending_file.is_file():
+                    rid = pending_file.read_text(encoding='utf-8').strip()
+                    cand = workdir / 'runs' / rid / 'corpus.json'
+                    if cand.is_file():
+                        frozen_corpus_path = cand
 
             with _EXP003_LOCK:
                 _EXP003_STATE['stage'] = f'Aplicando confrontação crítica e verificação determinística{rep_note}…'
@@ -812,7 +889,7 @@ def _run_exp003_worker(run_script: Path, confront_script: Path, workdir: Path, c
                 pass
 
 
-def start_exp003_run(exp003_dir=None, *, config: dict | None = None):
+def start_exp003_run(exp003_dir=None, *, config: dict | None = None, config_version: int | None = None):
     """Inicia a reexecução assíncrona de EXP-003/004 sobre o acervo ativo com a configuração vigente."""
     workdir = Path(exp003_dir) if exp003_dir else _default_exp003_dir()
     run_script = workdir / 'run_exp003.py'
@@ -832,7 +909,7 @@ def start_exp003_run(exp003_dir=None, *, config: dict | None = None):
 
     t = threading.Thread(
         target=_run_exp003_worker,
-        args=(run_script, confront_script, workdir, config),
+        args=(run_script, confront_script, workdir, config, config_version),
         daemon=True,
     )
     t.start()

@@ -255,6 +255,9 @@ class Handler(BaseHTTPRequestHandler):
             q = parse_qs(urlsplit(self.path).query)
             run_id = (q.get("run_id") or [None])[0]
             self.send_json(200, build_overview(self.server.archive, run_id=run_id)); return
+        if path == "/api/analytics/corpus":
+            from .analytics import build_investigation_corpus
+            self.send_json(200, build_investigation_corpus(self.server.archive)); return
         if path == "/api/analytics/runs":
             from .analytics import build_discovery_continuity, list_exp003_runs
             self.send_json(200, {'runs': list_exp003_runs(), 'continuity': build_discovery_continuity()}); return
@@ -263,7 +266,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, get_exp003_status()); return
         if path == "/api/settings/investigation":
             from .investigation_config import get_investigation_settings
-            self.send_json(200, get_investigation_settings(self.server.archive.db)); return
+            self.send_json(200, get_investigation_settings(self.server.archive.db, lock=self.server.archive.lock)); return
         if path=="/api/insights":
             q=parse_qs(urlsplit(self.path).query)
             if q.get("q"):
@@ -329,18 +332,18 @@ class Handler(BaseHTTPRequestHandler):
             if path == '/api/settings/investigation':
                 from .investigation_config import update_investigation_settings
                 note = data.pop('change_note', None) if isinstance(data, dict) else None
-                self.send_json(200, update_investigation_settings(self.server.archive.db, data, change_note=note))
+                self.send_json(200, update_investigation_settings(self.server.archive.db, data, change_note=note, lock=self.server.archive.lock))
                 return
             if path == '/api/settings/investigation/reset':
                 from .investigation_config import reset_investigation_settings
-                self.send_json(200, reset_investigation_settings(self.server.archive.db))
+                self.send_json(200, reset_investigation_settings(self.server.archive.db, lock=self.server.archive.lock))
                 return
             if path == '/api/analytics/exp003/run':
                 from .analytics import start_exp003_run
                 from .investigation_config import get_investigation_settings
                 try:
-                    cfg = get_investigation_settings(self.server.archive.db)['config']
-                    self.send_json(202, start_exp003_run(config=cfg))
+                    settings = get_investigation_settings(self.server.archive.db, lock=self.server.archive.lock)
+                    self.send_json(202, start_exp003_run(config=settings['config'], config_version=settings['version']))
                 except FileNotFoundError as exc:
                     self.send_json(404, {'error': 'EXP003_UNAVAILABLE', 'message': str(exc)})
                 except RuntimeError as exc:
@@ -397,7 +400,7 @@ class Handler(BaseHTTPRequestHandler):
             data = self.body()
             from .investigation_config import update_investigation_settings
             note = data.pop('change_note', None) if isinstance(data, dict) else None
-            self.send_json(200, update_investigation_settings(self.server.archive.db, data, change_note=note))
+            self.send_json(200, update_investigation_settings(self.server.archive.db, data, change_note=note, lock=self.server.archive.lock))
         except ValueError as e:
             self.send_json(400, {'error': 'INVALID_INPUT', 'message': str(e)})
         except (TypeError, KeyError, json.JSONDecodeError):

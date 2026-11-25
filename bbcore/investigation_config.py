@@ -6,9 +6,13 @@ from __future__ import annotations
 
 import copy
 import json
+import threading
+from contextlib import nullcontext
 from typing import Any
 
 from .store import stamp
+
+_CONFIG_LOCK = threading.RLock()
 
 VALID_PROFILES = ('reference', 'exploration', 'verification')
 VALID_STRATEGIES = ('A', 'B', 'C', 'D', 'E')
@@ -150,13 +154,14 @@ def validate_investigation_config(raw: dict[str, Any], base: dict[str, Any] | No
     }
 
 
-def get_investigation_settings(db) -> dict[str, Any]:
+def get_investigation_settings(db, *, lock=None) -> dict[str, Any]:
     """Retorna a configuração vigente, padrões, documentação e histórico de versões."""
-    ensure_investigation_tables(db)
-    row = db.execute('SELECT version, config_json, updated_at FROM investigation_settings WHERE id = 1').fetchone()
-    history_rows = db.execute(
-        'SELECT version, config_json, changed_at, change_note FROM investigation_settings_history ORDER BY version DESC LIMIT 20'
-    ).fetchall()
+    with _CONFIG_LOCK, (lock if lock is not None else nullcontext()):
+        ensure_investigation_tables(db)
+        row = db.execute('SELECT version, config_json, updated_at FROM investigation_settings WHERE id = 1').fetchone()
+        history_rows = db.execute(
+            'SELECT version, config_json, changed_at, change_note FROM investigation_settings_history ORDER BY version DESC LIMIT 20'
+        ).fetchall()
     return {
         'version': row['version'],
         'updated_at': row['updated_at'],
@@ -176,32 +181,41 @@ def get_investigation_settings(db) -> dict[str, Any]:
     }
 
 
-def update_investigation_settings(db, raw_config: dict[str, Any], *, change_note: str | None = None) -> dict[str, Any]:
-    """Valida, versiona e persiste nova configuração investigativa."""
-    ensure_investigation_tables(db)
-    current_row = db.execute('SELECT version, config_json FROM investigation_settings WHERE id = 1').fetchone()
-    current_cfg = json.loads(current_row['config_json'])
-    validated = validate_investigation_config(raw_config, base=current_cfg)
-    next_version = int(current_row['version']) + 1
-    now = stamp()
-    payload = json.dumps(validated, ensure_ascii=False, sort_keys=True)
-    note = (change_note or 'Atualização de parâmetros investigativos').strip()[:240]
-    with db:
-        db.execute(
-            'UPDATE investigation_settings SET version = ?, config_json = ?, updated_at = ? WHERE id = 1',
-            (next_version, payload, now),
-        )
-        db.execute(
-            'INSERT INTO investigation_settings_history (version, config_json, changed_at, change_note) VALUES (?, ?, ?, ?)',
-            (next_version, payload, now, note),
-        )
-    return get_investigation_settings(db)
+def update_investigation_settings(db, raw_config: dict[str, Any], *, change_note: str | None = None, lock=None) -> dict[str, Any]:
+    """Valida, versiona e persiste nova configuração investigativa de forma atômica."""
+    with _CONFIG_LOCK, (lock if lock is not None else nullcontext()):
+        ensure_investigation_tables(db)
+        if not db.in_transaction:
+            db.execute('BEGIN IMMEDIATE')
+        try:
+            current_row = db.execute('SELECT version, config_json FROM investigation_settings WHERE id = 1').fetchone()
+            current_cfg = json.loads(current_row['config_json'])
+            validated = validate_investigation_config(raw_config, base=current_cfg)
+            next_version = int(current_row['version']) + 1
+            now = stamp()
+            payload = json.dumps(validated, ensure_ascii=False, sort_keys=True)
+            note = (change_note or 'Atualização de parâmetros investigativos').strip()[:240]
+            db.execute(
+                'UPDATE investigation_settings SET version = ?, config_json = ?, updated_at = ? WHERE id = 1',
+                (next_version, payload, now),
+            )
+            db.execute(
+                'INSERT INTO investigation_settings_history (version, config_json, changed_at, change_note) VALUES (?, ?, ?, ?)',
+                (next_version, payload, now, note),
+            )
+            db.commit()
+        except Exception:
+            if db.in_transaction:
+                db.rollback()
+            raise
+        return get_investigation_settings(db)
 
 
-def reset_investigation_settings(db) -> dict[str, Any]:
+def reset_investigation_settings(db, *, lock=None) -> dict[str, Any]:
     """Restaura a configuração padrão como nova versão registrada no histórico."""
     return update_investigation_settings(
         db,
         copy.deepcopy(DEFAULT_INVESTIGATION_CONFIG),
         change_note='Restauração dos valores padrão (EXP-004)',
+        lock=lock,
     )

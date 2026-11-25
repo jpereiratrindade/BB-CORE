@@ -313,12 +313,13 @@
         );
         if (contLinks.length) {
             const kindLabels = {
-                RECURRENCE: 'Recorrência',
-                GROUND_EXPANSION: 'Ampliação de fundamentação',
-                CONCEPTUAL_REFORMULATION: 'Reformulação conceitual',
-                EXPERIMENTAL_SENSITIVITY: 'Dependência experimental',
+                CANDIDATE_LEXICAL_OVERLAP_SAME_GROUNDS: 'Sobreposição lexical · mesmos registros (sinal candidato)',
+                CANDIDATE_LEXICAL_OVERLAP_EXPANDED_GROUNDS: 'Sobreposição lexical · conjunto ampliado (sinal candidato)',
+                CANDIDATE_SHARED_GROUNDS_LEXICAL_SHIFT: 'Registros compartilhados · variação lexical (sinal candidato)',
+                CANDIDATE_RUN_SPECIFIC_OCCURRENCE: 'Ocorrência específica de execução (sinal candidato)',
             };
-            dossier.append(el('h5', `Continuidade entre execuções (${contLinks.length} sinal(is) candidato(s))`));
+            dossier.append(el('h5', `Sinais heurísticos candidatos entre execuções (${contLinks.length})`));
+            dossier.append(el('p', 'Aproximação lexical e de registros; não estabelece continuidade nem equivalência conceitual.', 'muted'));
             const ul = el('ul');
             for (const lk of contLinks) {
                 const isLeft = lk.left_discovery_id === disc.discovery_id;
@@ -374,10 +375,12 @@
         const discs = visibleDiscoveries();
         const c = ov.counts;
         const profMap = { reference: 'Referência', exploration: 'Exploração', verification: 'Verificação' };
-        const profStr = ov.profile ? `Perfil: ${profMap[ov.profile] || ov.profile} · ` : '';
+        const cfgVer = ov.config_version ? ` v${ov.config_version}` : '';
+        const profStr = ov.profile ? `Perfil: ${profMap[ov.profile] || ov.profile}${cfgVer} · ` : '';
+        const basisStr = ov.formulation_basis === 'ORIGINAL_CANONICAL_RECORDS' ? ' · formulações originais' : '';
         if (summaryLine) {
             summaryLine.textContent = ov.source_available
-                ? `${profStr}${c.sustained} sustentada(s) na confrontação automática · ${c.weak_or_redundant} fraca(s)/redundante(s) · ${c.stale} desatualizada(s) (${ov.llm_model})`
+                ? `${profStr}${c.sustained} sustentada(s) na confrontação automática · ${c.weak_or_redundant} fraca(s)/redundante(s) · ${c.stale} desatualizada(s) (${ov.llm_model}${basisStr})`
                 : 'Nenhum resultado de descoberta disponível.';
         }
 

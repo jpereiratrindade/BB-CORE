@@ -175,28 +175,8 @@ def load_bbcore_records():
         with opener.open(req, timeout=10) as resp:
             return json.load(resp)
 
-    listing = get_json('/api/insights')['items']
-    records = []
-    for item in listing:
-        ctx = get_json(f'/api/insights/{item["id"]}/context')
-        elab = ctx.get('elaboration') or {}
-        c = ctx.get('context') or {}
-        traj = ctx.get('trajectory') or {}
-        records.append({
-            'id': ctx['id'],
-            'version': ctx['version'],
-            'created_at': ctx['created_at'],
-            'title': ctx['title'],
-            'kind': elab.get('kind'),
-            'work_state': elab.get('work_state'),
-            'claim': ctx['claim'],
-            'why_matters': c.get('why_matters') or '',
-            'scope': c.get('scope') or '',
-            'limitations': ctx['limitations'],
-            'genesis': ctx.get('genesis') or {},
-            'provenance_status': (traj.get('provenance') or {}).get('origin_status'),
-            'event_count': traj.get('event_count', 0),
-        })
+    corpus_resp = get_json('/api/analytics/corpus')
+    records = corpus_resp['records']
     records.sort(key=lambda r: (r['created_at'], r['title']))
     return records
 
@@ -323,7 +303,7 @@ def _atomic_write_json(target: Path, payload: dict) -> None:
     tmp.replace(target)
 
 
-def run_all(config=None, replay_corpus_path=None, run_id=None, profile_override=None, seed_override=None):
+def run_all(config=None, replay_corpus_path=None, run_id=None, profile_override=None, seed_override=None, config_version=None, batch_id=None):
     cfg = {**DEFAULT_CONFIG, **(config or {})}
     if profile_override:
         cfg['profile'] = profile_override
@@ -347,13 +327,33 @@ def run_all(config=None, replay_corpus_path=None, run_id=None, profile_override=
     run_dir = OUT_DIR / 'runs' / rid
     run_dir.mkdir(parents=True, exist_ok=True)
 
+    # Resolver execução de origem no perfil Verificação antes de congelar o corpus
+    source_run_id = None
+    prev_results_path = None
+    source_corpus_path = None
+    if profile == 'verification':
+        prev_results_path = OUT_DIR / 'results.json'
+        latest_ptr = OUT_DIR / 'latest.json'
+        if latest_ptr.is_file():
+            ptr = json.loads(latest_ptr.read_text(encoding='utf-8'))
+            if ptr.get('run_id'):
+                cand_res = OUT_DIR / 'runs' / ptr['run_id'] / 'results.json'
+                cand_corp = OUT_DIR / 'runs' / ptr['run_id'] / 'corpus.json'
+                if cand_res.is_file():
+                    prev_results_path = cand_res
+                    source_run_id = ptr['run_id']
+                if cand_corp.is_file():
+                    source_corpus_path = cand_corp
+
     # 0. Congelamento do universo investigativo (corpus.json)
-    if replay_corpus_path:
-        corpus_payload = json.loads(Path(replay_corpus_path).read_text(encoding='utf-8'))
+    effective_replay = replay_corpus_path or (str(source_corpus_path) if source_corpus_path else None)
+    if effective_replay:
+        corpus_payload = json.loads(Path(effective_replay).read_text(encoding='utf-8'))
         records = corpus_payload['records']
     else:
         records = load_bbcore_records()
 
+    formulation_basis = 'ORIGINAL_CANONICAL_RECORDS'
     rec_by_id = {r['id']: r for r in records}
     formatted_texts = {r['id']: format_record(r) for r in records}
     record_order = [r['id'] for r in records]
@@ -413,7 +413,9 @@ def run_all(config=None, replay_corpus_path=None, run_id=None, profile_override=
     # Salvar fotografia congelada do corpus imediatamente
     _atomic_write_json(run_dir / 'corpus.json', {
         'run_id': rid,
+        'batch_id': batch_id,
         'frozen_at': started_at,
+        'formulation_basis': formulation_basis,
         'corpus_sha256': corpus_sha256,
         'record_order': record_order,
         'records': records,
@@ -422,19 +424,15 @@ def run_all(config=None, replay_corpus_path=None, run_id=None, profile_override=
             'strategy_b_subset_ids': [r['id'] for r in subset_b],
             'strategy_c_subset_ids': [r['id'] for r in subset_c],
         },
-        'replayed_from': str(replay_corpus_path) if replay_corpus_path else None,
+        'replayed_from': effective_replay,
+        'source_run_id': source_run_id,
     })
 
     if profile == 'verification':
-        # Perfil Verificação: reutiliza descobertas da última execução e submete apenas à nova confrontação
-        prev_results_path = OUT_DIR / 'results.json'
-        latest_ptr = OUT_DIR / 'latest.json'
-        if latest_ptr.is_file():
-            ptr = json.loads(latest_ptr.read_text(encoding='utf-8'))
-            cand = OUT_DIR / 'runs' / ptr['run_id'] / 'results.json'
-            if cand.is_file():
-                prev_results_path = cand
+        # Perfil Verificação: reutiliza descobertas e corpus da execução de origem e submete apenas à nova confrontação
         prev_data = json.loads(prev_results_path.read_text(encoding='utf-8'))
+        if not source_run_id:
+            source_run_id = prev_data.get('run_id')
         disc_a = verify_discoveries((prev_data.get('strategy_a_integral') or {}).get('discoveries', []), rec_by_id)
         disc_b = verify_discoveries((prev_data.get('strategy_b_semantic_neighborhood') or {}).get('discoveries', []), rec_by_id)
         disc_c = verify_discoveries((prev_data.get('strategy_c_transversal_distant') or {}).get('discoveries', []), rec_by_id)
@@ -563,8 +561,12 @@ def run_all(config=None, replay_corpus_path=None, run_id=None, profile_override=
     output = {
         'instruction': 'BB-CORE-EXP-004 v0.1.0',
         'run_id': rid,
+        'batch_id': batch_id,
+        'source_run_id': source_run_id,
         'profile': profile,
+        'config_version': config_version,
         'config_used': cfg,
+        'formulation_basis': formulation_basis,
         'corpus_sha256': corpus_sha256,
         'executed_at': started_at,
         'llm_model': inv_model,
@@ -597,12 +599,24 @@ def run_all(config=None, replay_corpus_path=None, run_id=None, profile_override=
 
     manifest = {
         'run_id': rid,
+        'batch_id': batch_id,
         'engine_version': ENGINE_VERSION,
         'status': 'pending_confrontation',
         'started_at': started_at,
         'finished_at': None,
         'profile': profile,
+        'config_version': config_version,
         'config_used': cfg,
+        'formulation_basis': formulation_basis,
+        'verification_source': (
+            {
+                'source_run_id': source_run_id,
+                'source_corpus_path': str(source_corpus_path) if source_corpus_path else None,
+                'corpus_reused_from_source': bool(source_corpus_path),
+            }
+            if profile == 'verification'
+            else None
+        ),
         'effective_generation': {'model': inv_model, 'temperature': gen_temp, 'seed': gen_seed, 'num_ctx': num_ctx},
         'effective_confrontation': {'model': conf_model, 'temperature': conf_temp, 'seed': conf_seed, 'num_ctx': num_ctx},
         'models': {
@@ -641,6 +655,8 @@ if __name__ == '__main__':
     parser.add_argument('--run-id', type=str, default=None)
     parser.add_argument('--profile', type=str, default=None)
     parser.add_argument('--seed', type=int, default=None)
+    parser.add_argument('--config-version', type=int, default=None)
+    parser.add_argument('--batch-id', type=str, default=None)
     args = parser.parse_args()
     loaded_cfg = json.loads(Path(args.config_json).read_text(encoding='utf-8')) if args.config_json else None
     run_all(
@@ -649,4 +665,6 @@ if __name__ == '__main__':
         run_id=args.run_id,
         profile_override=args.profile,
         seed_override=args.seed,
+        config_version=args.config_version,
+        batch_id=args.batch_id,
     )

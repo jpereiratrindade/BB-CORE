@@ -52,7 +52,9 @@ def deterministic_verify(item: dict, rec_by_id: dict, assessment: dict | None) -
         inconsistencies.append(f'Trechos literais não verificados exatamente: {excerpts_total - excerpts_exact}/{excerpts_total}.')
 
     criteria_coherent = True
-    if assessment:
+    if assessment is None:
+        inconsistencies.append('Avaliação crítica automatizada ausente para este candidato.')
+    else:
         verdict = assessment.get('verdict')
         if verdict == 'SUSTAINED_CANDIDATE':
             if len(set(rec_ids)) < 2:
@@ -200,10 +202,32 @@ def main(run_dir_arg: str | None = None):
     # 3. Verificação determinística + distinção em três dimensões (EXP-004 §9)
     assess_by_id = {a['discovery_id']: a for a in existing_assessments}
     confrontation_entries = []
-    det_summary = {'total': len(all_items), 'consistent': 0, 'inconsistent': 0, 'effective_sustained': 0}
+    candidate_ids = {item['discovery_id'] for item in all_items}
+    orphan_assessments = [a for a in existing_assessments if a.get('discovery_id') not in candidate_ids]
+    det_summary = {
+        'total': len(all_items),
+        'consistent': 0,
+        'inconsistent': 0,
+        'effective_sustained': 0,
+        'orphan_assessments_count': len(orphan_assessments),
+    }
 
     for item in all_items:
         did = item['discovery_id']
+        # Recalcular verificação por registro contra o corpus congelado para consistência total
+        recomputed_verif = []
+        for sr in item.get('supporting_records') or []:
+            rid = sr.get('record_id')
+            rec = rec_by_id.get(rid)
+            corpus = ''
+            if rec:
+                corpus = '\n'.join(
+                    str(x) for x in (rec.get('title'), rec.get('scope'), rec.get('claim'), rec.get('why_matters'), rec.get('limitations')) if x
+                )
+            ex_checks = [{'excerpt': ex, 'exact_match': bool(ex and ex.strip()) and (ex.strip() in corpus)} for ex in sr.get('excerpts', [])]
+            recomputed_verif.append({'record_id': rid, 'record_exists': rec is not None, 'excerpts': ex_checks})
+        item['verification'] = recomputed_verif
+
         assess = assess_by_id.get(did)
         det = deterministic_verify(item, rec_by_id, assess)
         item['deterministic_verification'] = det
@@ -238,6 +262,7 @@ def main(run_dir_arg: str | None = None):
         'confrontation_model': conf_model,
         'same_model_limitation': same_model_limitation,
         'summary': det_summary,
+        'orphan_assessments': orphan_assessments,
         'entries': confrontation_entries,
     })
 
@@ -253,6 +278,7 @@ def main(run_dir_arg: str | None = None):
             'weak_or_redundant': sum(1 for a in existing_assessments if a.get('verdict') == 'WEAK_OR_REDUNDANT'),
             'contested': sum(1 for a in existing_assessments if a.get('verdict') == 'CONTESTED'),
             'effective_sustained': det_summary['effective_sustained'],
+            'orphan_assessments_count': len(orphan_assessments),
         }
         manifest['abstentions_count'] = (
             len((data.get('strategy_a_integral') or {}).get('abstentions', []))

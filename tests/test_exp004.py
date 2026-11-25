@@ -170,20 +170,27 @@ class Exp004Tests(unittest.TestCase):
         self.assertFalse(det_bad['criteria_verdict_coherent'])
         self.assertTrue(len(det_bad['inconsistencies']) >= 1)
 
+        # Avaliação ausente também deve ser explicitada
+        det_missing = deterministic_verify(consistent_item, rec_by_id, None)
+        self.assertEqual(det_missing['effective_status'], 'NOT_EXAMINED')
+        self.assertIn('Avaliação crítica automatizada ausente para este candidato.', det_missing['inconsistencies'])
+
     def test_preserved_runs_and_continuity(self):
         base = Path(self.tmp.name) / 'exp003'
         for rid, prof, recs in [
-            ('run-1', 'reference', [{'record_id': 'r1'}, {'record_id': 'r2'}]),
-            ('run-2', 'exploration', [{'record_id': 'r1'}, {'record_id': 'r2'}, {'record_id': 'r3'}]),
+            ('run-1', 'reference', [{'record_id': 'r1'}, {'record_id': 'r2'}, {'record_id': 'r3'}]),
+            ('run-2', 'exploration', [{'record_id': 'r1'}, {'record_id': 'r2'}]),
         ]:
             rdir = base / 'runs' / rid
             rdir.mkdir(parents=True)
             (rdir / 'manifest.json').write_text(json.dumps({
-                'run_id': rid, 'status': 'completed', 'profile': prof,
+                'run_id': rid, 'status': 'completed', 'profile': prof, 'config_version': 2,
+                'formulation_basis': 'ORIGINAL_CANONICAL_RECORDS',
                 'started_at': '2026-11-25T10:00:00Z', 'corpus_sha256': 'abc',
             }), encoding='utf-8')
             (rdir / 'results.json').write_text(json.dumps({
-                'run_id': rid, 'profile': prof, 'executed_at': '2026-11-25T10:00:00Z',
+                'run_id': rid, 'profile': prof, 'config_version': 2,
+                'executed_at': '2026-11-25T10:00:00Z',
                 'strategy_a_integral': {'discoveries': [{
                     'discovery_id': f'{rid}-A-01',
                     'title': 'Continuidade intelectual e preservação de contexto',
@@ -195,10 +202,59 @@ class Exp004Tests(unittest.TestCase):
 
         runs = list_exp003_runs(base)
         self.assertEqual(len(runs), 2)
+        self.assertEqual(runs[0]['config_version'], 2)
         cont = build_discovery_continuity(base)
         self.assertEqual(cont['runs_compared'], 2)
         self.assertEqual(len(cont['links']), 1)
-        self.assertEqual(cont['links'][0]['kind'], 'GROUND_EXPANSION')
+        self.assertEqual(cont['links'][0]['kind'], 'CANDIDATE_LEXICAL_OVERLAP_EXPANDED_GROUNDS')
+        self.assertTrue(cont['links'][0]['heuristic_only'])
+
+    def test_full_corpus_exceeds_30_and_concurrent_settings_updates(self):
+        # Inserir 34 registros adicionais (total 35 > 30 do Archive.list padrão)
+        for i in range(34):
+            self.archive.capture(make_capsule(
+                title=f'Registro extra {i:02d}',
+                claim=f'Formulação original {i:02d} preservada.',
+            ))
+        req_corpus = Request(
+            f'http://127.0.0.1:{self.port}/api/analytics/corpus',
+            headers={'Authorization': 'Bearer r-tok'},
+        )
+        with self.opener.open(req_corpus, timeout=5) as resp:
+            self.assertEqual(resp.status, 200)
+            corpus = json.load(resp)
+            self.assertEqual(corpus['total_records'], 35)
+            self.assertEqual(len(corpus['records']), 35)
+            self.assertEqual(corpus['formulation_basis'], 'ORIGINAL_CANONICAL_RECORDS')
+
+        # Concorrência em configurações: 6 threads atualizando simultaneamente sem colisão de versão
+        errors = []
+        versions = []
+        vlock = threading.Lock()
+
+        def worker(idx):
+            try:
+                res = update_investigation_settings(
+                    self.archive.db,
+                    {'seed': 100 + idx},
+                    change_note=f'Concorrente {idx}',
+                    lock=self.archive.lock,
+                )
+                with vlock:
+                    versions.append(res['version'])
+            except Exception as exc:
+                with vlock:
+                    errors.append(str(exc))
+
+        threads = [threading.Thread(target=worker, args=(i,)) for i in range(6)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+        self.assertEqual(errors, [])
+        self.assertEqual(len(versions), 6)
+        self.assertEqual(len(set(versions)), 6)
 
 
 if __name__ == '__main__':
