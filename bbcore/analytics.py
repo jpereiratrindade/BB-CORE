@@ -7,6 +7,9 @@ forçado para registros sem correspondência lexical.
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
+import threading
 from collections import OrderedDict, deque
 from pathlib import Path
 
@@ -560,3 +563,87 @@ def build_overview(archive, *, exp002_path=None, exp003_path=None):
             'without_occurred_at': sum(1 for e in calendar_events if not e['occurred_at']),
         },
     }
+
+
+_EXP003_LOCK = threading.Lock()
+_EXP003_STATE = {
+    'status': 'idle',  # 'idle' | 'running' | 'completed' | 'error'
+    'stage': None,
+    'started_at': None,
+    'finished_at': None,
+    'error': None,
+}
+
+
+def get_exp003_status():
+    """Retorna o estado atual da execução sob demanda do experimento EXP-003."""
+    with _EXP003_LOCK:
+        return dict(_EXP003_STATE)
+
+
+def _run_exp003_worker(run_script: Path, confront_script: Path, workdir: Path):
+    try:
+        with _EXP003_LOCK:
+            _EXP003_STATE['stage'] = 'Executando síntese semântica (EXP-003) via Ollama…'
+        res1 = subprocess.run(
+            [sys.executable, str(run_script)],
+            cwd=str(workdir),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if res1.returncode != 0:
+            err_msg = (res1.stderr or res1.stdout or f'Código de saída {res1.returncode}').strip().splitlines()[-1]
+            raise RuntimeError(f'Falha na etapa de síntese: {err_msg}')
+
+        with _EXP003_LOCK:
+            _EXP003_STATE['stage'] = 'Aplicando confrontação crítica automática (Estratégia E)…'
+        res2 = subprocess.run(
+            [sys.executable, str(confront_script)],
+            cwd=str(workdir),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if res2.returncode != 0:
+            err_msg = (res2.stderr or res2.stdout or f'Código de saída {res2.returncode}').strip().splitlines()[-1]
+            raise RuntimeError(f'Falha na confrontação crítica: {err_msg}')
+
+        with _EXP003_LOCK:
+            _EXP003_STATE['status'] = 'completed'
+            _EXP003_STATE['stage'] = 'Nova análise EXP-003 concluída.'
+            _EXP003_STATE['finished_at'] = stamp()
+            _EXP003_STATE['error'] = None
+    except Exception as exc:
+        with _EXP003_LOCK:
+            _EXP003_STATE['status'] = 'error'
+            _EXP003_STATE['stage'] = 'Execução interrompida por erro.'
+            _EXP003_STATE['finished_at'] = stamp()
+            _EXP003_STATE['error'] = str(exc)
+
+
+def start_exp003_run(exp003_dir=None):
+    """Inicia a reexecução assíncrona de EXP-003 sobre o acervo ativo."""
+    workdir = Path(exp003_dir) if exp003_dir else (Path(__file__).resolve().parent.parent / 'lab' / 'exp003')
+    run_script = workdir / 'run_exp003.py'
+    confront_script = workdir / 'confront_all.py'
+    if not run_script.is_file() or not confront_script.is_file():
+        raise FileNotFoundError('Scripts de execução do EXP-003 não encontrados no runtime.')
+
+    with _EXP003_LOCK:
+        if _EXP003_STATE['status'] == 'running':
+            raise RuntimeError('EXP003_ALREADY_RUNNING')
+        _EXP003_STATE['status'] = 'running'
+        _EXP003_STATE['stage'] = 'Iniciando análise semântica (EXP-003)…'
+        _EXP003_STATE['started_at'] = stamp()
+        _EXP003_STATE['finished_at'] = None
+        _EXP003_STATE['error'] = None
+        snapshot = dict(_EXP003_STATE)
+
+    t = threading.Thread(
+        target=_run_exp003_worker,
+        args=(run_script, confront_script, workdir),
+        daemon=True,
+    )
+    t.start()
+    return snapshot

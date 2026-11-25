@@ -295,6 +295,27 @@ class AnalyticsHTTPTests(unittest.TestCase):
             self.assertIn('CONCEPTUAL_DISCOVERY', gjs)
             self.assertIn('BBGlossary', gjs)
 
+        status_req = Request(
+            f'http://127.0.0.1:{self.port}/api/analytics/exp003/status',
+            headers={'Authorization': 'Bearer r-tok'},
+        )
+        with self.opener.open(status_req, timeout=5) as resp:
+            self.assertEqual(resp.status, 200)
+            st = json.load(resp)
+            self.assertIn(st['status'], ('idle', 'running', 'completed', 'error'))
+
+        with self.assertRaises(HTTPError) as cm_unauth:
+            self.opener.open(
+                Request(
+                    f'http://127.0.0.1:{self.port}/api/analytics/exp003/run',
+                    method='POST',
+                    headers={'Content-Type': 'application/json'},
+                    data=b'{}',
+                ),
+                timeout=5,
+            )
+        self.assertEqual(cm_unauth.exception.code, 401)
+
 
 if __name__ == '__main__':
     unittest.main()

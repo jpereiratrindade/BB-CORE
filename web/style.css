@@ -155,3 +155,7 @@
 .glossary-item{border:1px solid var(--line);border-radius:9px;padding:14px 16px;background:#fafcfe;display:grid;gap:6px;align-content:start}
 .glossary-item h3{margin:0;font-size:.96rem;color:var(--navy);line-height:1.35}
 .glossary-item p{margin:0;font-size:.83rem;line-height:1.5;color:var(--ink)}
+.analytics-status-bar{margin:0 0 12px;padding:9px 13px;border-radius:8px;border:1px solid #cfe0ec;background:#f2f8fc;color:#18344a;font-size:.85rem;line-height:1.4}
+.analytics-status-bar.running{border-color:#bfd6ea;background:#eef6fd;color:#0e3c68}
+.analytics-status-bar.success{border-color:#b5ddd7;background:#eff9f7;color:#0b564e}
+.analytics-status-bar.error{border-color:#e4b9b9;background:#fdf3f3;color:#7a1f1f}

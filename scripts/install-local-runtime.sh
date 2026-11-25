@@ -15,6 +15,12 @@ if [ -f "$SOURCE_DIR/lab/exp003/results.json" ]; then
     mkdir -p "$RUNTIME_DIR/lab/exp003"
     cp "$SOURCE_DIR/lab/exp003/results.json" "$RUNTIME_DIR/lab/exp003/results.json"
 fi
+for script in run_exp003.py confront_all.py; do
+    if [ -f "$SOURCE_DIR/lab/exp003/$script" ]; then
+        mkdir -p "$RUNTIME_DIR/lab/exp003"
+        cp "$SOURCE_DIR/lab/exp003/$script" "$RUNTIME_DIR/lab/exp003/$script"
+    fi
+done
 cat > "$DROPIN_DIR/local-runtime.conf" <<EOF
 [Unit]
 ConditionPathIsDirectory=

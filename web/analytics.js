@@ -1126,9 +1126,94 @@
         dayBox.append(ul);
     }
 
-    async function loadAnalytics() {
+    let exp003PollTimer = null;
+
+    function setAnalyticsStatus(message, kind = 'info') {
+        const bar = byId('analytics-status-bar');
+        if (!bar) return;
+        if (!message) {
+            bar.hidden = true;
+            bar.textContent = '';
+            bar.className = 'analytics-status-bar';
+            return;
+        }
+        bar.hidden = false;
+        bar.textContent = message;
+        bar.className = `analytics-status-bar ${kind}`;
+    }
+
+    function setExp003RunningUI(running) {
+        const btn = byId('exp003-run-btn');
+        if (!btn) return;
+        btn.disabled = running;
+        btn.textContent = running ? '⏳ Reanalisando (EXP-003)…' : '✦ Reanalisar acervo (EXP-003)';
+    }
+
+    async function pollExp003Status() {
+        try {
+            const res = await fetch('/api/analytics/exp003/status', {credentials: 'same-origin'});
+            if (!res.ok) return;
+            const st = await res.json();
+            if (st.status === 'running') {
+                setExp003RunningUI(true);
+                setAnalyticsStatus(`${st.stage || 'Analisando acervo com EXP-003…'} (pode levar ~2 min)`, 'running');
+                if (!exp003PollTimer) {
+                    exp003PollTimer = setInterval(pollExp003Status, 3000);
+                }
+            } else {
+                if (exp003PollTimer) {
+                    clearInterval(exp003PollTimer);
+                    exp003PollTimer = null;
+                }
+                setExp003RunningUI(false);
+                if (st.status === 'completed') {
+                    await loadAnalytics({ announce: false, skipStatusCheck: true });
+                    setAnalyticsStatus(`Nova análise EXP-003 concluída às ${new Date().toLocaleTimeString('pt-BR')} e carregada no painel.`, 'success');
+                } else if (st.status === 'error') {
+                    setAnalyticsStatus(`Falha ao reanalisar acervo (EXP-003): ${st.error || 'erro desconhecido'}. Verifique se o Ollama está ativo.`, 'error');
+                }
+            }
+        } catch {
+            // Ignora falha transitória de polling.
+        }
+    }
+
+    async function startExp003Reanalysis() {
+        setExp003RunningUI(true);
+        setAnalyticsStatus('Iniciando nova análise semântica (EXP-003) via Ollama…', 'running');
+        try {
+            const res = await fetch('/api/analytics/exp003/run', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {'Content-Type': 'application/json'},
+                body: '{}',
+            });
+            const payload = await res.json().catch(() => ({}));
+            if (res.status === 409) {
+                setAnalyticsStatus('Já existe uma reanálise EXP-003 em andamento. Aguardando conclusão…', 'running');
+                if (!exp003PollTimer) exp003PollTimer = setInterval(pollExp003Status, 3000);
+                return;
+            }
+            if (!res.ok) {
+                throw Error(payload.message || `Erro ao iniciar EXP-003 (${res.status})`);
+            }
+            if (!exp003PollTimer) {
+                exp003PollTimer = setInterval(pollExp003Status, 3000);
+            }
+        } catch (err) {
+            setExp003RunningUI(false);
+            setAnalyticsStatus(err.message, 'error');
+        }
+    }
+
+    async function loadAnalytics({ announce = false, skipStatusCheck = false } = {}) {
         const meta = byId('analytics-meta');
         const note = byId('analytics-epistemic-note');
+        const refreshBtn = byId('analytics-refresh');
+        if (refreshBtn) {
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = '↻ Atualizando…';
+        }
         try {
             const res = await fetch('/api/analytics/overview', {credentials: 'same-origin'});
             if (!res.ok) throw Error('Erro ao calcular projeção analítica (' + res.status + ')');
@@ -1156,8 +1241,28 @@
             renderDiscoveryCards();
             renderActivePerspective();
             renderCalendar();
+            if (announce) {
+                const staleCount = ov?.counts?.stale || 0;
+                setAnalyticsStatus(
+                    `Projeção atualizada às ${new Date().toLocaleTimeString('pt-BR')} · ${m.record_universe_count} registro(s), ${m.event_universe_count} acontecimento(s) · ${staleCount} descoberta(s) desatualizada(s).`,
+                    'success'
+                );
+            }
+            if (!skipStatusCheck && !exp003PollTimer) {
+                const stRes = await fetch('/api/analytics/exp003/status', {credentials: 'same-origin'}).catch(() => null);
+                if (stRes?.ok) {
+                    const st = await stRes.json();
+                    if (st.status === 'running') pollExp003Status();
+                }
+            }
         } catch (err) {
             if (meta) meta.textContent = err.message;
+            if (announce) setAnalyticsStatus(err.message, 'error');
+        } finally {
+            if (refreshBtn) {
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = '↻ Atualizar projeção';
+            }
         }
     }
 
@@ -1232,8 +1337,9 @@
         syncCrossFilter();
     });
 
-    document.addEventListener('bb-session-ready', loadAnalytics);
-    byId('analytics-refresh')?.addEventListener('click', loadAnalytics);
+    document.addEventListener('bb-session-ready', () => loadAnalytics());
+    byId('analytics-refresh')?.addEventListener('click', () => loadAnalytics({ announce: true }));
+    byId('exp003-run-btn')?.addEventListener('click', startExp003Reanalysis);
     byId('analytics-clear')?.addEventListener('click', () => {
         state.selectedDiscoveryId = null;
         state.selectedInsightId = null;

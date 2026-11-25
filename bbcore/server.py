@@ -253,6 +253,9 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/analytics/overview":
             from .analytics import build_overview
             self.send_json(200, build_overview(self.server.archive)); return
+        if path == "/api/analytics/exp003/status":
+            from .analytics import get_exp003_status
+            self.send_json(200, get_exp003_status()); return
         if path=="/api/insights":
             q=parse_qs(urlsplit(self.path).query)
             if q.get("q"):
@@ -301,7 +304,7 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, {'access': 'local_read_and_confirmed_document_ingestion'}, {
                 'Set-Cookie': 'bb_local=' + self.server.browser_token + '; HttpOnly; SameSite=Strict; Path=/'})
             return
-        document_write = path in ('/api/documents', '/api/documents/inspect', '/api/documents/confirm-record', '/api/documents/link-legacy', '/api/document-records', '/api/events', '/api/elaborations')
+        document_write = path in ('/api/documents', '/api/documents/inspect', '/api/documents/confirm-record', '/api/documents/link-legacy', '/api/document-records', '/api/events', '/api/elaborations', '/api/analytics/exp003/run')
         if path not in ("/mcp","/api/insights","/api/relations") and not document_write:
             self.send_json(404,{"error":"NOT_FOUND"});return
         local_document_write = document_write and self.local_origin() and self.local_cookie()
@@ -311,6 +314,18 @@ class Handler(BaseHTTPRequestHandler):
         if not local_document_write and not self.authorized(write=path not in ("/mcp", "/api/documents/inspect")):return
         try:
             data=self.body()
+            if path == '/api/analytics/exp003/run':
+                from .analytics import start_exp003_run
+                try:
+                    self.send_json(202, start_exp003_run())
+                except FileNotFoundError as exc:
+                    self.send_json(404, {'error': 'EXP003_UNAVAILABLE', 'message': str(exc)})
+                except RuntimeError as exc:
+                    if str(exc) == 'EXP003_ALREADY_RUNNING':
+                        self.send_json(409, {'error': 'EXP003_ALREADY_RUNNING', 'message': 'Já existe uma reanálise EXP-003 em andamento.'})
+                    else:
+                        raise
+                return
             if path == '/api/documents/inspect':
                 self.send_json(200, self.server.archive.documents.inspect_parametrized(content_base64=data.get('content_base64')))
                 return
