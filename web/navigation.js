@@ -7,6 +7,7 @@
         elaboracao: 'Mesa de Elaboração',
         integridade: 'Integridade e origem',
         sobre: 'Sobre o BB-CORE',
+        configuracoes: 'Configurações',
     };
     let current = null;
 
@@ -21,7 +22,7 @@
         for (const panel of document.querySelectorAll('[data-view]')) {
             panel.hidden = panel.dataset.view !== view;
         }
-        for (const link of document.querySelectorAll('.sidebar nav a')) {
+        for (const link of document.querySelectorAll('.sidebar a[href^="#"]')) {
             const active = link.hash === '#' + view;
             link.classList.toggle('active', active);
             if (active) link.setAttribute('aria-current', 'page');

@@ -8,20 +8,40 @@ Experimento isolado sobre os 6 registros reais (002..007) do BB-CORE:
 """
 from __future__ import annotations
 
+import argparse
+import hashlib
 import json
 import math
 import subprocess
 import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import ProxyHandler, Request, build_opener
 
+ENGINE_VERSION = 'BB-CORE-EXP-004/0.1.0'
 LLM_MODEL = 'qwen2.5:14b'
 EMBED_MODEL = 'qwen3-embedding:4b'
 OLLAMA_CHAT_URL = 'http://127.0.0.1:11434/api/chat'
 OLLAMA_EMBED_URL = 'http://127.0.0.1:11434/api/embed'
+OLLAMA_SHOW_URL = 'http://127.0.0.1:11434/api/show'
 BBCORE_URL = 'http://127.0.0.1:8789'
 OUT_DIR = Path(__file__).resolve().parent
+
+DEFAULT_CONFIG = {
+    'profile': 'reference',
+    'investigator_model': LLM_MODEL,
+    'embed_model': EMBED_MODEL,
+    'confrontation_model': LLM_MODEL,
+    'reference_temperature': 0.0,
+    'exploratory_temperature': 0.2,
+    'seed': 42,
+    'context_window': 16384,
+    'exploratory_repetitions': 3,
+    'enabled_strategies': ['A', 'B', 'C', 'D', 'E'],
+    'confrontation_temperature': 0.0,
+    'confrontation_seed': 42,
+}
 
 SYSTEM_DISCOVERY = (
     'Você é um investigador analítico examinando registros intelectuais preservados no BB-CORE.\n'
@@ -192,12 +212,39 @@ def format_record(r):
     )
 
 
-def embed_texts(texts):
+def sha256_json(obj):
+    raw = json.dumps(obj, ensure_ascii=False, sort_keys=True).encode('utf-8')
+    return hashlib.sha256(raw).hexdigest()
+
+
+def query_model_digest(model_name):
+    opener = build_opener(ProxyHandler({}))
+    try:
+        req = Request(
+            OLLAMA_SHOW_URL,
+            data=json.dumps({'model': model_name}).encode('utf-8'),
+            headers={'Content-Type': 'application/json'},
+        )
+        with opener.open(req, timeout=5) as resp:
+            info = json.load(resp)
+        details = info.get('details') or {}
+        return {
+            'name': model_name,
+            'digest': info.get('digest') or details.get('digest'),
+            'family': details.get('family'),
+            'parameter_size': details.get('parameter_size'),
+            'quantization_level': details.get('quantization_level'),
+        }
+    except Exception:
+        return {'name': model_name, 'digest': None}
+
+
+def embed_texts(texts, *, model=EMBED_MODEL):
     opener = build_opener(ProxyHandler({}))
     t0 = time.monotonic()
     req = Request(
         OLLAMA_EMBED_URL,
-        data=json.dumps({'model': EMBED_MODEL, 'input': texts}).encode('utf-8'),
+        data=json.dumps({'model': model, 'input': texts}).encode('utf-8'),
         headers={'Content-Type': 'application/json'},
     )
     with opener.open(req, timeout=120) as resp:
@@ -212,13 +259,16 @@ def cosine(a, b):
     return round(dot / (na * nb), 4)
 
 
-def call_llm(system_msg, prompt, schema):
+def call_llm(system_msg, prompt, schema, *, model=LLM_MODEL, temperature=0.0, seed=42, num_ctx=16384):
     opener = build_opener(ProxyHandler({}))
+    options = {'temperature': float(temperature), 'num_ctx': int(num_ctx)}
+    if seed is not None:
+        options['seed'] = int(seed)
     payload = {
-        'model': LLM_MODEL,
+        'model': model,
         'stream': False,
         'format': schema,
-        'options': {'temperature': 0.1, 'num_ctx': 16384},
+        'options': options,
         'messages': [
             {'role': 'system', 'content': system_msg},
             {'role': 'user', 'content': prompt},
@@ -267,21 +317,58 @@ def verify_discoveries(discoveries, records_by_id):
     return verified
 
 
-def run_all():
-    records = load_bbcore_records()
+def _atomic_write_json(target: Path, payload: dict) -> None:
+    tmp = target.with_suffix('.tmp')
+    tmp.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    tmp.replace(target)
+
+
+def run_all(config=None, replay_corpus_path=None, run_id=None, profile_override=None, seed_override=None):
+    cfg = {**DEFAULT_CONFIG, **(config or {})}
+    if profile_override:
+        cfg['profile'] = profile_override
+    if seed_override is not None:
+        cfg['seed'] = int(seed_override)
+
+    profile = cfg['profile']
+    inv_model = cfg['investigator_model']
+    emb_model = cfg['embed_model']
+    conf_model = cfg['confrontation_model']
+    num_ctx = int(cfg['context_window'])
+    enabled = set(cfg.get('enabled_strategies') or ['A', 'B', 'C', 'D', 'E'])
+    gen_temp = float(cfg['exploratory_temperature'] if profile == 'exploration' else cfg['reference_temperature'])
+    gen_seed = int(cfg['seed'])
+    conf_temp = float(cfg['confrontation_temperature'])
+    conf_seed = int(cfg['confrontation_seed'])
+
+    started_dt = datetime.now(timezone.utc)
+    started_at = started_dt.isoformat(timespec='seconds')
+    rid = run_id or f"run-{started_dt.strftime('%Y%m%dT%H%M%SZ')}-{uuid.uuid4().hex[:6]}"
+    run_dir = OUT_DIR / 'runs' / rid
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    # 0. Congelamento do universo investigativo (corpus.json)
+    if replay_corpus_path:
+        corpus_payload = json.loads(Path(replay_corpus_path).read_text(encoding='utf-8'))
+        records = corpus_payload['records']
+    else:
+        records = load_bbcore_records()
+
     rec_by_id = {r['id']: r for r in records}
-    started_at = datetime.now(timezone.utc).isoformat(timespec='seconds')
+    formatted_texts = {r['id']: format_record(r) for r in records}
+    record_order = [r['id'] for r in records]
+    corpus_sha256 = sha256_json(records)
 
     # 1. Representações vetoriais locais (integral + por campo)
-    full_texts = [format_record(r) for r in records]
+    full_texts = [formatted_texts[r['id']] for r in records]
     claim_texts = [r['claim'] for r in records]
     why_texts = [r['why_matters'] or r['title'] for r in records]
     lim_texts = [r['limitations'] for r in records]
 
-    emb_full, t_full = embed_texts(full_texts)
-    emb_claim, t_claim = embed_texts(claim_texts)
-    emb_why, t_why = embed_texts(why_texts)
-    emb_lim, t_lim = embed_texts(lim_texts)
+    emb_full, t_full = embed_texts(full_texts, model=emb_model)
+    emb_claim, t_claim = embed_texts(claim_texts, model=emb_model)
+    emb_why, t_why = embed_texts(why_texts, model=emb_model)
+    emb_lim, t_lim = embed_texts(lim_texts, model=emb_model)
 
     def sim_matrix(vecs):
         pairs = []
@@ -302,20 +389,9 @@ def run_all():
     sim_why = sim_matrix(emb_why)
     sim_lim = sim_matrix(emb_lim)
 
-    # 2. Estratégia A — Leitura integral do acervo
-    prompt_a = (
-        'Examine conjuntamente todos os 6 registros abaixo.\n'
-        'Investigue o que pode ser descoberto pela integração desses conhecimentos (estruturas, processos, '
-        'princípios, tensões, lacunas ou novas questões investigativas) que não está evidente na leitura isolada.\n\n'
-        + '\n\n---\n\n'.join(format_record(r) for r in records)
-    )
-    res_a = call_llm(SYSTEM_DISCOVERY, prompt_a, DISCOVERY_LIST_SCHEMA)
-    disc_a = verify_discoveries(res_a['parsed']['discoveries'], rec_by_id)
-
-    # 3. Estratégia B — Exploração semântica (vizinhança mais próxima a partir do par mais similar)
+    # Seleção determinística dos subconjuntos B e C (para preservar no corpus.json)
     top_pair = sim_full[0]
     seed_ids = {top_pair['a_id'], top_pair['b_id']}
-    # Adicionar o 3º registro mais próximo ao par semente
     for p in sim_full[1:]:
         if p['a_id'] in seed_ids or p['b_id'] in seed_ids:
             seed_ids.add(p['a_id'])
@@ -323,15 +399,7 @@ def run_all():
             if len(seed_ids) >= 3:
                 break
     subset_b = [r for r in records if r['id'] in seed_ids]
-    prompt_b = (
-        'Examine este subconjunto de registros semanticamente próximos (recuperados por similaridade vetorial).\n'
-        'Investigue que abstrações, princípios ou tensões emergem especificamente dessa vizinhança semântica.\n\n'
-        + '\n\n---\n\n'.join(format_record(r) for r in subset_b)
-    )
-    res_b = call_llm(SYSTEM_DISCOVERY, prompt_b, DISCOVERY_LIST_SCHEMA)
-    disc_b = verify_discoveries(res_b['parsed']['discoveries'], rec_by_id)
 
-    # 4. Estratégia C — Exploração transversal (registros semanticamente mais distantes)
     distant_pair = sim_full[-1]
     dist_ids = {distant_pair['a_id'], distant_pair['b_id']}
     for p in reversed(sim_full[:-1]):
@@ -341,53 +409,126 @@ def run_all():
             if len(dist_ids) >= 3:
                 break
     subset_c = [r for r in records if r['id'] in dist_ids]
-    prompt_c = (
-        'Examine conjuntamente este subconjunto de registros semanticamente DISTANTES entre si.\n'
-        'Investigue se a distância temática revela complementaridades, analogias estruturais, '
-        'processos comuns ou tensões relevantes que não aparecem na proximidade imediata.\n\n'
-        + '\n\n---\n\n'.join(format_record(r) for r in subset_c)
-    )
-    res_c = call_llm(SYSTEM_DISCOVERY, prompt_c, DISCOVERY_LIST_SCHEMA)
-    disc_c = verify_discoveries(res_c['parsed']['discoveries'], rec_by_id)
 
-    # 5. Estratégia D — Incorporação incremental com estado determinístico fora da LLM
-    disc_state = []
-    steps_d = []
-    next_id = 1
-    for step_idx, r in enumerate(records, 1):
-        prompt_d = (
-            f'Etapa incremental {step_idx}/{len(records)}.\n'
-            'Você recebe o estado atual das descobertas acumuladas (gerenciado externamente) e um novo registro incorporado.\n'
-            'Decida mediante operações atômicas se o novo registro:\n'
-            '- ADD_GROUND_TO_EXISTING: acrescenta fundamento a uma descoberta existente;\n'
-            '- MODIFY_OR_CONTEST_DISCOVERY: modifica ou contesta uma descoberta existente;\n'
-            '- PROPOSE_NEW_DISCOVERY: revela nova estrutura/abstração;\n'
-            '- INTEGRATE_SEPARATE_KNOWLEDGE: integra conhecimentos antes separados;\n'
-            '- ABSTAIN: não oferece contribuição identificável às abstrações.\n\n'
-            f'DESCOBERTAS ACUMULADAS:\n{json.dumps(disc_state, ensure_ascii=False, indent=2)}\n\n'
-            f'NOVO REGISTRO:\n{format_record(r)}'
-        )
-        res_d = call_llm(SYSTEM_DISCOVERY, prompt_d, INCREMENTAL_OPS_SCHEMA)
-        ops = res_d['parsed']['operations']
-        for op in ops:
-            act = op['action']
-            if act in ('PROPOSE_NEW_DISCOVERY', 'INTEGRATE_SEPARATE_KNOWLEDGE') and op.get('new_or_updated_discovery'):
-                item = {'discovery_id': f'INC-{next_id:02d}', **op['new_or_updated_discovery']}
-                next_id += 1
-                disc_state.append(item)
-            elif act == 'MODIFY_OR_CONTEST_DISCOVERY' and op.get('target_discovery_id') and op.get('new_or_updated_discovery'):
-                for k, existing in enumerate(disc_state):
-                    if existing['discovery_id'] == op['target_discovery_id']:
-                        disc_state[k] = {'discovery_id': existing['discovery_id'], **op['new_or_updated_discovery'], 'revised_at_step': step_idx}
-            elif act == 'ADD_GROUND_TO_EXISTING' and op.get('target_discovery_id') and op.get('new_or_updated_discovery'):
-                for existing in disc_state:
-                    if existing['discovery_id'] == op['target_discovery_id']:
-                        existing.setdefault('added_grounds', []).append({'step': step_idx, 'record_id': r['id'], 'reason': op['reason']})
-        steps_d.append({'step': step_idx, 'record_id': r['id'], 'title': r['title'], **res_d})
+    # Salvar fotografia congelada do corpus imediatamente
+    _atomic_write_json(run_dir / 'corpus.json', {
+        'run_id': rid,
+        'frozen_at': started_at,
+        'corpus_sha256': corpus_sha256,
+        'record_order': record_order,
+        'records': records,
+        'formatted_texts': formatted_texts,
+        'selected_contexts': {
+            'strategy_b_subset_ids': [r['id'] for r in subset_b],
+            'strategy_c_subset_ids': [r['id'] for r in subset_c],
+        },
+        'replayed_from': str(replay_corpus_path) if replay_corpus_path else None,
+    })
 
-    disc_d_verified = verify_discoveries(disc_state, rec_by_id)
+    if profile == 'verification':
+        # Perfil Verificação: reutiliza descobertas da última execução e submete apenas à nova confrontação
+        prev_results_path = OUT_DIR / 'results.json'
+        latest_ptr = OUT_DIR / 'latest.json'
+        if latest_ptr.is_file():
+            ptr = json.loads(latest_ptr.read_text(encoding='utf-8'))
+            cand = OUT_DIR / 'runs' / ptr['run_id'] / 'results.json'
+            if cand.is_file():
+                prev_results_path = cand
+        prev_data = json.loads(prev_results_path.read_text(encoding='utf-8'))
+        disc_a = verify_discoveries((prev_data.get('strategy_a_integral') or {}).get('discoveries', []), rec_by_id)
+        disc_b = verify_discoveries((prev_data.get('strategy_b_semantic_neighborhood') or {}).get('discoveries', []), rec_by_id)
+        disc_c = verify_discoveries((prev_data.get('strategy_c_transversal_distant') or {}).get('discoveries', []), rec_by_id)
+        disc_d_verified = verify_discoveries((prev_data.get('strategy_d_incremental') or {}).get('final_discoveries', []), rec_by_id)
+        res_a = {'parsed': {'abstentions': (prev_data.get('strategy_a_integral') or {}).get('abstentions', [])}, 'metrics': {}, 'raw_response': None}
+        res_b = {'parsed': {'abstentions': (prev_data.get('strategy_b_semantic_neighborhood') or {}).get('abstentions', [])}, 'metrics': {}}
+        res_c = {'parsed': {'abstentions': (prev_data.get('strategy_c_transversal_distant') or {}).get('abstentions', [])}, 'metrics': {}}
+        steps_d = (prev_data.get('strategy_d_incremental') or {}).get('steps', [])
+        strategies_executed = ['E']
+    else:
+        strategies_executed = []
+        # 2. Estratégia A — Leitura integral do acervo
+        if 'A' in enabled:
+            prompt_a = (
+                f'Examine conjuntamente todos os {len(records)} registros abaixo.\n'
+                'Investigue o que pode ser descoberto pela integração desses conhecimentos (estruturas, processos, '
+                'princípios, tensões, lacunas ou novas questões investigativas) que não está evidente na leitura isolada.\n\n'
+                + '\n\n---\n\n'.join(formatted_texts[r['id']] for r in records)
+            )
+            res_a = call_llm(SYSTEM_DISCOVERY, prompt_a, DISCOVERY_LIST_SCHEMA, model=inv_model, temperature=gen_temp, seed=gen_seed, num_ctx=num_ctx)
+            disc_a = verify_discoveries(res_a['parsed']['discoveries'], rec_by_id)
+            strategies_executed.append('A')
+        else:
+            res_a = {'parsed': {'abstentions': []}, 'metrics': {}, 'raw_response': None}
+            disc_a = []
 
-    # 6. Estratégia E — Confrontação crítica independente das descobertas de A e D
+        # 3. Estratégia B — Exploração semântica (vizinhança mais próxima)
+        if 'B' in enabled:
+            prompt_b = (
+                'Examine este subconjunto de registros semanticamente próximos (recuperados por similaridade vetorial).\n'
+                'Investigue que abstrações, princípios ou tensões emergem especificamente dessa vizinhança semântica.\n\n'
+                + '\n\n---\n\n'.join(formatted_texts[r['id']] for r in subset_b)
+            )
+            res_b = call_llm(SYSTEM_DISCOVERY, prompt_b, DISCOVERY_LIST_SCHEMA, model=inv_model, temperature=gen_temp, seed=gen_seed, num_ctx=num_ctx)
+            disc_b = verify_discoveries(res_b['parsed']['discoveries'], rec_by_id)
+            strategies_executed.append('B')
+        else:
+            res_b = {'parsed': {'abstentions': []}, 'metrics': {}}
+            disc_b = []
+
+        # 4. Estratégia C — Exploração transversal (registros semanticamente mais distantes)
+        if 'C' in enabled:
+            prompt_c = (
+                'Examine conjuntamente este subconjunto de registros semanticamente DISTANTES entre si.\n'
+                'Investigue se a distância temática revela complementaridades, analogias estruturais, '
+                'processos comuns ou tensões relevantes que não aparecem na proximidade imediata.\n\n'
+                + '\n\n---\n\n'.join(formatted_texts[r['id']] for r in subset_c)
+            )
+            res_c = call_llm(SYSTEM_DISCOVERY, prompt_c, DISCOVERY_LIST_SCHEMA, model=inv_model, temperature=gen_temp, seed=gen_seed, num_ctx=num_ctx)
+            disc_c = verify_discoveries(res_c['parsed']['discoveries'], rec_by_id)
+            strategies_executed.append('C')
+        else:
+            res_c = {'parsed': {'abstentions': []}, 'metrics': {}}
+            disc_c = []
+
+        # 5. Estratégia D — Incorporação incremental com estado determinístico fora da LLM
+        disc_state = []
+        steps_d = []
+        next_id = 1
+        if 'D' in enabled:
+            for step_idx, r in enumerate(records, 1):
+                prompt_d = (
+                    f'Etapa incremental {step_idx}/{len(records)}.\n'
+                    'Você recebe o estado atual das descobertas acumuladas (gerenciado externamente) e um novo registro incorporado.\n'
+                    'Decida mediante operações atômicas se o novo registro:\n'
+                    '- ADD_GROUND_TO_EXISTING: acrescenta fundamento a uma descoberta existente;\n'
+                    '- MODIFY_OR_CONTEST_DISCOVERY: modifica ou contesta uma descoberta existente;\n'
+                    '- PROPOSE_NEW_DISCOVERY: revela nova estrutura/abstração;\n'
+                    '- INTEGRATE_SEPARATE_KNOWLEDGE: integra conhecimentos antes separados;\n'
+                    '- ABSTAIN: não oferece contribuição identificável às abstrações.\n\n'
+                    f'DESCOBERTAS ACUMULADAS:\n{json.dumps(disc_state, ensure_ascii=False, indent=2)}\n\n'
+                    f'NOVO REGISTRO:\n{formatted_texts[r["id"]]}'
+                )
+                res_d = call_llm(SYSTEM_DISCOVERY, prompt_d, INCREMENTAL_OPS_SCHEMA, model=inv_model, temperature=gen_temp, seed=gen_seed, num_ctx=num_ctx)
+                ops = res_d['parsed']['operations']
+                for op in ops:
+                    act = op['action']
+                    if act in ('PROPOSE_NEW_DISCOVERY', 'INTEGRATE_SEPARATE_KNOWLEDGE') and op.get('new_or_updated_discovery'):
+                        item = {'discovery_id': f'INC-{next_id:02d}', **op['new_or_updated_discovery']}
+                        next_id += 1
+                        disc_state.append(item)
+                    elif act == 'MODIFY_OR_CONTEST_DISCOVERY' and op.get('target_discovery_id') and op.get('new_or_updated_discovery'):
+                        for k, existing in enumerate(disc_state):
+                            if existing['discovery_id'] == op['target_discovery_id']:
+                                disc_state[k] = {'discovery_id': existing['discovery_id'], **op['new_or_updated_discovery'], 'revised_at_step': step_idx}
+                    elif act == 'ADD_GROUND_TO_EXISTING' and op.get('target_discovery_id') and op.get('new_or_updated_discovery'):
+                        for existing in disc_state:
+                            if existing['discovery_id'] == op['target_discovery_id']:
+                                existing.setdefault('added_grounds', []).append({'step': step_idx, 'record_id': r['id'], 'reason': op['reason']})
+                steps_d.append({'step': step_idx, 'record_id': r['id'], 'title': r['title'], **res_d})
+            strategies_executed.append('D')
+        disc_d_verified = verify_discoveries(disc_state, rec_by_id)
+
+    # 6. Estratégia E — Confrontação crítica independente das descobertas de A e D (B e C seguem em confront_all.py)
     all_to_confront = [
         {'discovery_id': d['discovery_id'], 'title': d['title'], 'formulation': d['formulation'],
          'supporting_record_ids': [s['record_id'] for s in d['supporting_records']]}
@@ -403,7 +544,7 @@ def run_all():
         '5) Os registros sustentam a interpretação?\n'
         '6) Há registros que contradizem ou limitam?\n'
         '7) Acrescenta possibilidade de compreensão ou investigação?\n\n'
-        f'REGISTROS ORIGINAIS:\n' + '\n\n---\n\n'.join(format_record(r) for r in records) + '\n\n'
+        f'REGISTROS ORIGINAIS:\n' + '\n\n---\n\n'.join(formatted_texts[r['id']] for r in records) + '\n\n'
         f'DESCOBERTAS CANDIDATAS:\n{json.dumps(all_to_confront, ensure_ascii=False, indent=2)}'
     )
     system_critique = (
@@ -411,14 +552,24 @@ def run_all():
         'Classifique como WEAK_OR_REDUNDANT se a descoberta apenas resumir ou repetir um único registro. '
         'Responda em português e estritamente no JSON solicitado.'
     )
-    res_e = call_llm(system_critique, prompt_e, CONFRONTATION_SCHEMA)
+    if 'E' in enabled and all_to_confront:
+        res_e = call_llm(system_critique, prompt_e, CONFRONTATION_SCHEMA, model=conf_model, temperature=conf_temp, seed=conf_seed, num_ctx=num_ctx)
+        if 'E' not in strategies_executed:
+            strategies_executed.append('E')
+    else:
+        res_e = {'parsed': {'assessments': []}, 'metrics': {}, 'raw_response': None}
 
     ollama_ps = subprocess.run(['ollama', 'ps'], capture_output=True, text=True, check=False).stdout.strip()
     output = {
-        'instruction': 'BB-CORE-EXP-003 v0.2.0',
+        'instruction': 'BB-CORE-EXP-004 v0.1.0',
+        'run_id': rid,
+        'profile': profile,
+        'config_used': cfg,
+        'corpus_sha256': corpus_sha256,
         'executed_at': started_at,
-        'llm_model': LLM_MODEL,
-        'embed_model': EMBED_MODEL,
+        'llm_model': inv_model,
+        'embed_model': emb_model,
+        'confrontation_model': conf_model,
         'ollama_ps': ollama_ps,
         'records': [{'id': r['id'], 'version': r['version'], 'title': r['title']} for r in records],
         'embeddings': {
@@ -428,16 +579,74 @@ def run_all():
             'similarity_why_matters': sim_why,
             'similarity_limitations': sim_lim,
         },
-        'strategy_a_integral': {'discoveries': disc_a, 'abstentions': res_a['parsed']['abstentions'], 'metrics': res_a['metrics'], 'raw_response': res_a['raw_response']},
+        'strategy_a_integral': {'discoveries': disc_a, 'abstentions': res_a['parsed']['abstentions'], 'metrics': res_a['metrics'], 'raw_response': res_a.get('raw_response')},
         'strategy_b_semantic_neighborhood': {'subset_ids': [r['id'] for r in subset_b], 'discoveries': disc_b, 'abstentions': res_b['parsed']['abstentions'], 'metrics': res_b['metrics']},
         'strategy_c_transversal_distant': {'subset_ids': [r['id'] for r in subset_c], 'discoveries': disc_c, 'abstentions': res_c['parsed']['abstentions'], 'metrics': res_c['metrics']},
         'strategy_d_incremental': {'final_discoveries': disc_d_verified, 'steps': steps_d},
         'strategy_e_confrontation': res_e,
     }
-    out_file = OUT_DIR / 'results.json'
-    out_file.write_text(json.dumps(output, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-    print('SAVED:', out_file)
+    results_file = run_dir / 'results.json'
+    _atomic_write_json(results_file, output)
+
+    limitations = []
+    if inv_model == conf_model:
+        limitations.append(
+            f'Mesmo modelo ({inv_model}) empregado na descoberta e na confrontação crítica; '
+            'vieses compartilhados não são eliminados apenas por prompts distintos.'
+        )
+
+    manifest = {
+        'run_id': rid,
+        'engine_version': ENGINE_VERSION,
+        'status': 'pending_confrontation',
+        'started_at': started_at,
+        'finished_at': None,
+        'profile': profile,
+        'config_used': cfg,
+        'effective_generation': {'model': inv_model, 'temperature': gen_temp, 'seed': gen_seed, 'num_ctx': num_ctx},
+        'effective_confrontation': {'model': conf_model, 'temperature': conf_temp, 'seed': conf_seed, 'num_ctx': num_ctx},
+        'models': {
+            'investigator': query_model_digest(inv_model),
+            'embeddings': query_model_digest(emb_model),
+            'confrontation': query_model_digest(conf_model),
+        },
+        'prompts_sha256': sha256_json({'discovery': SYSTEM_DISCOVERY, 'critique': system_critique}),
+        'schemas_sha256': sha256_json({
+            'discovery': DISCOVERY_LIST_SCHEMA,
+            'incremental': INCREMENTAL_OPS_SCHEMA,
+            'confrontation': CONFRONTATION_SCHEMA,
+        }),
+        'corpus_sha256': corpus_sha256,
+        'record_count': len(records),
+        'strategies_executed': strategies_executed,
+        'methodological_limitations': limitations,
+        'timings_s': {
+            'embeddings': {'full': t_full, 'claim': t_claim, 'why_matters': t_why, 'limitations': t_lim},
+            'strategy_a': (res_a.get('metrics') or {}).get('elapsed_s'),
+            'strategy_b': (res_b.get('metrics') or {}).get('elapsed_s'),
+            'strategy_c': (res_c.get('metrics') or {}).get('elapsed_s'),
+            'strategy_e_initial': (res_e.get('metrics') or {}).get('elapsed_s'),
+        },
+    }
+    _atomic_write_json(run_dir / 'manifest.json', manifest)
+    (OUT_DIR / '.pending_run').write_text(rid, encoding='utf-8')
+    print('SAVED_RUN:', run_dir)
+    return run_dir
 
 
 if __name__ == '__main__':
-    run_all()
+    parser = argparse.ArgumentParser(description='BB-CORE-EXP-004 runner')
+    parser.add_argument('--config-json', type=str, default=None)
+    parser.add_argument('--replay-corpus', type=str, default=None)
+    parser.add_argument('--run-id', type=str, default=None)
+    parser.add_argument('--profile', type=str, default=None)
+    parser.add_argument('--seed', type=int, default=None)
+    args = parser.parse_args()
+    loaded_cfg = json.loads(Path(args.config_json).read_text(encoding='utf-8')) if args.config_json else None
+    run_all(
+        config=loaded_cfg,
+        replay_corpus_path=args.replay_corpus,
+        run_id=args.run_id,
+        profile_override=args.profile,
+        seed_override=args.seed,
+    )

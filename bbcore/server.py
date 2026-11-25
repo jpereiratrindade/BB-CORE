@@ -181,11 +181,11 @@ class Handler(BaseHTTPRequestHandler):
 
     def get_route(self):
         path=urlsplit(self.path).path
-        if path in ('/style.css', '/app.js', '/analytics.js', '/documents.js', '/glossary.js', '/mesa.js', '/navigation.js', '/trajectory.js', '/favicon.svg'):
+        if path in ('/style.css', '/app.js', '/analytics.js', '/documents.js', '/glossary.js', '/mesa.js', '/navigation.js', '/settings.js', '/trajectory.js', '/favicon.svg'):
             asset = Path(__file__).resolve().parent.parent / 'web' / path[1:]
             blob = asset.read_bytes()
             self.send_response(200)
-            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/analytics.js': 'text/javascript; charset=utf-8', '/documents.js': 'text/javascript; charset=utf-8', '/glossary.js': 'text/javascript; charset=utf-8', '/mesa.js': 'text/javascript; charset=utf-8', '/navigation.js': 'text/javascript; charset=utf-8', '/trajectory.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
+            self.send_header('Content-Type', {'/style.css': 'text/css; charset=utf-8', '/app.js': 'text/javascript; charset=utf-8', '/analytics.js': 'text/javascript; charset=utf-8', '/documents.js': 'text/javascript; charset=utf-8', '/glossary.js': 'text/javascript; charset=utf-8', '/mesa.js': 'text/javascript; charset=utf-8', '/navigation.js': 'text/javascript; charset=utf-8', '/settings.js': 'text/javascript; charset=utf-8', '/trajectory.js': 'text/javascript; charset=utf-8', '/favicon.svg': 'image/svg+xml'}[path])
             self.send_header('Content-Length', str(len(blob)))
             self.send_header('Cache-Control', 'no-store')
             self.send_header('X-Content-Type-Options', 'nosniff')
@@ -252,10 +252,18 @@ class Handler(BaseHTTPRequestHandler):
                 return
         if path == "/api/analytics/overview":
             from .analytics import build_overview
-            self.send_json(200, build_overview(self.server.archive)); return
+            q = parse_qs(urlsplit(self.path).query)
+            run_id = (q.get("run_id") or [None])[0]
+            self.send_json(200, build_overview(self.server.archive, run_id=run_id)); return
+        if path == "/api/analytics/runs":
+            from .analytics import build_discovery_continuity, list_exp003_runs
+            self.send_json(200, {'runs': list_exp003_runs(), 'continuity': build_discovery_continuity()}); return
         if path == "/api/analytics/exp003/status":
             from .analytics import get_exp003_status
             self.send_json(200, get_exp003_status()); return
+        if path == "/api/settings/investigation":
+            from .investigation_config import get_investigation_settings
+            self.send_json(200, get_investigation_settings(self.server.archive.db)); return
         if path=="/api/insights":
             q=parse_qs(urlsplit(self.path).query)
             if q.get("q"):
@@ -304,7 +312,11 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(200, {'access': 'local_read_and_confirmed_document_ingestion'}, {
                 'Set-Cookie': 'bb_local=' + self.server.browser_token + '; HttpOnly; SameSite=Strict; Path=/'})
             return
-        document_write = path in ('/api/documents', '/api/documents/inspect', '/api/documents/confirm-record', '/api/documents/link-legacy', '/api/document-records', '/api/events', '/api/elaborations', '/api/analytics/exp003/run')
+        document_write = path in (
+            '/api/documents', '/api/documents/inspect', '/api/documents/confirm-record',
+            '/api/documents/link-legacy', '/api/document-records', '/api/events', '/api/elaborations',
+            '/api/analytics/exp003/run', '/api/settings/investigation', '/api/settings/investigation/reset',
+        )
         if path not in ("/mcp","/api/insights","/api/relations") and not document_write:
             self.send_json(404,{"error":"NOT_FOUND"});return
         local_document_write = document_write and self.local_origin() and self.local_cookie()
@@ -314,10 +326,21 @@ class Handler(BaseHTTPRequestHandler):
         if not local_document_write and not self.authorized(write=path not in ("/mcp", "/api/documents/inspect")):return
         try:
             data=self.body()
+            if path == '/api/settings/investigation':
+                from .investigation_config import update_investigation_settings
+                note = data.pop('change_note', None) if isinstance(data, dict) else None
+                self.send_json(200, update_investigation_settings(self.server.archive.db, data, change_note=note))
+                return
+            if path == '/api/settings/investigation/reset':
+                from .investigation_config import reset_investigation_settings
+                self.send_json(200, reset_investigation_settings(self.server.archive.db))
+                return
             if path == '/api/analytics/exp003/run':
                 from .analytics import start_exp003_run
+                from .investigation_config import get_investigation_settings
                 try:
-                    self.send_json(202, start_exp003_run())
+                    cfg = get_investigation_settings(self.server.archive.db)['config']
+                    self.send_json(202, start_exp003_run(config=cfg))
                 except FileNotFoundError as exc:
                     self.send_json(404, {'error': 'EXP003_UNAVAILABLE', 'message': str(exc)})
                 except RuntimeError as exc:
@@ -360,6 +383,25 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(409, payload)
         except NotFound as e: self.send_json(404,{"error":"NOT_FOUND","message":str(e)})
         except (TypeError,KeyError,json.JSONDecodeError): self.send_json(400,{"error":"INVALID_INPUT"})
+
+    def do_PUT(self):
+        path = urlsplit(self.path).path
+        if path != '/api/settings/investigation':
+            self.send_json(404, {'error': 'NOT_FOUND'}); return
+        local_write = self.local_origin() and self.local_cookie()
+        if not local_write and not self.safe_origin(): return
+        if self.headers.get('Content-Type', '').split(';')[0].strip().lower() != 'application/json':
+            self.send_json(415, {'error': 'application/json obrigatório'}); return
+        if not local_write and not self.authorized(write=True): return
+        try:
+            data = self.body()
+            from .investigation_config import update_investigation_settings
+            note = data.pop('change_note', None) if isinstance(data, dict) else None
+            self.send_json(200, update_investigation_settings(self.server.archive.db, data, change_note=note))
+        except ValueError as e:
+            self.send_json(400, {'error': 'INVALID_INPUT', 'message': str(e)})
+        except (TypeError, KeyError, json.JSONDecodeError):
+            self.send_json(400, {'error': 'INVALID_INPUT'})
 
     def do_DELETE(self):
         path = urlsplit(self.path).path

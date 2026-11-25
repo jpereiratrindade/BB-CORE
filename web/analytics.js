@@ -5,6 +5,7 @@
 
     const state = {
         data: null,
+        selectedRunId: null,
         viewMode: 'discoveries', // 'discoveries' | 'semantic' | 'records' | 'lexical'
         discFilter: 'sustained', // 'sustained' | 'all'
         semField: 'similarity_full',
@@ -268,10 +269,29 @@
         dossier.append(el('h5', 'Relevância potencial'));
         dossier.append(el('p', disc.potential_relevance));
 
+        if (disc.deterministic_verification) {
+            const dv = disc.deterministic_verification;
+            dossier.append(el('h5', '1. Verificação determinística dos fundamentos'));
+            dossier.append(el(
+                'p',
+                `Registros válidos: ${dv.all_record_ids_valid ? 'Sim' : 'Não'} (${dv.distinct_supporting_records} distinto(s)) · `
+                + `Trechos literais exatos: ${dv.excerpts_exact_match}/${dv.excerpts_total} · `
+                + `Coerência critérios/veredito: ${dv.criteria_verdict_coherent ? 'Sim' : 'Não'}`
+            ));
+            if (dv.inconsistencies?.length) {
+                const ul = el('ul', undefined, 'disc-inconsistencies');
+                for (const inc of dv.inconsistencies) ul.append(el('li', inc));
+                dossier.append(ul);
+            }
+        }
+
         if (disc.confrontation) {
             const cf = disc.confrontation;
-            dossier.append(el('h5', 'Confrontação crítica independente (E)'));
+            dossier.append(el('h5', '2. Avaliação crítica automatizada (E)'));
             dossier.append(el('p', cf.critique));
+            if (disc.same_model_limitation) {
+                dossier.append(el('p', 'Limitação metodológica: o mesmo modelo foi usado na descoberta e na confrontação crítica.', 'muted'));
+            }
             const critDet = el('details');
             critDet.append(el('summary', 'Critérios examinados (7 verificações)'));
             critDet.append(el('pre',
@@ -283,6 +303,31 @@
                 + `Acrescenta compreensão/investigação: ${cf.adds_comprehension_or_investigation ? 'Sim' : 'Não'}`
             ));
             dossier.append(critDet);
+        }
+
+        dossier.append(el('h5', '3. Reconhecimento intelectual humano'));
+        dossier.append(el('p', disc.human_recognition?.note || 'Proposição candidata fora do acervo canônico; reconhecimento humano não realizado.', 'muted'));
+
+        const contLinks = (state.data?.discoveries_overview?.continuity?.links || []).filter(
+            lk => lk.left_discovery_id === disc.discovery_id || lk.right_discovery_id === disc.discovery_id
+        );
+        if (contLinks.length) {
+            const kindLabels = {
+                RECURRENCE: 'Recorrência',
+                GROUND_EXPANSION: 'Ampliação de fundamentação',
+                CONCEPTUAL_REFORMULATION: 'Reformulação conceitual',
+                EXPERIMENTAL_SENSITIVITY: 'Dependência experimental',
+            };
+            dossier.append(el('h5', `Continuidade entre execuções (${contLinks.length} sinal(is) candidato(s))`));
+            const ul = el('ul');
+            for (const lk of contLinks) {
+                const isLeft = lk.left_discovery_id === disc.discovery_id;
+                const otherTitle = isLeft ? lk.right_title : lk.left_title;
+                const otherRun = isLeft ? lk.right_run_id : lk.left_run_id;
+                const otherProf = isLeft ? lk.right_profile : lk.left_profile;
+                ul.append(el('li', `${kindLabels[lk.kind] || lk.kind}: "${otherTitle}" (${otherRun} · perfil ${otherProf} · sobreposição lexical ${Math.round(lk.lexical_overlap * 100)}%)`));
+            }
+            dossier.append(ul);
         }
 
         if (disc.limitations_and_counterarguments?.length) {
@@ -328,10 +373,30 @@
 
         const discs = visibleDiscoveries();
         const c = ov.counts;
+        const profMap = { reference: 'Referência', exploration: 'Exploração', verification: 'Verificação' };
+        const profStr = ov.profile ? `Perfil: ${profMap[ov.profile] || ov.profile} · ` : '';
         if (summaryLine) {
             summaryLine.textContent = ov.source_available
-                ? `${c.sustained} sustentada(s) na confrontação automática · ${c.weak_or_redundant} fraca(s)/redundante(s) · ${c.stale} desatualizada(s) (${ov.llm_model})`
+                ? `${profStr}${c.sustained} sustentada(s) na confrontação automática · ${c.weak_or_redundant} fraca(s)/redundante(s) · ${c.stale} desatualizada(s) (${ov.llm_model})`
                 : 'Nenhum resultado de descoberta disponível.';
+        }
+
+        const runSelect = byId('exp003-run-select');
+        if (runSelect) {
+            const runs = ov.runs || [];
+            if (runs.length > 1) {
+                runSelect.hidden = false;
+                const activeRid = state.selectedRunId || ov.run_id || '';
+                runSelect.replaceChildren();
+                for (const r of runs) {
+                    const opt = el('option', `${r.run_id} (${profMap[r.profile] || r.profile || 'ref'})`);
+                    opt.value = r.run_id;
+                    runSelect.append(opt);
+                }
+                if (activeRid) runSelect.value = activeRid;
+            } else {
+                runSelect.hidden = true;
+            }
         }
 
         cardsBox.replaceChildren();
@@ -1215,7 +1280,10 @@
             refreshBtn.textContent = '↻ Atualizando…';
         }
         try {
-            const res = await fetch('/api/analytics/overview', {credentials: 'same-origin'});
+            const url = state.selectedRunId
+                ? `/api/analytics/overview?run_id=${encodeURIComponent(state.selectedRunId)}`
+                : '/api/analytics/overview';
+            const res = await fetch(url, {credentials: 'same-origin'});
             if (!res.ok) throw Error('Erro ao calcular projeção analítica (' + res.status + ')');
             const data = await res.json();
             state.data = data;
@@ -1339,7 +1407,12 @@
 
     document.addEventListener('bb-session-ready', () => loadAnalytics());
     byId('analytics-refresh')?.addEventListener('click', () => loadAnalytics({ announce: true }));
-    byId('exp003-run-btn')?.addEventListener('click', startExp003Reanalysis);
+    byId('exp003-run-btn')?.addEventListener('click', () => { state.selectedRunId = null; startExp003Reanalysis(); });
+    byId('exp003-run-select')?.addEventListener('change', e => {
+        state.selectedRunId = e.target.value || null;
+        state.selectedDiscoveryId = null;
+        loadAnalytics({ announce: true, skipStatusCheck: true });
+    });
     byId('analytics-clear')?.addEventListener('click', () => {
         state.selectedDiscoveryId = null;
         state.selectedInsightId = null;
