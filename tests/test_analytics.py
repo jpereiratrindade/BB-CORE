@@ -289,6 +289,12 @@ class AnalyticsHTTPTests(unittest.TestCase):
             js = resp.read().decode('utf-8')
             self.assertIn('/api/analytics/overview', js)
 
+        with self.opener.open(Request(f'http://127.0.0.1:{self.port}/glossary.js'), timeout=5) as resp:
+            self.assertEqual(resp.status, 200)
+            gjs = resp.read().decode('utf-8')
+            self.assertIn('CONCEPTUAL_DISCOVERY', gjs)
+            self.assertIn('BBGlossary', gjs)
+
 
 if __name__ == '__main__':
     unittest.main()

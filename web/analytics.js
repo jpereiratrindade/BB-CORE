@@ -219,13 +219,23 @@
         renderCalendar();
     }
 
+    function glossaryBadge(key, label, cls) {
+        if (window.BBGlossary) {
+            return window.BBGlossary.createTermButton(key, { label, className: cls });
+        }
+        return el('span', label, cls);
+    }
+
     function buildDiscoveryDossier(disc) {
         const recById = recordMap();
         const dossier = el('div', undefined, 'disc-dossier');
         const badgeCls = disc.confrontation_status === 'SUSTAINED_CANDIDATE' ? 'sustained' : 'weak';
-        dossier.append(el('span', verdictLabels[disc.confrontation_status] || disc.confrontation_status, 'net-badge ' + badgeCls));
-        dossier.append(el('span', disc.strategy_label || ('Estratégia ' + disc.strategy), 'net-badge'));
-        dossier.append(el('span', 'Objeto analítico (não canônico)', 'net-badge'));
+        const verdictText = verdictLabels[disc.confrontation_status] || disc.confrontation_status;
+        const strategyKey = disc.strategy ? `STRATEGY_${String(disc.strategy).toUpperCase()}` : 'EXP-003';
+        const strategyText = disc.strategy_label || ('Estratégia ' + disc.strategy);
+        dossier.append(glossaryBadge(disc.confrontation_status, verdictText, 'net-badge ' + badgeCls));
+        dossier.append(glossaryBadge(strategyKey, strategyText, 'net-badge'));
+        dossier.append(glossaryBadge('NON_CANONICAL', 'Objeto analítico (não canônico)', 'net-badge'));
         if (disc.stale) {
             dossier.append(el('span', 'Potencialmente desatualizada', 'net-badge stale'));
             dossier.append(el('p', disc.stale_reasons.join(' · '), 'muted'));
@@ -241,7 +251,13 @@
         }
 
         dossier.append(el('h5', 'Natureza da abstração'));
-        dossier.append(el('p', disc.nature));
+        if (window.BBGlossary) {
+            const natureWrap = el('p', undefined, 'disc-nature-line');
+            natureWrap.append(window.BBGlossary.createTermButton(disc.nature, { showCode: true }));
+            dossier.append(natureWrap);
+        } else {
+            dossier.append(el('p', disc.nature));
+        }
 
         dossier.append(el('h5', 'Contribuição intelectual e justificativa da integração'));
         dossier.append(el('p', disc.integration_justification));
@@ -336,11 +352,12 @@
             top.append(el('span', `Estratégia ${d.strategy}`, 'net-badge'));
             if (d.stale) top.append(el('span', 'Desatualizada', 'net-badge stale'));
 
+            const natureLabel = window.BBGlossary ? window.BBGlossary.formatNature(d.nature) : d.nature;
             card.append(
                 top,
                 el('div', d.title, 'disc-card-title'),
                 el('p', d.formulation, 'disc-card-formulation'),
-                el('div', `${d.nature} · ${d.supporting_records.length} registro(s) fundamentador(es)`, 'disc-card-meta')
+                el('div', `${natureLabel} · ${d.supporting_records.length} registro(s) fundamentador(es)`, 'disc-card-meta')
             );
             card.addEventListener('click', () => {
                 state.selectedDiscoveryId = state.selectedDiscoveryId === d.discovery_id ? null : d.discovery_id;

@@ -133,3 +133,25 @@
 .cal-cell.l4{background:#0b5d69;border-color:#07444d}
 .cal-cell.selected{outline:2px solid #062a4f;outline-offset:1px}
 .cal-day-events{margin-top:10px;border:1px solid #d9e5ee;border-radius:8px;padding:10px 12px;background:#f8fbfd;font-size:.86rem}
+.glossary-term{display:inline-flex;align-items:center;gap:4px;border:0;background:transparent;padding:0;font:inherit;color:var(--navy);border-bottom:1px dotted #4a789c;cursor:pointer;text-align:left;line-height:1.35}
+.glossary-term:hover{color:var(--blue);border-bottom-color:var(--blue)}
+.glossary-term.net-badge{border-bottom:1px solid transparent;padding:3px 9px;cursor:pointer}
+.glossary-term.net-badge:hover{filter:brightness(.95)}
+.glossary-icon{font-size:.82em;color:var(--blue);font-style:normal;opacity:.85}
+.glossary-inline-code{font-size:.78em;background:#eef5fa;color:#2c4d67;padding:1px 6px;border-radius:4px;border:1px solid #d8e6f0}
+.disc-nature-line{margin:2px 0 8px}
+.glossary-popover{position:fixed;z-index:1200;width:min(380px,calc(100vw - 24px));background:#fff;border:1px solid #bfd4e4;border-radius:11px;padding:14px 16px;box-shadow:0 14px 36px rgba(7,30,56,.2);display:grid;gap:7px}
+.glossary-popover-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.glossary-popover-close{border:1px solid var(--line);background:#f7fafd;color:var(--navy);border-radius:6px;width:26px;height:26px;line-height:1;font-size:16px;display:inline-flex;align-items:center;justify-content:center;padding:0}
+.glossary-popover-title{font-size:.98rem;color:var(--navy);line-height:1.3}
+.glossary-popover-code{justify-self:start;font-size:.75rem;background:#f1f6fa;color:#3c586e;padding:2px 7px;border-radius:4px;border:1px solid #dce7ef}
+.glossary-popover-desc{margin:0;font-size:.85rem;line-height:1.5;color:var(--ink)}
+.glossary-popover-foot{padding-top:6px;border-top:1px solid #edf3f7}
+.glossary-popover-link{font-size:.8rem;font-weight:700;color:var(--blue)}
+.glossary-popover-link:hover{text-decoration:underline}
+.glossary-section{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+.glossary-section h2{margin-bottom:6px}
+.glossary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:14px}
+.glossary-item{border:1px solid var(--line);border-radius:9px;padding:14px 16px;background:#fafcfe;display:grid;gap:6px;align-content:start}
+.glossary-item h3{margin:0;font-size:.96rem;color:var(--navy);line-height:1.35}
+.glossary-item p{margin:0;font-size:.83rem;line-height:1.5;color:var(--ink)}

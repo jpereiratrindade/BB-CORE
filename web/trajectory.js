@@ -34,7 +34,11 @@ function renderTrajectory(container, trajectory) {
     details.append(make('summary', 'Consultar ' + trajectory.event_count + ' acontecimento(s) registrado(s)'));
     details.append(make('p', 'Ordem de registro no sistema. A sequência e o encadeamento técnico não demonstram influência ou causalidade.', 'muted'));
     if (trajectory.baseline?.nature === 'EXISTING_RECORD_AT_FIRST_EVENT') {
-        details.append(make('p', 'O insight já existia quando seu primeiro acontecimento foi registrado. A base preservada nesse momento não reconstrói sua história anterior.', 'trajectory-baseline'));
+        const baseNote = make('p', 'O insight já existia quando seu primeiro acontecimento foi registrado. A base preservada nesse momento não reconstrói sua história anterior. ', 'trajectory-baseline');
+        if (window.BBGlossary) {
+            baseNote.append(window.BBGlossary.createTermButton('EXISTING_RECORD_AT_FIRST_EVENT', { label: 'Entender este marco' }));
+        }
+        details.append(baseNote);
     }
     if (trajectory.formulation_revision_count) {
         const current = make('section', undefined, 'trajectory-projection');
